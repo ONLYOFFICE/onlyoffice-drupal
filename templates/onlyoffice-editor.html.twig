@@ -1,0 +1,75 @@
+{# onlyoffice_connector/templates/onlyoffice-editor.html.twig #}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>{{ filename }} | Drupal</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <link rel="icon" href="/wp-content/plugins/onlyoffice-wordpress/public/images/{{ doc_type }}.ico" type="image/x-icon" />
+
+    <style>
+        html {
+            height: 100%;
+            width: 100%;
+        }
+
+        body {
+            background: #fff;
+            color: #333;
+            font-family: Arial, Tahoma, sans-serif;
+            font-size: 12px;
+            font-weight: normal;
+            height: 100%;
+            margin: 0;
+            overflow-y: hidden;
+            padding: 0;
+            text-decoration: none;
+        }
+
+        form {
+            height: 100%;
+        }
+
+        div {
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+
+    <script type="text/javascript" src="{{ doc_server_url }}web-apps/apps/api/documents/api.js"></script>
+</head>
+
+<body>
+    <div id="iframeEditor"></div>
+
+    <script type="text/javascript">
+        var docEditor;
+
+        var connectEditor = function() {
+            var config = {{ config|raw }};
+
+            config.width = "100%";
+            config.height = "100%";
+
+            if ((config.document.fileType === "docxf" || config.document.fileType === "oform") &&
+                DocsAPI.DocEditor.version().split(".")[0] < 7) {
+                innerAlert("{{ forms_unavailable_notice }}");
+                return;
+            }
+
+            docEditor = new DocsAPI.DocEditor("iframeEditor", config);
+        };
+
+        if (window.addEventListener) {
+            window.addEventListener("load", connectEditor);
+        } else if (window.attachEvent) {
+            window.attachEvent("load", connectEditor);
+        }
+    </script>
+</body>
+
+</html>

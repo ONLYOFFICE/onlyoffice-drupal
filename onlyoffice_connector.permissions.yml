@@ -1,0 +1,4 @@
+administer onlyoffice_connector configuration:
+  title: 'Administer onlyoffice_connector configuration'
+  description: 'Optional description.'
+  restrict access: true

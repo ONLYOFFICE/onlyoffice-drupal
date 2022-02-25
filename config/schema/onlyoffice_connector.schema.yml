@@ -1,0 +1,11 @@
+# Schema for the configuration files of the ONLYOFFICE Connector module.
+onlyoffice_connector.settings:
+  type: config_object
+  label: 'ONLYOFFICE Connector settings'
+  mapping:
+    doc_server_url:
+      type: string
+      label: 'Document Server Address'
+    doc_server_jwt:
+      type: string
+      label: 'Document Server JWT'

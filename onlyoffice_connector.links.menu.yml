@@ -1,0 +1,6 @@
+onlyoffice_connector.settings_form:
+  title: 'ONLYOFFICE Connector'
+  description: 'Configure ONLYOFFICE Connector.'
+  parent: system.admin_config_media
+  route_name: onlyoffice_connector.settings_form
+  weight: 10
