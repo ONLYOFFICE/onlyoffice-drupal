@@ -7,6 +7,7 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\file\Entity\File;
+use Drupal\media\Entity\Media;
 use Drupal\onlyoffice_connector\OnlyofficeDocumentHelper;
 use Drupal\user\UserStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -39,7 +40,7 @@ class OnlyofficeConnectorController extends ControllerBase
   protected $userStorage;
 
   /**
-   * 
+   *
    * @param \Drupal\Core\Render\RendererInterface $renderer
    */
   public function __construct(OnlyofficeDocumentHelper $docHelper, UserStorageInterface $userStorage, RendererInterface $renderer)
@@ -58,21 +59,21 @@ class OnlyofficeConnectorController extends ControllerBase
     );
   }
 
-  public function edit(File $file, Request $request)
+  public function edit(Media $media, Request $request)
   {
     if ($request->isMethod('get')) {
-      return $this->editGet($file, $request);
+      return $this->editGet($media, $request);
     } else if ($request->isMethod('post')) {
-      return $this->editPost($file, $request);
+      return $this->editPost($media, $request);
     } else {
       throw new BadRequestHttpException();
     }
   }
 
-  public function editGet(File $file, Request $request)
+  public function editGet(Media $media, Request $request)
   {
     $build = [
-      'page' => $this->getDocumentConfig($file)
+      'page' => $this->getDocumentConfig($media)
     ];
 
     $build['page']['#theme'] = 'onlyoffice_editor';
@@ -84,7 +85,7 @@ class OnlyofficeConnectorController extends ControllerBase
     return $response;
   }
 
-  public function editPost(File $file, Request $request)
+  public function editPost(Media $media, Request $request)
   {
     $errorMessage = NULL;
 
@@ -107,7 +108,7 @@ class OnlyofficeConnectorController extends ControllerBase
         break;
       case "MustSave":
       case "Corrupted":
-        $errorMessage = $this->proccess_save($body, $file);
+        $errorMessage = $this->proccess_save($body, $media);
         break;
       case "MustForceSave":
       case "CorruptedForceSave":
@@ -122,8 +123,11 @@ class OnlyofficeConnectorController extends ControllerBase
     }
   }
 
-  private function proccess_save($body, File $file)
+  private function proccess_save($body, Media $media)
   {
+    $fid = $media->toArray()["field_media_document"][0]["target_id"];
+    $file = File::load($fid);
+
     $download_url = $body["url"];
     if ($download_url === null) {
       return 'nothing to save';
@@ -142,24 +146,25 @@ class OnlyofficeConnectorController extends ControllerBase
     return NULL;
   }
 
-  private function getDocumentConfig(File $file)
+  private function getDocumentConfig(Media $media)
   {
+    $fid = $media->toArray()["field_media_document"][0]["target_id"];
+    $file = File::load($fid);
+
     $options = \Drupal::config('onlyoffice_connector.settings');
 
     $author = $file->getOwner();
     $user = \Drupal::currentUser()->getAccount();
-
-    $filetype = strtolower(pathinfo($file->getFilename(), PATHINFO_EXTENSION));
     $filename = $file->getFilename();
 
-    $can_edit = true; //current_user_can('edit_post', $attachemnt_id) && OOP_Document_Helper::is_editable($filename);
+    $can_edit = $this->docHelper->isEditable($filename); //current_user_can('edit_post', $attachemnt_id) && OOP_Document_Helper::is_editable($filename);
     $config = [
       'type' => 'desktop',
       'documentType' => $this->docHelper->getDocumentType($filename),
       'document' => [
         'title' => $filename,
         'url' => $file->createFileUrl(false),
-        'fileType' => $filetype,
+        'fileType' => $this->docHelper->getExtension($filename),
         'key' => base64_encode($file->getChangedTime()),
         'info' => [
           'owner' => $author->getDisplayName(),
@@ -173,7 +178,7 @@ class OnlyofficeConnectorController extends ControllerBase
       'editorConfig' => [
         'mode' => $can_edit ? 'edit' : 'view',
         'lang' => 'en', // ToDo: change to user language
-        'callbackUrl' => Url::fromRoute('onlyoffice_connector.editor', ['file' => $file->id()], ['absolute' => true])->toString(),
+        'callbackUrl' => Url::fromRoute('onlyoffice_connector.editor', ['media' => $media->id()], ['absolute' => true])->toString(),
         'user' => [
           'id' => $user->id(),
           'name' => $user->getDisplayName()
@@ -186,7 +191,7 @@ class OnlyofficeConnectorController extends ControllerBase
     return [
       '#config' => json_encode($config),
       '#filename' => $filename,
-      '#doc_type' => $filetype,
+      '#doc_type' => $this->docHelper->getExtension($filename),
       '#doc_server_url' => $options->get('doc_server_url'),
       '#forms_unavailable_notice' => $this->t('forms_unavailable_notice')
     ];
