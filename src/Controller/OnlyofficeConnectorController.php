@@ -156,15 +156,16 @@ class OnlyofficeConnectorController extends ControllerBase
     $author = $file->getOwner();
     $user = \Drupal::currentUser()->getAccount();
     $filename = $file->getFilename();
+    $extension = $this->docHelper->getExtension($filename);
 
-    $can_edit = $this->docHelper->isEditable($filename); //current_user_can('edit_post', $attachemnt_id) && OOP_Document_Helper::is_editable($filename);
+    $can_edit = $this->docHelper->isEditable($extension) || $this->docHelper->isFillForms($extension) ;
     $config = [
       'type' => 'desktop',
-      'documentType' => $this->docHelper->getDocumentType($filename),
+      'documentType' => $this->docHelper->getDocumentType($extension),
       'document' => [
         'title' => $filename,
         'url' => $file->createFileUrl(false),
-        'fileType' => $this->docHelper->getExtension($filename),
+        'fileType' => $extension,
         'key' => base64_encode($file->getChangedTime()),
         'info' => [
           'owner' => $author->getDisplayName(),
@@ -191,7 +192,7 @@ class OnlyofficeConnectorController extends ControllerBase
     return [
       '#config' => json_encode($config),
       '#filename' => $filename,
-      '#doc_type' => $this->docHelper->getExtension($filename),
+      '#doc_type' => $extension,
       '#doc_server_url' => $options->get('doc_server_url'),
       '#forms_unavailable_notice' => $this->t('forms_unavailable_notice')
     ];
