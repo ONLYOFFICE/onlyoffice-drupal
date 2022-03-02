@@ -19,7 +19,7 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 /**
  * Returns responses for ONLYOFFICE Connector routes.
  */
-class OnlyofficeConnectorController extends ControllerBase
+class OnlyofficeEditorController extends ControllerBase
 {
 
   /**
@@ -59,7 +59,7 @@ class OnlyofficeConnectorController extends ControllerBase
     );
   }
 
-  public function edit(Media $media, Request $request)
+  public function editor(Media $media, Request $request)
   {
     if ($request->isMethod('get')) {
       return $this->editGet($media, $request);
@@ -100,7 +100,7 @@ class OnlyofficeConnectorController extends ControllerBase
     $account = $this->userStorage->load($body["actions"][0]["userid"]);
     \Drupal::currentUser()->setAccount($account);
 
-    $status = OnlyofficeConnectorController::CALLBACK_STATUS[$body["status"]];
+    $status = OnlyofficeEditorController::CALLBACK_STATUS[$body["status"]];
 
     switch ($status) {
       case "Editing":

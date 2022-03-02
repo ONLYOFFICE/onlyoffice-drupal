@@ -1,9 +1,17 @@
+onlyoffice_connector.settings_form:
+  path: '/admin/config/system/onlyoffice-connector'
+  defaults:
+    _title: 'ONLYOFFICE Connector settings'
+    _form: 'Drupal\onlyoffice_connector\Form\SettingsForm'
+  requirements:
+    _permission: 'administer onlyoffice_connector configuration'
+
 onlyoffice_connector.editor:
-  path: '/media/{media}/onlyoffice-edit'
+  path: 'admin/media/{media}/onlyoffice-editor'
   defaults:
     _title: 'ONLYOFFICE'
-    _controller: '\Drupal\onlyoffice_connector\Controller\OnlyofficeConnectorController::edit'
-  methods: [GET, POST]
+    _controller: '\Drupal\onlyoffice_connector\Controller\OnlyofficeEditorController::editor'
+  methods: [POST]
   options:
     parameters:
       media:
@@ -12,10 +20,3 @@ onlyoffice_connector.editor:
     _permission: 'view media'
     media: '\d+'
 
-onlyoffice_connector.settings_form:
-  path: '/admin/config/system/onlyoffice-connector'
-  defaults:
-    _title: 'ONLYOFFICE Connector settings'
-    _form: 'Drupal\onlyoffice_connector\Form\SettingsForm'
-  requirements:
-    _permission: 'administer onlyoffice_connector configuration'
