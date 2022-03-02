@@ -51,9 +51,13 @@ class OnlyofficeDownloadController extends ControllerBase {
 
     $media = $this->entityRepository->loadEntityByUuid('media', $uuid);
 
+    if (!$media) {
+      throw new BadRequestHttpException("The targeted media resource with UUID `{$uuid}` does not exist.");
+    }
+
     $fid = $media->toArray()["field_media_document"][0]["target_id"];
     $file = File::load($fid);
-    
+
     return new BinaryFileResponse($file->getFileUri(), 200);
   }
 
