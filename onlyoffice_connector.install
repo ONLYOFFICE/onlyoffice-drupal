@@ -5,11 +5,14 @@
  * Install, update and uninstall functions for the ONLYOFFICE Connector module.
  */
 
+use Drupal\Core\Cache\Cache;
+
 /**
  * Implements hook_install().
  */
 function onlyoffice_connector_install() {
   \Drupal::messenger()->addStatus(__FUNCTION__);
+  Cache::invalidateTags(['rendered']);
 }
 
 /**
@@ -17,6 +20,7 @@ function onlyoffice_connector_install() {
  */
 function onlyoffice_connector_uninstall() {
   \Drupal::messenger()->addStatus(__FUNCTION__);
+  Cache::invalidateTags(['rendered']);
 }
 
 /**

@@ -5,6 +5,14 @@
  * Primary module hooks for ONLYOFFICE Connector module.
  */
 
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\file\Entity\File;
+use Drupal\onlyoffice_connector\OnlyofficeDocumentHelper;
+use Drupal\Core\Url;
+
+/**
+ * Implements hook_theme().
+ */
 function onlyoffice_connector_theme($existing, $type, $theme, $path) {
   return [
     'onlyoffice_editor' => [
@@ -15,6 +23,52 @@ function onlyoffice_connector_theme($existing, $type, $theme, $path) {
           'config' => '{}',
           'forms_unavailable_notice' => ''
         ],
+    ],
+  ];
+}
+
+/**
+ * Implements hook_entity_operation().
+ */
+function onlyoffice_connector_entity_operation(EntityInterface $entity) {
+  if ($entity->getEntityTypeId() != "media" || $entity->bundle() != "document") {
+    return null;
+  }
+
+  $account = \Drupal::currentUser()->getAccount();
+
+  if (!$entity->access("view", $account)) {
+    return null;
+  }
+
+  $fid = $entity->toArray()["field_media_document"][0]["target_id"];
+  $file = File::load($fid);
+  $extension = OnlyofficeDocumentHelper::getExtension($file->getFilename());
+
+  if (OnlyofficeDocumentHelper::getDocumentType($extension) == null) {
+    return null;
+  }
+
+  $title = "View in ONLYOFFICE";
+
+  if (OnlyofficeDocumentHelper::isEditable($extension) && $entity->access("update", $account)) {
+    $title =  "Edit in ONLYOFFICE";
+  }
+
+  if (OnlyofficeDocumentHelper::isFillForms($extension) && $entity->access("update", $account)) {
+    $title =  "Fill in form in ONLYOFFICE";
+  }
+
+  $route_name = "onlyoffice_connector.editor";
+  $route_parameters = [
+    'media' => $entity->id(),
+  ];
+
+  return [
+    'onlyoffice' => [
+      'title' => $title,
+      'weight' => 50,
+      'url' => Url::fromRoute($route_name, $route_parameters),
     ],
   ];
 }
