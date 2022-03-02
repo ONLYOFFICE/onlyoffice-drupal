@@ -89,7 +89,7 @@ class OnlyofficeEditorController extends ControllerBase {
       'documentType' => $this->documentHelper->getDocumentType($extension),
       'document' => [
         'title' => $filename,
-        'url' => $file->createFileUrl(false),
+        'url' => Url::fromRoute('onlyoffice_connector.download', ['uuid' => $media->uuid()], ['absolute' => true])->toString(),
         'fileType' => $extension,
         'key' => base64_encode($file->getChangedTime()),
         'info' => [

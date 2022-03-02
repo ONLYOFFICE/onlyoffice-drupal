@@ -28,3 +28,11 @@ onlyoffice_connector.callback:
   methods: [POST]
   requirements:
     _access: 'TRUE'
+
+onlyoffice_connector.download:
+  path: '/onlyoffice-download/{uuid}'
+  defaults:
+    _controller: '\Drupal\onlyoffice_connector\Controller\OnlyofficeDownloadController::download'
+  methods: [ GET ]
+  requirements:
+    _access: 'TRUE'
