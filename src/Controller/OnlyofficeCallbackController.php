@@ -2,11 +2,13 @@
 
 namespace Drupal\onlyoffice_connector\Controller;
 
+use Drupal\Component\Uuid\Uuid;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\user\UserStorageInterface;
 use Drupal\file\Entity\File;
 use Drupal\media\Entity\Media;
+use Drupal\Core\Entity\EntityRepositoryInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -39,12 +41,22 @@ class OnlyofficeCallbackController extends ControllerBase {
   protected $userStorage;
 
   /**
+   * The entity repository.
+   *
+   * @var \Drupal\Core\Entity\EntityRepositoryInterface
+   */
+  protected $entityRepository;
+
+  /**
    *
    * @param \Drupal\user\UserStorageInterface $user_storage
    * The user storage.
+   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
+   * The entity repository.
    */
-  public function __construct(UserStorageInterface $user_storage) {
+  public function __construct(UserStorageInterface $user_storage, EntityRepositoryInterface $entity_repository) {
     $this->userStorage = $user_storage;
+    $this->entityRepository = $entity_repository;
   }
 
   /**
@@ -52,14 +64,22 @@ class OnlyofficeCallbackController extends ControllerBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity_type.manager')->getStorage('user')
+      $container->get('entity_type.manager')->getStorage('user'),
+      $container->get('entity.repository')
     );
   }
 
   public function callback($uuid, Request $request) {
-    $errorMessage = NULL;
+    if (!$uuid || !Uuid::isValid($uuid)) {
+      throw new BadRequestHttpException();
+    }
 
-    $media = null;
+    $media = $this->entityRepository->loadEntityByUuid('media', $uuid);
+
+    if (!$media) {
+      throw new BadRequestHttpException("The targeted media resource with UUID `{$uuid}` does not exist.");
+    }
+
     $body = [];
     $content = $request->getContent();
     if (!empty($content)) {
@@ -72,6 +92,7 @@ class OnlyofficeCallbackController extends ControllerBase {
     \Drupal::currentUser()->setAccount($account);
 
     $status = OnlyofficeCallbackController::CALLBACK_STATUS[$body["status"]];
+    $errorMessage = null;
 
     switch ($status) {
       case "Editing":
@@ -87,7 +108,7 @@ class OnlyofficeCallbackController extends ControllerBase {
     }
     //https://api.drupal.org/api/drupal/core%21modules%21file%21file.module/function/file_save_data/8.8.x
 
-    if ($errorMessage == NULL) {
+    if ($errorMessage == null) {
       return new JsonResponse(['error' => 0], 200);
     } else {
       return new JsonResponse(['error' => 1, 'message' => $errorMessage], 400);
