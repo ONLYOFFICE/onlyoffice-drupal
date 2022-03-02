@@ -9,6 +9,7 @@ onlyoffice_connector.editor:
       media:
         type: entity:media
   requirements:
+    _permission: 'view media'
     media: '\d+'
 
 onlyoffice_connector.settings_form:

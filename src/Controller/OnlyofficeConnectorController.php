@@ -158,7 +158,9 @@ class OnlyofficeConnectorController extends ControllerBase
     $filename = $file->getFilename();
     $extension = $this->docHelper->getExtension($filename);
 
-    $can_edit = $this->docHelper->isEditable($extension) || $this->docHelper->isFillForms($extension) ;
+    $can_edit = $this->docHelper->isEditable($extension) || $this->docHelper->isFillForms($extension);
+    $edit_permission = $media->access("update", $user);
+
     $config = [
       'type' => 'desktop',
       'documentType' => $this->docHelper->getDocumentType($extension),
@@ -173,7 +175,7 @@ class OnlyofficeConnectorController extends ControllerBase
         ],
         'permissions' => [
           'download' => true,
-          'edit' => $can_edit
+          'edit' => $edit_permission
         ]
       ],
       'editorConfig' => [
