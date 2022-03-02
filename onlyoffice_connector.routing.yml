@@ -11,7 +11,7 @@ onlyoffice_connector.editor:
   defaults:
     _title: 'ONLYOFFICE'
     _controller: '\Drupal\onlyoffice_connector\Controller\OnlyofficeEditorController::editor'
-  methods: [POST]
+  methods: [GET]
   options:
     parameters:
       media:
@@ -20,3 +20,11 @@ onlyoffice_connector.editor:
     _permission: 'view media'
     media: '\d+'
 
+onlyoffice_connector.callback:
+  path: '/onlyoffice-callback/{uuid}'
+  defaults:
+    _title: 'ONLYOFFICE'
+    _controller: '\Drupal\onlyoffice_connector\Controller\OnlyofficeCallbackController::callback'
+  methods: [POST]
+  requirements:
+    _access: 'TRUE'
