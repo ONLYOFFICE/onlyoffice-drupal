@@ -3,7 +3,6 @@
 namespace Drupal\onlyoffice_connector\Controller;
 
 use Drupal\file\Entity\File;
-use Drupal\media\Entity\Media;
 use Drupal\Component\Uuid\Uuid;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityRepositoryInterface;
@@ -15,7 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
-
+use Firebase\JWT\JWT;
 /**
  * Returns responses for ONLYOFFICE Connector routes.
  */
