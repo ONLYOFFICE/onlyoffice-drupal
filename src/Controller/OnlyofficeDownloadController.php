@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 /**
  * Returns responses for ONLYOFFICE Connector routes.
@@ -45,6 +46,22 @@ class OnlyofficeDownloadController extends ControllerBase {
   }
 
   public function download($uuid, Request $request) {
+
+    if (\Drupal::config('onlyoffice_connector.settings')->get('doc_server_jwt')) {
+      $header = $request->headers->get('Authorization'); //ToDo: jwt header
+      $token = $header !== NULL ?  substr($header, strlen("Bearer ")) : $header;
+
+      if (empty($token)) {
+        throw new UnauthorizedHttpException("Download without jwt");
+      }
+
+      try {
+        JWT::decode($token, \Drupal::config('onlyoffice_connector.settings')->get('doc_server_jwt'), array("HS256"));
+      } catch (\Exception $e) {
+        throw new UnauthorizedHttpException("Download with invalid jwt");
+      }
+    }
+
     if (!$uuid || !Uuid::isValid($uuid)) {
       throw new BadRequestHttpException();
     }

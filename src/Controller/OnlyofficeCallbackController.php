@@ -14,6 +14,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
+use Firebase\JWT\JWT;
 
 /**
  * Returns responses for ONLYOFFICE Connector routes.
@@ -70,6 +72,36 @@ class OnlyofficeCallbackController extends ControllerBase {
   }
 
   public function callback($uuid, Request $request) {
+
+    $body = json_decode($request->getContent());
+
+    if (!$body) {
+        throw new BadRequestHttpException("The request body is missing.");
+    }
+
+    if (\Drupal::config('onlyoffice_connector.settings')->get('doc_server_jwt')) {
+      $token = $body->token;
+      $inBody = true;
+
+      if (empty($token)) {
+        $header = $request->headers->get('Authorization'); //ToDo: jwt header
+        $token = $header !== NULL ?  substr($header, strlen("Bearer ")) : $header;
+        $inBody = false;
+      }
+
+      if (empty($token)) {
+        throw new UnauthorizedHttpException("Try save without JWT");
+      }
+
+      try {
+        $bodyFromToken = JWT::decode($token, \Drupal::config('onlyoffice_connector.settings')->get('doc_server_jwt'), array("HS256"));
+
+        $body = $inBody ? $bodyFromToken : $bodyFromToken->payload;
+      } catch (\Exception $e) {
+        throw new UnauthorizedHttpException("Try save with wrong JWT");
+      }
+    }
+
     if (!$uuid || !Uuid::isValid($uuid)) {
       throw new BadRequestHttpException();
     }
@@ -80,18 +112,12 @@ class OnlyofficeCallbackController extends ControllerBase {
       throw new BadRequestHttpException("The targeted media resource with UUID `{$uuid}` does not exist.");
     }
 
-    $body = [];
-    $content = $request->getContent();
-    if (!empty($content)) {
-      $body = json_decode($content, true);
-    }
+    $userId = isset($body->actions) ? $body->actions[0]->userid : null;
 
-    // ToDo: check if null etc+
-
-    $account = $this->userStorage->load($body["actions"][0]["userid"]);
+    $account = $this->userStorage->load($userId);
     \Drupal::currentUser()->setAccount($account);
 
-    $status = OnlyofficeCallbackController::CALLBACK_STATUS[$body["status"]];
+    $status = OnlyofficeCallbackController::CALLBACK_STATUS[$body->status];
     $errorMessage = null;
 
     switch ($status) {
@@ -119,7 +145,7 @@ class OnlyofficeCallbackController extends ControllerBase {
     $fid = $media->toArray()["field_media_document"][0]["target_id"];
     $file = File::load($fid);
 
-    $download_url = $body["url"];
+    $download_url = $body->url;
     if ($download_url === null) {
       return 'nothing to save';
     }
