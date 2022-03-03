@@ -1,7 +1,8 @@
-name: ONLYOFFICE Connector
+name: 'ONLYOFFICE Connector'
 type: module
-description: Provides additional functionality for the site.
-package: Custom
+description: '?????'
 core_version_requirement: ^9 || ^10
-
+package: Media
 configure: onlyoffice_connector.settings_form
+dependencies:
+  - drupal:media

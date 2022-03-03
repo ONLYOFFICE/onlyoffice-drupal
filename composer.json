@@ -1,0 +1,23 @@
+{
+    "name": "drupal/onlyoffice_connector",
+    "type": "drupal-module",
+    "description": "?????",
+    "keywords": ["drupal"],
+    "license": "Apache-2.0",
+    "homepage": "https://www.drupal.org/project/onlyoffice_connector",
+    "authors": [
+        {
+            "name": "Ascensio System SIA",
+            "email": "integration@onlyoffice.com",
+            "homepage": "https://www.onlyoffice.com/"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/ONLYOFFICE/onlyoffice-drupal/issues",
+        "source": "https://github.com/ONLYOFFICE/onlyoffice-drupal"
+    },
+    "require": {
+        "drupal/core": "^9 || ^10",
+        "firebase/php-jwt": "^6.0"
+    }
+}
