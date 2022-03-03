@@ -2,7 +2,7 @@
 
 namespace Drupal\onlyoffice_connector;
 
-use \Drupal\onlyoffice_connector\OnlyofficeAppConfig;
+use Drupal\onlyoffice_connector\OnlyofficeAppConfig;
 
 class OnlyofficeDocumentHelper {
 

@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Firebase\JWT\JWT;
+use Drupal\onlyoffice_connector\OnlyofficeAppConfig;
 
 /**
  * Returns responses for ONLYOFFICE Connector routes.
@@ -84,7 +85,8 @@ class OnlyofficeCallbackController extends ControllerBase {
       $inBody = true;
 
       if (empty($token)) {
-        $header = $request->headers->get('Authorization'); //ToDo: jwt header
+        $jwtHeader = OnlyofficeAppConfig::getJwtHeader();
+        $header = $request->headers->get($jwtHeader);
         $token = $header !== NULL ?  substr($header, strlen("Bearer ")) : $header;
         $inBody = false;
       }

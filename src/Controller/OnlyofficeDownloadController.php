@@ -7,6 +7,7 @@ use Drupal\media\Entity\Media;
 use Drupal\Component\Uuid\Uuid;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityRepositoryInterface;
+use Drupal\onlyoffice_connector\OnlyofficeAppConfig;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -48,7 +49,8 @@ class OnlyofficeDownloadController extends ControllerBase {
   public function download($uuid, Request $request) {
 
     if (\Drupal::config('onlyoffice_connector.settings')->get('doc_server_jwt')) {
-      $header = $request->headers->get('Authorization'); //ToDo: jwt header
+      $jwtHeader = OnlyofficeAppConfig::getJwtHeader();
+      $header = $request->headers->get($jwtHeader);
       $token = $header !== NULL ?  substr($header, strlen("Bearer ")) : $header;
 
       if (empty($token)) {

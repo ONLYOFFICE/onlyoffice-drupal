@@ -2,6 +2,8 @@
 
 namespace Drupal\onlyoffice_connector;
 
+use Drupal\Core\Site\Settings;
+
 class OnlyofficeAppConfig {
 
   /**
@@ -60,5 +62,9 @@ class OnlyofficeAppConfig {
 
   public static function getSupportedFormats() {
     return self::SUPPORTED_FORMATS;
+  }
+
+  public static function getJwtHeader() {
+    return Settings::get('onlyoffice_jwt_header') ? Settings::get('onlyoffice_jwt_header') : "Authorization";
   }
 }
