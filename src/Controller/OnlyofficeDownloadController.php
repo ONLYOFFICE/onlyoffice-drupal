@@ -7,6 +7,7 @@ use Drupal\Component\Uuid\Uuid;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\onlyoffice_connector\OnlyofficeAppConfig;
+use Drupal\onlyoffice_connector\OnlyofficeDocumentHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -73,8 +74,7 @@ class OnlyofficeDownloadController extends ControllerBase {
       throw new BadRequestHttpException("The targeted media resource with UUID `{$uuid}` does not exist.");
     }
 
-    $fid = $media->toArray()["field_media_document"][0]["target_id"];
-    $file = File::load($fid);
+    $file = $media->get(OnlyofficeDocumentHelper::getSourceFieldName($media))->entity;
 
     return new BinaryFileResponse($file->getFileUri(), 200);
   }

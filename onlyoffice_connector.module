@@ -41,8 +41,7 @@ function onlyoffice_connector_entity_operation(EntityInterface $entity) {
     return null;
   }
 
-  $fid = $entity->toArray()["field_media_document"][0]["target_id"];
-  $file = File::load($fid);
+  $file = $entity->get(OnlyofficeDocumentHelper::getSourceFieldName($entity))->entity;
   $extension = OnlyofficeDocumentHelper::getExtension($file->getFilename());
 
   if (OnlyofficeDocumentHelper::getDocumentType($extension) == null) {

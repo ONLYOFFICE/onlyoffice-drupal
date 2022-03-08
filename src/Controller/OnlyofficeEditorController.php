@@ -72,8 +72,7 @@ class OnlyofficeEditorController extends ControllerBase {
   }
 
   private function getDocumentConfig(Media $media) {
-    $fid = $media->toArray()["field_media_document"][0]["target_id"];
-    $file = File::load($fid);
+    $file = $media->get(OnlyofficeDocumentHelper::getSourceFieldName($media))->entity;
 
     $options = \Drupal::config('onlyoffice_connector.settings');
 
