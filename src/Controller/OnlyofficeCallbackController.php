@@ -9,6 +9,7 @@ use Drupal\user\UserStorageInterface;
 use Drupal\file\Entity\File;
 use Drupal\media\Entity\Media;
 use Drupal\Core\Entity\EntityRepositoryInterface;
+use Drupal\Component\Datetime\TimeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,6 +18,7 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Firebase\JWT\JWT;
 use Drupal\onlyoffice_connector\OnlyofficeAppConfig;
+use Drupal\onlyoffice_connector\OnlyofficeDocumentHelper;
 
 /**
  * Returns responses for ONLYOFFICE Connector routes.
@@ -51,15 +53,36 @@ class OnlyofficeCallbackController extends ControllerBase {
   protected $entityRepository;
 
   /**
+   * The file system service.
+   *
+   * @var \Drupal\Core\File\FileSystemInterface
+   */
+  protected $fileSystem;
+
+  /**
+   * The time service.
+   *
+   * @var \Drupal\Component\Datetime\TimeInterface
+   */
+  protected $time;
+
+  /**
    *
    * @param \Drupal\user\UserStorageInterface $user_storage
    * The user storage.
    * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
    * The entity repository.
+   * @param \Drupal\Core\File\FileSystemInterface $file_system
+   * The file system service.
+   * @param \Drupal\Component\Datetime\TimeInterface $time
+   * The time service.
    */
-  public function __construct(UserStorageInterface $user_storage, EntityRepositoryInterface $entity_repository) {
+  public function __construct(UserStorageInterface $user_storage, EntityRepositoryInterface $entity_repository,
+                              FileSystemInterface $file_system, TimeInterface $time) {
     $this->userStorage = $user_storage;
     $this->entityRepository = $entity_repository;
+    $this->fileSystem = $file_system;
+    $this->time = $time;
   }
 
   /**
@@ -68,7 +91,9 @@ class OnlyofficeCallbackController extends ControllerBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('entity_type.manager')->getStorage('user'),
-      $container->get('entity.repository')
+      $container->get('entity.repository'),
+      $container->get('file_system'),
+      $container->get('datetime.time')
     );
   }
 
@@ -144,23 +169,28 @@ class OnlyofficeCallbackController extends ControllerBase {
   }
 
   private function proccess_save($body, Media $media) {
-    $fid = $media->toArray()["field_media_document"][0]["target_id"];
-    $file = File::load($fid);
-
     $download_url = $body->url;
     if ($download_url === null) {
-      return 'nothing to save';
+      return 'Url not found';
     }
 
+    $file = $media->get(OnlyofficeDocumentHelper::getSourceFieldName($media))->entity;
+
+    $directory = $this->fileSystem->dirname($file->getFileUri());
+    $separator =  substr($directory, -1) == '/' ? '' : '/';
+    $newDestination = $directory . $separator . $media->getName();
     $new_data = file_get_contents($download_url);
-    if ($new_data === null) return 'nothing to save';
 
-    $filepath = $file->getFileUri();
-    $result = \Drupal::service('file_system')->saveData($new_data, $filepath, FileSystemInterface::EXISTS_REPLACE);
+    $newFile = \Drupal::service('file.repository')->writeData($new_data, $newDestination, FileSystemInterface::EXISTS_RENAME);
+    $newFile->setSize(strlen($new_data));
+    $newFile->save();
 
-    if ($result === 0) return 'saving failed';
-    $file->setSize(strlen($new_data));
-    $file->save();
+    $media->set(OnlyofficeDocumentHelper::getSourceFieldName($media), $newFile);
+    $media->setNewRevision();
+    $media->setRevisionUser(\Drupal::currentUser()->getAccount());
+    $media->setRevisionCreationTime($this->time->getRequestTime());
+    $media->setRevisionLogMessage('');
+    $media->save();
 
     return NULL;
   }

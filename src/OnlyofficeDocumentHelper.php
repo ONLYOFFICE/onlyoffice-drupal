@@ -28,4 +28,11 @@ class OnlyofficeDocumentHelper {
 
       return isset($format["fillForms"]) && $format["fillForms"];
     }
+
+    public static function getSourceFieldName($media) {
+      return $media->getSource()
+        ->getSourceFieldDefinition($media->bundle->entity)
+        ->getName();
+    }
+
 }
