@@ -6,7 +6,6 @@ use Drupal\Component\Uuid\Uuid;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\user\UserStorageInterface;
-use Drupal\file\Entity\File;
 use Drupal\media\Entity\Media;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Component\Datetime\TimeInterface;
@@ -112,7 +111,7 @@ class OnlyofficeCallbackController extends ControllerBase {
       if (empty($token)) {
         $jwtHeader = OnlyofficeAppConfig::getJwtHeader();
         $header = $request->headers->get($jwtHeader);
-        $token = $header !== NULL ?  substr($header, strlen("Bearer ")) : $header;
+        $token = $header !== NULL ? substr($header, strlen("Bearer ")) : $header;
         $inBody = false;
       }
 
@@ -145,7 +144,6 @@ class OnlyofficeCallbackController extends ControllerBase {
     \Drupal::currentUser()->setAccount($account);
 
     $status = OnlyofficeCallbackController::CALLBACK_STATUS[$body->status];
-    $errorMessage = null;
 
     switch ($status) {
       case "Editing":
@@ -153,25 +151,23 @@ class OnlyofficeCallbackController extends ControllerBase {
         break;
       case "MustSave":
       case "Corrupted":
-        $errorMessage = $this->proccess_save($body, $media);
-        break;
+        return $this->proccess_save($body, $media);
       case "MustForceSave":
       case "CorruptedForceSave":
         break;
     }
-    //https://api.drupal.org/api/drupal/core%21modules%21file%21file.module/function/file_save_data/8.8.x
-
-    if ($errorMessage == null) {
-      return new JsonResponse(['error' => 0], 200);
-    } else {
-      return new JsonResponse(['error' => 1, 'message' => $errorMessage], 400);
-    }
   }
 
   private function proccess_save($body, Media $media) {
+    $edit_permission = $media->access("update", \Drupal::currentUser()->getAccount());
+
+    if (!$edit_permission) {
+      return new JsonResponse(['error' => 1, 'message' => 'User does not have edit access to this media.'], 403);
+    }
+
     $download_url = $body->url;
     if ($download_url === null) {
-      return 'Url not found';
+      return new JsonResponse(['error' => 1, 'message' => 'Url not found'], 400);
     }
 
     $file = $media->get(OnlyofficeDocumentHelper::getSourceFieldName($media))->entity;
@@ -192,6 +188,6 @@ class OnlyofficeCallbackController extends ControllerBase {
     $media->setRevisionLogMessage('');
     $media->save();
 
-    return NULL;
+    return new JsonResponse(['error' => 0], 200);
   }
 }
