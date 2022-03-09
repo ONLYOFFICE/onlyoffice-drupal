@@ -42,11 +42,22 @@
         var docEditor;
 
         var connectEditor = function() {
+            if (typeof DocsAPI === "undefined") {
+              alert("{{ 'ONLYOFFICE cannot be reached. Please contact admin.'|t }}");
+              return;
+            }
+
+            var docsVersion = DocsAPI.DocEditor.version().split(".");
+
+            if (docsVersion[0] < 6 || docsVersion[0] == 6 && docsVersion[1] == 0) {
+              alert("{{ 'Not supported version DocumentServer.'|t }}");
+              return;
+            }
+
             var config = {{ config|raw }};
 
-            if ((config.document.fileType === "docxf" || config.document.fileType === "oform") &&
-                DocsAPI.DocEditor.version().split(".")[0] < 7) {
-                innerAlert("{{ forms_unavailable_notice }}");
+            if ((config.document.fileType === "docxf" || config.document.fileType === "oform") && docsVersion[0] < 7) {
+                alert("{{ 'Please update ONLYOFFICE Docs to version 7.0 to work on fillable forms online.'|t }}");
                 return;
             }
 
