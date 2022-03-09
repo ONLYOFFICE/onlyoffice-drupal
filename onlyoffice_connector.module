@@ -6,7 +6,6 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\file\Entity\File;
 use Drupal\onlyoffice_connector\OnlyofficeDocumentHelper;
 use Drupal\Core\Url;
 
@@ -48,14 +47,14 @@ function onlyoffice_connector_entity_operation(EntityInterface $entity) {
     return null;
   }
 
-  $title = "View in ONLYOFFICE";
+  $title = t("View in ONLYOFFICE");
 
   if (OnlyofficeDocumentHelper::isEditable($extension) && $entity->access("update", $account)) {
-    $title =  "Edit in ONLYOFFICE";
+    $title =  t("Edit in ONLYOFFICE");
   }
 
   if (OnlyofficeDocumentHelper::isFillForms($extension) && $entity->access("update", $account)) {
-    $title =  "Fill in form in ONLYOFFICE";
+    $title =  t("Fill in form in ONLYOFFICE");
   }
 
   $route_name = "onlyoffice_connector.editor";
