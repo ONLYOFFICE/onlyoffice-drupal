@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="mobile-web-app-capable" content="yes" />
-    <link rel="icon" href="/wp-content/plugins/onlyoffice-wordpress/public/images/{{ doc_type }}.ico" type="image/x-icon" />
+    <link rel="icon" href="/modules/onlyoffice-drupal/images/{{ doc_type }}.ico" type="image/vnd.microsoft.icon" />
 
     <style>
         html {
@@ -30,14 +30,6 @@
             text-decoration: none;
         }
 
-        form {
-            height: 100%;
-        }
-
-        div {
-            margin: 0;
-            padding: 0;
-        }
     </style>
 
     <script type="text/javascript" src="{{ doc_server_url }}web-apps/apps/api/documents/api.js"></script>
@@ -51,9 +43,6 @@
 
         var connectEditor = function() {
             var config = {{ config|raw }};
-
-            config.width = "100%";
-            config.height = "100%";
 
             if ((config.document.fileType === "docxf" || config.document.fileType === "oform") &&
                 DocsAPI.DocEditor.version().split(".")[0] < 7) {

@@ -5,7 +5,6 @@ namespace Drupal\onlyoffice_connector\Controller;
 use Drupal\Core\Url;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Render\RendererInterface;
-use Drupal\file\Entity\File;
 use Drupal\media\Entity\Media;
 use Drupal\onlyoffice_connector\OnlyofficeDocumentHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -86,6 +85,8 @@ class OnlyofficeEditorController extends ControllerBase {
 
     $config = [
       'type' => 'desktop',
+      'width' => "100%",
+      'height' => "100%",
       'documentType' => $this->documentHelper->getDocumentType($extension),
       'document' => [
         'title' => $filename,
@@ -122,7 +123,7 @@ class OnlyofficeEditorController extends ControllerBase {
     return [
       '#config' => json_encode($config),
       '#filename' => $filename,
-      '#doc_type' => $extension,
+      '#doc_type' => $this->documentHelper->getDocumentType($extension),
       '#doc_server_url' => $options->get('doc_server_url'),
       '#forms_unavailable_notice' => $this->t('forms_unavailable_notice')
     ];
