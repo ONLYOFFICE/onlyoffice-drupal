@@ -20,7 +20,7 @@ function onlyoffice_connector_theme($existing, $type, $theme, $path) {
           'doc_type' => 'docx',
           'doc_server_url' => 'http://127.0.0.1/',
           'config' => '{}',
-          'forms_unavailable_notice' => ''
+          'error' => null
         ],
     ],
   ];

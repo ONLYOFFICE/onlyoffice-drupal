@@ -11,20 +11,20 @@ class OnlyofficeDocumentHelper {
     }
 
     public static function getDocumentType($ext) {
-        $format = OnlyofficeAppConfig::getSupportedFormats()[$ext];
+        $format = OnlyofficeAppConfig::getSupportedFormats()[$ext] ?? null;
         if ($format) return $format["type"];
 
         return null;
     }
 
     public static function isEditable($ext) {
-      $format = OnlyofficeAppConfig::getSupportedFormats()[$ext];
+      $format = OnlyofficeAppConfig::getSupportedFormats()[$ext] ?? null;
 
       return isset($format["edit"]) && $format["edit"];
     }
 
     public static function isFillForms($ext) {
-      $format = OnlyofficeAppConfig::getSupportedFormats()[$ext];
+      $format = OnlyofficeAppConfig::getSupportedFormats()[$ext] ?? null;
 
       return isset($format["fillForms"]) && $format["fillForms"];
     }

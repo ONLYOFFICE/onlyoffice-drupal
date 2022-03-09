@@ -7,6 +7,7 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\media\Entity\Media;
 use Drupal\onlyoffice_connector\OnlyofficeDocumentHelper;
+use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -57,6 +58,10 @@ class OnlyofficeEditorController extends ControllerBase {
   }
 
   public function editor(Media $media, Request $request) {
+    if ($media->getEntityTypeId() != "media" || $media->bundle() != "document") {
+      throw new UnsupportedMediaTypeHttpException();
+    }
+
     $build = [
       'page' => $this->getDocumentConfig($media)
     ];
@@ -72,13 +77,18 @@ class OnlyofficeEditorController extends ControllerBase {
 
   private function getDocumentConfig(Media $media) {
     $file = $media->get(OnlyofficeDocumentHelper::getSourceFieldName($media))->entity;
+    $filename = $file->getFilename();
+    $extension = $this->documentHelper->getExtension($filename);
+    $documentType = $this->documentHelper->getDocumentType($extension);
+
+    if (!$documentType) {
+      return ['#error' => $this->t("Sorry, this file format isn't supported (@extension)", ['@extension' => $extension])];
+    }
 
     $options = \Drupal::config('onlyoffice_connector.settings');
 
     $author = $file->getOwner();
     $user = \Drupal::currentUser()->getAccount();
-    $filename = $file->getFilename();
-    $extension = $this->documentHelper->getExtension($filename);
 
     $can_edit = $this->documentHelper->isEditable($extension) || $this->documentHelper->isFillForms($extension);
     $edit_permission = $media->access("update", $user);
@@ -87,7 +97,7 @@ class OnlyofficeEditorController extends ControllerBase {
       'type' => 'desktop',
       'width' => "100%",
       'height' => "100%",
-      'documentType' => $this->documentHelper->getDocumentType($extension),
+      'documentType' => $documentType,
       'document' => [
         'title' => $filename,
         'url' => Url::fromRoute('onlyoffice_connector.download', ['uuid' => $media->uuid()], ['absolute' => true])->toString(),
@@ -118,14 +128,11 @@ class OnlyofficeEditorController extends ControllerBase {
       $config["token"] = $token;
     }
 
-    // ToDo: JWT
-
     return [
       '#config' => json_encode($config),
       '#filename' => $filename,
-      '#doc_type' => $this->documentHelper->getDocumentType($extension),
+      '#doc_type' => $documentType,
       '#doc_server_url' => $options->get('doc_server_url'),
-      '#forms_unavailable_notice' => $this->t('forms_unavailable_notice')
     ];
   }
 }

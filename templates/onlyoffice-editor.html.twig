@@ -55,10 +55,19 @@
             }
 
             var config = {{ config|raw }};
+            var error =  "{{ error }}";
 
-            if ((config.document.fileType === "docxf" || config.document.fileType === "oform") && docsVersion[0] < 7) {
+            if (error) {
+              config.events = {
+                onAppReady: function() {
+                  docEditor.showMessage(error);
+                }
+              }
+            } else {
+              if ((config.document.fileType === "docxf" || config.document.fileType === "oform") && docsVersion[0] < 7) {
                 alert("{{ 'Please update ONLYOFFICE Docs to version 7.0 to work on fillable forms online.'|t }}");
                 return;
+              }
             }
 
             docEditor = new DocsAPI.DocEditor("iframeEditor", config);
