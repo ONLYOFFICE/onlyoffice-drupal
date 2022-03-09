@@ -85,11 +85,7 @@ class OnlyofficeEditorController extends ControllerBase {
       return ['#error' => $this->t("Sorry, this file format isn't supported (@extension)", ['@extension' => $extension])];
     }
 
-    $options = \Drupal::config('onlyoffice_connector.settings');
-
-    $author = $file->getOwner();
     $user = \Drupal::currentUser()->getAccount();
-
     $can_edit = $this->documentHelper->isEditable($extension) || $this->documentHelper->isFillForms($extension);
     $edit_permission = $media->access("update", $user);
 
@@ -104,8 +100,8 @@ class OnlyofficeEditorController extends ControllerBase {
         'fileType' => $extension,
         'key' => base64_encode($file->getChangedTime()),
         'info' => [
-          'owner' => $author->getDisplayName(),
-          'uploaded' => $file->getCreatedTime()
+          'owner' => $media->getOwner()->getDisplayName(),
+          'uploaded' => $media->getCreatedTime()
         ],
         'permissions' => [
           'download' => true,
@@ -115,13 +111,18 @@ class OnlyofficeEditorController extends ControllerBase {
       'editorConfig' => [
         'mode' => $can_edit ? 'edit' : 'view',
         'lang' => 'en', // ToDo: change to user language
-        'callbackUrl' => Url::fromRoute('onlyoffice_connector.callback', ['uuid' => $media->uuid()], ['absolute' => true])->toString(),
         'user' => [
           'id' => $user->id(),
           'name' => $user->getDisplayName()
         ]
       ]
     ];
+
+    if ($edit_permission) {
+      $config['editorConfig']['callbackUrl'] = Url::fromRoute('onlyoffice_connector.callback', ['uuid' => $media->uuid()], ['absolute' => true])->toString();
+    }
+
+    $options = \Drupal::config('onlyoffice_connector.settings');
 
     if ($options->get('doc_server_jwt')) {
       $token = JWT::encode($config, $options->get('doc_server_jwt'));
