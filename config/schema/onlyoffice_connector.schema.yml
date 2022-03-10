@@ -5,7 +5,7 @@ onlyoffice_connector.settings:
   mapping:
     doc_server_url:
       type: string
-      label: 'Document Server Address'
+      label: 'Document Editing Service address'
     doc_server_jwt:
       type: string
-      label: 'Document Server JWT'
+      label: 'Secret key (leave blank to disable)'

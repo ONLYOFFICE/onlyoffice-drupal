@@ -47,13 +47,13 @@ class SettingsForm extends ConfigFormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form['doc_server_url'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('Document Server Address'),
+      '#title' => $this->t('Document Editing Service address'),
       '#default_value' => $this->config('onlyoffice_connector.settings')->get('doc_server_url'),
       '#required' => TRUE,
     ];
     $form['doc_server_jwt'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('Document Server JWT'),
+      '#title' => $this->t('Secret key (leave blank to disable)'),
       '#default_value' => $this->config('onlyoffice_connector.settings')->get('doc_server_jwt'),
     ];
     return parent::buildForm($form, $form_state);

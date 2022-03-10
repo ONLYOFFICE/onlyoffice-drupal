@@ -6,3 +6,6 @@ package: Media
 configure: onlyoffice_connector.settings_form
 dependencies:
   - drupal:media
+project: onlyoffice_connector
+'interface translation project': onlyoffice_connector
+'interface translation server pattern': modules/custom/onlyoffice-drupal/translations/onlyoffice_connector.%language.po
