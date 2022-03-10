@@ -156,6 +156,8 @@ class OnlyofficeCallbackController extends ControllerBase {
       case "CorruptedForceSave":
         break;
     }
+
+    return new JsonResponse(['error' => 0], 200);
   }
 
   private function proccess_save($body, Media $media) {
