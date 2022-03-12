@@ -12,8 +12,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Firebase\JWT\JWT;
 
 /**
  * Returns responses for ONLYOFFICE Connector routes.
@@ -77,9 +75,8 @@ class OnlyofficeEditorController extends ControllerBase {
 
   private function getDocumentConfig(Media $media) {
     $file = $media->get(OnlyofficeDocumentHelper::getSourceFieldName($media))->entity;
-    $filename = $file->getFilename();
-    $extension = $this->documentHelper->getExtension($filename);
-    $documentType = $this->documentHelper->getDocumentType($extension);
+    $extension = OnlyofficeDocumentHelper::getExtension($file->getFilename());
+    $documentType = OnlyofficeDocumentHelper::getDocumentType($extension);
 
     if (!$documentType) {
       return ['#error' => $this->t("Sorry, this file format isn't supported (@extension)", ['@extension' => $extension])];
@@ -88,50 +85,26 @@ class OnlyofficeEditorController extends ControllerBase {
     $user = \Drupal::currentUser()->getAccount();
     $can_edit = $this->documentHelper->isEditable($extension) || $this->documentHelper->isFillForms($extension);
     $edit_permission = $media->access("update", $user);
+    $callbackUrl = Url::fromRoute('onlyoffice_connector.callback', ['uuid' => $media->uuid()], ['absolute' => true])->toString();
 
-    $config = [
-      'type' => 'desktop',
-      'width' => "100%",
-      'height' => "100%",
-      'documentType' => $documentType,
-      'document' => [
-        'title' => $filename,
-        'url' => Url::fromRoute('onlyoffice_connector.download', ['uuid' => $media->uuid()], ['absolute' => true])->toString(),
-        'fileType' => $extension,
-        'key' => base64_encode($file->getChangedTime()),
-        'info' => [
-          'owner' => $media->getOwner()->getDisplayName(),
-          'uploaded' => $media->getCreatedTime()
-        ],
-        'permissions' => [
-          'download' => true,
-          'edit' => $edit_permission
-        ]
-      ],
-      'editorConfig' => [
-        'mode' => $can_edit ? 'edit' : 'view',
-        'lang' => 'en', // ToDo: change to user language
-        'user' => [
-          'id' => $user->id(),
-          'name' => $user->getDisplayName()
-        ]
-      ]
-    ];
-
-    if ($edit_permission) {
-      $config['editorConfig']['callbackUrl'] = Url::fromRoute('onlyoffice_connector.callback', ['uuid' => $media->uuid()], ['absolute' => true])->toString();
-    }
+    $editorConfig = $this->documentHelper->createEditorConfig(
+      base64_encode($file->getChangedTime()), // ToDo: doc key
+      $file->getFilename(),
+      Url::fromRoute('onlyoffice_connector.download', ['uuid' => $media->uuid()], ['absolute' => true])->toString(),
+      document_info_owner: $media->getOwner()->getDisplayName(),
+      document_info_uploaded:$media->getCreatedTime(),
+      document_permissions_edit: $edit_permission,
+      editorConfig_callbackUrl: $edit_permission ? $callbackUrl : null,
+      editorConfig_mode: $edit_permission && $can_edit ? 'edit' : 'view',
+      editorConfig_user_id: $user->id(),
+      editorConfig_user_name: $user->getDisplayName()
+    );
 
     $options = \Drupal::config('onlyoffice_connector.settings');
 
-    if ($options->get('doc_server_jwt')) {
-      $token = JWT::encode($config, $options->get('doc_server_jwt'));
-      $config["token"] = $token;
-    }
-
     return [
-      '#config' => json_encode($config),
-      '#filename' => $filename,
+      '#config' => json_encode($editorConfig),
+      '#filename' => $file->getFilename(),
       '#doc_type' => $documentType,
       '#doc_server_url' => $options->get('doc_server_url'),
     ];
