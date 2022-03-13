@@ -96,6 +96,7 @@ class OnlyofficeEditorController extends ControllerBase {
       document_permissions_edit: $edit_permission,
       editorConfig_callbackUrl: $edit_permission ? $callbackUrl : null,
       editorConfig_mode: $edit_permission && $can_edit ? 'edit' : 'view',
+      editorConfig_lang: \Drupal::languageManager()->getCurrentLanguage()->getId(),
       editorConfig_user_id: $user->id(),
       editorConfig_user_name: $user->getDisplayName()
     );
