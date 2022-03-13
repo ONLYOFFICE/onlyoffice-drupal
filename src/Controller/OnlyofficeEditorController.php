@@ -88,7 +88,7 @@ class OnlyofficeEditorController extends ControllerBase {
     $callbackUrl = Url::fromRoute('onlyoffice_connector.callback', ['uuid' => $media->uuid()], ['absolute' => true])->toString();
 
     $editorConfig = $this->documentHelper->createEditorConfig(
-      base64_encode($file->getChangedTime()), // ToDo: doc key
+      $this->documentHelper->getEditingKey($file),
       $file->getFilename(),
       Url::fromRoute('onlyoffice_connector.download', ['uuid' => $media->uuid()], ['absolute' => true])->toString(),
       document_info_owner: $media->getOwner()->getDisplayName(),

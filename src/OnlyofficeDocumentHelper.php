@@ -7,6 +7,10 @@ use Firebase\JWT\JWT;
 
 class OnlyofficeDocumentHelper {
 
+    public static function getEditingKey ($file) {
+      return $file->uuid() . "_" .  base64_encode($file->getChangedTime());
+    }
+
     public static function getExtension($filename): string {
         return strtolower(pathinfo($filename, PATHINFO_EXTENSION));
     }
