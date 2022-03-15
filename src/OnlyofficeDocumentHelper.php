@@ -41,6 +41,7 @@ class OnlyofficeDocumentHelper {
     }
 
     public static function createEditorConfig(
+      $editor_type,
       $document_key,
       $document_title,
       $document_url,
@@ -55,13 +56,13 @@ class OnlyofficeDocumentHelper {
       $editorConfig_user_name = null
     ) {
 
-      $document_fileType = OnlyofficeDocumentHelper::getExtension($document_title);
+      $document_fileType = static::getExtension($document_title);
 
       $config = [
-        'type' => 'desktop',
+        'type' => $editor_type,
         'width' => "100%",
         'height' => "100%",
-        'documentType' => OnlyofficeDocumentHelper::getDocumentType($document_fileType),
+        'documentType' => static::getDocumentType($document_fileType),
         'document' => [
           'title' => $document_title,
           'url' => $document_url,
