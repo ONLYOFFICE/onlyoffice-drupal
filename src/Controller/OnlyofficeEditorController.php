@@ -7,6 +7,7 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\media\Entity\Media;
 use Drupal\onlyoffice_connector\OnlyofficeDocumentHelper;
+use Drupal\onlyoffice_connector\OnlyofficeAppConfig;
 use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -108,7 +109,7 @@ class OnlyofficeEditorController extends ControllerBase {
       '#config' => json_encode($editorConfig),
       '#filename' => $file->getFilename(),
       '#doc_type' => $documentType,
-      '#doc_server_url' => $options->get('doc_server_url'),
+      '#doc_server_url' => $options->get('doc_server_url') . OnlyofficeAppConfig::getDocServiceApiUrl(),
     ];
   }
 }
