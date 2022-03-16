@@ -27,13 +27,13 @@ function onlyoffice_connector_uninstall() {
 function onlyoffice_connector_requirements($phase) {
   $requirements = [];
 
-  if ($phase == 'runtime') {
-    $value = mt_rand(0, 100);
-    $requirements['onlyoffice_connector_status'] = [
-      'title' => t('ONLYOFFICE Connector status'),
-      'value' => t('ONLYOFFICE Connector value: @value', ['@value' => $value]),
-      'severity' => $value > 50 ? REQUIREMENT_INFO : REQUIREMENT_WARNING,
-    ];
+  if ($phase == 'install') {
+    if (!class_exists('\Firebase\JWT\JWT')) {
+      $requirements['jwt_library'] = [
+        'description' => t('ONLYOFFICE Connector requires the firebase/php-jwt library.'),
+        'severity' => REQUIREMENT_ERROR,
+      ];
+    }
   }
 
   return $requirements;
