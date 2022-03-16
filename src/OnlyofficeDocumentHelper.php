@@ -7,8 +7,14 @@ use Firebase\JWT\JWT;
 
 class OnlyofficeDocumentHelper {
 
-    public static function getEditingKey ($file) {
-      return $file->uuid() . "_" .  base64_encode($file->getChangedTime());
+    public static function getEditingKey ($file, $preview = false) {
+      $key = $file->uuid() . "_" .  base64_encode($file->getChangedTime());
+
+      if ($preview) {
+        $key = $key . "_preview";
+      }
+
+      return $key;
     }
 
     public static function getExtension($filename): string {
@@ -53,15 +59,17 @@ class OnlyofficeDocumentHelper {
       $editorConfig_mode = 'view',
       $editorConfig_lang = 'en',
       $editorConfig_user_id = null,
-      $editorConfig_user_name = null
+      $editorConfig_user_name = null,
+      $editor_width = "100%",
+      $editor_height = "100%",
     ) {
 
       $document_fileType = static::getExtension($document_title);
 
       $config = [
         'type' => $editor_type,
-        'width' => "100%",
-        'height' => "100%",
+        'width' => $editor_width,
+        'height' => $editor_height,
         'documentType' => static::getDocumentType($document_fileType),
         'document' => [
           'title' => $document_title,
