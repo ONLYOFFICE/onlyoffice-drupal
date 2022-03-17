@@ -57,7 +57,7 @@ class OnlyofficeEditorController extends ControllerBase {
   }
 
   public function editor(Media $media, Request $request) {
-    if ($media->getEntityTypeId() != "media" || $media->bundle() != "document") {
+    if ($media->getSource()->getPluginId() != "file") {
       throw new UnsupportedMediaTypeHttpException();
     }
 
