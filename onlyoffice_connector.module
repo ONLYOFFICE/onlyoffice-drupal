@@ -9,6 +9,24 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\onlyoffice_connector\OnlyofficeDocumentHelper;
 use Drupal\onlyoffice_connector\OnlyofficeAppConfig;
 use Drupal\Core\Url;
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function onlyoffice_connector_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.onlyoffice_connector':
+      $output = '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('????????????????') . '</p>';
+
+
+      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<p>' . t('????????????????') . '</p>';
+
+      return $output;
+  }
+}
 
 /**
  * Implements hook_theme().
