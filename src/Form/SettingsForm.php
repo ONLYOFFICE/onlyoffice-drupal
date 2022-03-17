@@ -32,6 +32,7 @@ class SettingsForm extends ConfigFormBase {
       '#type' => 'textfield',
       '#title' => $this->t('Document Server Address'),
       '#default_value' => $this->config('onlyoffice_connector.settings')->get('doc_server_url'),
+      '#required' => TRUE,
     ];
     $form['doc_server_jwt'] = [
       '#type' => 'textfield',
@@ -45,9 +46,7 @@ class SettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    if ($form_state->getValue('doc_server_url') == '') {
-      $form_state->setErrorByName('doc_server_url', $this->t('The value is not correct.'));
-    }
+    //Todo: Validations settings
     parent::validateForm($form, $form_state);
   }
 
