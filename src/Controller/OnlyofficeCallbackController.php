@@ -176,7 +176,7 @@ class OnlyofficeCallbackController extends ControllerBase {
 
     $directory = $this->fileSystem->dirname($file->getFileUri());
     $separator =  substr($directory, -1) == '/' ? '' : '/';
-    $newDestination = $directory . $separator . $media->getName();
+    $newDestination = $directory . $separator . $file->getFilename();
     $new_data = file_get_contents($download_url);
 
     $newFile = \Drupal::service('file.repository')->writeData($new_data, $newDestination, FileSystemInterface::EXISTS_RENAME);
