@@ -94,7 +94,7 @@ class OnlyofficeEditorController extends ControllerBase {
       $file->getFilename(),
       Url::fromRoute('onlyoffice_connector.download', ['uuid' => $file->uuid()], ['absolute' => true])->toString(),
       document_info_owner: $media->getOwner()->getDisplayName(),
-      document_info_uploaded:$media->getCreatedTime(),
+      document_info_uploaded: \Drupal::service('date.formatter')->format($media->getCreatedTime(), 'short'),
       document_permissions_edit: $edit_permission,
       editorConfig_callbackUrl: $edit_permission ? $callbackUrl : null,
       editorConfig_mode: $edit_permission && $can_edit ? 'edit' : 'view',
