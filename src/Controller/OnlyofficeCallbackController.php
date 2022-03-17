@@ -4,7 +4,11 @@ namespace Drupal\onlyoffice_connector\Controller;
 
 use Drupal\Component\Uuid\Uuid;
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\File\Exception\InvalidStreamWrapperException;
 use Drupal\Core\File\FileSystemInterface;
+use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
+use Drupal\file\Entity\File;
+use Drupal\file\FileInterface;
 use Drupal\user\UserStorageInterface;
 use Drupal\media\Entity\Media;
 use Drupal\Core\Entity\EntityRepositoryInterface;
@@ -59,6 +63,13 @@ class OnlyofficeCallbackController extends ControllerBase {
   protected $fileSystem;
 
   /**
+   * The stream wrapper manager.
+   *
+   * @var \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface
+   */
+  protected $streamWrapperManager;
+
+  /**
    * The time service.
    *
    * @var \Drupal\Component\Datetime\TimeInterface
@@ -73,14 +84,17 @@ class OnlyofficeCallbackController extends ControllerBase {
    * The entity repository.
    * @param \Drupal\Core\File\FileSystemInterface $file_system
    * The file system service.
+   * @param \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface $streamWrapperManager
+   * The stream wrapper manager.
    * @param \Drupal\Component\Datetime\TimeInterface $time
    * The time service.
    */
   public function __construct(UserStorageInterface $user_storage, EntityRepositoryInterface $entity_repository,
-                              FileSystemInterface $file_system, TimeInterface $time) {
+                              FileSystemInterface $file_system, StreamWrapperManagerInterface $streamWrapperManager, TimeInterface $time) {
     $this->userStorage = $user_storage;
     $this->entityRepository = $entity_repository;
     $this->fileSystem = $file_system;
+    $this->streamWrapperManager = $streamWrapperManager;
     $this->time = $time;
   }
 
@@ -92,6 +106,7 @@ class OnlyofficeCallbackController extends ControllerBase {
       $container->get('entity_type.manager')->getStorage('user'),
       $container->get('entity.repository'),
       $container->get('file_system'),
+      $container->get('stream_wrapper_manager'),
       $container->get('datetime.time')
     );
   }
@@ -179,9 +194,7 @@ class OnlyofficeCallbackController extends ControllerBase {
     $newDestination = $directory . $separator . $file->getFilename();
     $new_data = file_get_contents($download_url);
 
-    $newFile = \Drupal::service('file.repository')->writeData($new_data, $newDestination, FileSystemInterface::EXISTS_RENAME);
-    $newFile->setSize(strlen($new_data));
-    $newFile->save();
+    $newFile = $this->writeData($new_data, $newDestination);
 
     $media->set(OnlyofficeDocumentHelper::getSourceFieldName($media), $newFile);
     $media->setNewRevision();
@@ -192,4 +205,25 @@ class OnlyofficeCallbackController extends ControllerBase {
 
     return new JsonResponse(['error' => 0], 200);
   }
+
+  private function writeData(string $data, string $destination, int $replace = FileSystemInterface::EXISTS_RENAME): FileInterface {
+    if (!$this->streamWrapperManager->isValidUri($destination)) {
+      throw new InvalidStreamWrapperException(sprintf('Invalid stream wrapper: %destination', ['%destination' => $destination]));
+    }
+    $uri = $this->fileSystem->saveData($data, $destination, $replace);
+
+    $file = File::create(['uri' => $uri]);
+    $file->setOwnerId(\Drupal::currentUser()->getAccount()->id());
+
+    if ($replace === FileSystemInterface::EXISTS_RENAME && is_file($destination)) {
+      $file->setFilename($this->fileSystem->basename($destination));
+    }
+
+    $file->setPermanent();
+    $file->setSize(strlen($data));
+    $file->save();
+
+    return $file;
+  }
+
 }
