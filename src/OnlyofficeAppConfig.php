@@ -7,6 +7,13 @@ use Drupal\Core\Site\Settings;
 class OnlyofficeAppConfig {
 
   /**
+   *  URL address to api.js
+   *
+   * @var string
+   */
+  private const DOC_SERVICE_API_URL = "web-apps/apps/api/documents/api.js";
+
+  /**
    *  Data about supported formats
    *
    * @var array
@@ -59,6 +66,10 @@ class OnlyofficeAppConfig {
     "pptm" => [ "type" => "slide" ],
     "pptx" => [ "type" => "slide", "edit" => true ]
   ];
+
+  public static function getDocServiceApiUrl() {
+    return self::DOC_SERVICE_API_URL;
+  }
 
   public static function getSupportedFormats() {
     return self::SUPPORTED_FORMATS;

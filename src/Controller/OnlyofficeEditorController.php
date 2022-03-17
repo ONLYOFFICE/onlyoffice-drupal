@@ -7,6 +7,7 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\media\Entity\Media;
 use Drupal\onlyoffice_connector\OnlyofficeDocumentHelper;
+use Drupal\onlyoffice_connector\OnlyofficeAppConfig;
 use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -88,9 +89,10 @@ class OnlyofficeEditorController extends ControllerBase {
     $callbackUrl = Url::fromRoute('onlyoffice_connector.callback', ['uuid' => $media->uuid()], ['absolute' => true])->toString();
 
     $editorConfig = $this->documentHelper->createEditorConfig(
+      'desktop',
       $this->documentHelper->getEditingKey($file),
       $file->getFilename(),
-      Url::fromRoute('onlyoffice_connector.download', ['uuid' => $media->uuid()], ['absolute' => true])->toString(),
+      Url::fromRoute('onlyoffice_connector.download', ['uuid' => $file->uuid()], ['absolute' => true])->toString(),
       document_info_owner: $media->getOwner()->getDisplayName(),
       document_info_uploaded:$media->getCreatedTime(),
       document_permissions_edit: $edit_permission,
@@ -107,7 +109,7 @@ class OnlyofficeEditorController extends ControllerBase {
       '#config' => json_encode($editorConfig),
       '#filename' => $file->getFilename(),
       '#doc_type' => $documentType,
-      '#doc_server_url' => $options->get('doc_server_url'),
+      '#doc_server_url' => $options->get('doc_server_url') . OnlyofficeAppConfig::getDocServiceApiUrl(),
     ];
   }
 }
