@@ -2,7 +2,9 @@
 
 namespace Drupal\onlyoffice_connector;
 
+use Drupal\Core\Url;
 use Drupal\onlyoffice_connector\OnlyofficeAppConfig;
+use Drupal\media\Entity\Media;
 use Firebase\JWT\JWT;
 
 class OnlyofficeDocumentHelper {
@@ -60,6 +62,7 @@ class OnlyofficeDocumentHelper {
       $editorConfig_lang = 'en',
       $editorConfig_user_id = null,
       $editorConfig_user_name = null,
+      $editorConfig_customization_goback_url = null,
       $editor_width = "100%",
       $editor_height = "100%",
     ) {
@@ -92,6 +95,11 @@ class OnlyofficeDocumentHelper {
           'user' => [
             'id' => $editorConfig_user_id,
             'name' => $editorConfig_user_name
+          ],
+          'customization' => [
+            'goback' => [
+              'url' => $editorConfig_customization_goback_url
+            ]
           ]
         ]
       ];
@@ -104,6 +112,16 @@ class OnlyofficeDocumentHelper {
       }
 
       return $config;
+    }
+
+    public static function getGoBackUrl(Media $media) {
+      $url = Url::fromRoute('entity.media.collection')->setAbsolute();
+
+      if ($media->hasField('directory') && $media->get('directory')->getString()) {
+        $url->setRouteParameter('directory', $media->get('directory')->getString());
+      }
+
+      return $url->toString();
     }
 
 }
