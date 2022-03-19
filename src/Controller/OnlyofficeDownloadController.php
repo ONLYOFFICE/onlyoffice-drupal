@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Firebase\JWT\JWT;
@@ -75,11 +76,15 @@ class OnlyofficeDownloadController extends ControllerBase {
     if (!$uuid || !Uuid::isValid($uuid)) {
       throw new BadRequestHttpException('Invalid parameter UUID.');
     }
-
+    /** @var \Drupal\file\Entity\File $file */
     $file = $this->entityRepository->loadEntityByUuid('file', $uuid);
 
     if (!$file) {
       throw new BadRequestHttpException("The targeted resource with UUID `{$uuid}` does not exist.");
+    }
+
+    if (!$file->access('download')) {
+      throw new AccessDeniedHttpException('The user does not have access');
     }
 
     return new BinaryFileResponse($file->getFileUri(), 200);
