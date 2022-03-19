@@ -100,7 +100,7 @@ class OnlyofficeEditorController extends ControllerBase {
       editorConfig_lang: \Drupal::languageManager()->getCurrentLanguage()->getId(),
       editorConfig_user_id: $user->id(),
       editorConfig_user_name: $user->getDisplayName(),
-      editorConfig_customization_goback_url: $this->documentHelper->getGoBackUrl($media)
+      editorConfig_customization_goback_url: OnlyofficeUrlHelper::getGoBackUrl($media)
     );
 
     $options = \Drupal::config('onlyoffice_connector.settings');

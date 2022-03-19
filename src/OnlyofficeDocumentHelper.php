@@ -114,14 +114,4 @@ class OnlyofficeDocumentHelper {
       return $config;
     }
 
-    public static function getGoBackUrl(Media $media) {
-      $url = Url::fromRoute('entity.media.collection')->setAbsolute();
-
-      if ($media->hasField('directory') && $media->get('directory')->getString()) {
-        $url->setRouteParameter('directory', $media->get('directory')->getString());
-      }
-
-      return $url->toString();
-    }
-
 }

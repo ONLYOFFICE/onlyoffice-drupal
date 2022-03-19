@@ -31,6 +31,16 @@ class OnlyofficeUrlHelper {
     return Url::fromRoute('onlyoffice_connector.download', ['key' => $key])->setAbsolute()->toString();
   }
 
+  public static function getGoBackUrl(Media $media) {
+    $url = Url::fromRoute('entity.media.collection')->setAbsolute();
+
+    if ($media->hasField('directory') && $media->get('directory')->getString()) {
+      $url->setRouteParameter('directory', $media->get('directory')->getString());
+    }
+
+    return $url->toString();
+  }
+
   private static function signLinkParameters(array $parameters) {
     $payload = \implode('?', $parameters);
 
