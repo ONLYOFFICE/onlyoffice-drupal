@@ -6,6 +6,7 @@ use Drupal\Component\Uuid\Uuid;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\onlyoffice_connector\OnlyofficeAppConfig;
+use Drupal\onlyoffice_connector\OnlyofficeUrlHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -44,7 +45,7 @@ class OnlyofficeDownloadController extends ControllerBase {
     );
   }
 
-  public function download($uuid, Request $request) {
+  public function download($key, Request $request) {
 
     if (\Drupal::config('onlyoffice_connector.settings')->get('doc_server_jwt')) {
       $jwtHeader = OnlyofficeAppConfig::getJwtHeader();
@@ -62,8 +63,17 @@ class OnlyofficeDownloadController extends ControllerBase {
       }
     }
 
+    $linkParameters = OnlyofficeUrlHelper::verifyLinkKey($key);
+
+    if(!$linkParameters) {
+      throw new BadRequestHttpException('Invalid link key.');
+    }
+
+    $uuid = $linkParameters[0];
+    $userId = $linkParameters[1]; //ToDo : check access
+
     if (!$uuid || !Uuid::isValid($uuid)) {
-      throw new BadRequestHttpException();
+      throw new BadRequestHttpException('Invalid parameter UUID.');
     }
 
     $file = $this->entityRepository->loadEntityByUuid('file', $uuid);

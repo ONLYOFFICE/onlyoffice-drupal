@@ -7,6 +7,7 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\media\Entity\Media;
 use Drupal\onlyoffice_connector\OnlyofficeDocumentHelper;
+use Drupal\onlyoffice_connector\OnlyofficeUrlHelper;
 use Drupal\onlyoffice_connector\OnlyofficeAppConfig;
 use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -92,7 +93,7 @@ class OnlyofficeEditorController extends ControllerBase {
       'desktop',
       $this->documentHelper->getEditingKey($file),
       $file->getFilename(),
-      Url::fromRoute('onlyoffice_connector.download', ['uuid' => $file->uuid()], ['absolute' => true])->toString(),
+      OnlyofficeUrlHelper::getDownloadFileUrl($file),
       document_info_owner: $media->getOwner()->getDisplayName(),
       document_info_uploaded: \Drupal::service('date.formatter')->format($media->getCreatedTime(), 'short'),
       document_permissions_edit: $edit_permission,
