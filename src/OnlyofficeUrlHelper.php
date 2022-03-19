@@ -5,9 +5,20 @@ namespace Drupal\onlyoffice_connector;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Url;
 use Drupal\file\Entity\File;
+use Drupal\media\Entity\Media;
 use Firebase\JWT\JWT;
 
 class OnlyofficeUrlHelper {
+
+  public static function getCallbackUrl (Media $media) {
+    $linkParameters = [
+      $media->uuid()
+    ];
+
+    $key = static::signLinkParameters($linkParameters);
+
+    return Url::fromRoute('onlyoffice_connector.callback', ['key' => $key])->setAbsolute()->toString();
+  }
 
   public static function getDownloadFileUrl (File $file) {
     $linkParameters = [

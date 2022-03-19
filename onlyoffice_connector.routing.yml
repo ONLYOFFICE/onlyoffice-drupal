@@ -21,7 +21,7 @@ onlyoffice_connector.editor:
     media: '\d+'
 
 onlyoffice_connector.callback:
-  path: '/onlyoffice-callback/{uuid}'
+  path: '/onlyoffice-callback/{key}'
   defaults:
     _controller: '\Drupal\onlyoffice_connector\Controller\OnlyofficeCallbackController::callback'
   methods: [POST]

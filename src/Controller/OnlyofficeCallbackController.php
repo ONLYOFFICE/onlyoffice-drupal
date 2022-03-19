@@ -9,6 +9,7 @@ use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
 use Drupal\file\Entity\File;
 use Drupal\file\FileInterface;
+use Drupal\onlyoffice_connector\OnlyofficeUrlHelper;
 use Drupal\user\UserStorageInterface;
 use Drupal\media\Entity\Media;
 use Drupal\Core\Entity\EntityRepositoryInterface;
@@ -111,7 +112,7 @@ class OnlyofficeCallbackController extends ControllerBase {
     );
   }
 
-  public function callback($uuid, Request $request) {
+  public function callback($key, Request $request) {
 
     $body = json_decode($request->getContent());
 
@@ -143,8 +144,16 @@ class OnlyofficeCallbackController extends ControllerBase {
       }
     }
 
+    $linkParameters = OnlyofficeUrlHelper::verifyLinkKey($key);
+
+    if(!$linkParameters) {
+      throw new BadRequestHttpException('Invalid link key.');
+    }
+
+    $uuid = $linkParameters[0];
+
     if (!$uuid || !Uuid::isValid($uuid)) {
-      throw new BadRequestHttpException();
+      throw new BadRequestHttpException("Invalid parameter UUID.");
     }
 
     $media = $this->entityRepository->loadEntityByUuid('media', $uuid);

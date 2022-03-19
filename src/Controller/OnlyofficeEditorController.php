@@ -2,7 +2,6 @@
 
 namespace Drupal\onlyoffice_connector\Controller;
 
-use Drupal\Core\Url;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\media\Entity\Media;
@@ -87,7 +86,6 @@ class OnlyofficeEditorController extends ControllerBase {
     $user = \Drupal::currentUser()->getAccount();
     $can_edit = $this->documentHelper->isEditable($extension) || $this->documentHelper->isFillForms($extension);
     $edit_permission = $media->access("update", $user);
-    $callbackUrl = Url::fromRoute('onlyoffice_connector.callback', ['uuid' => $media->uuid()], ['absolute' => true])->toString();
 
     $editorConfig = $this->documentHelper->createEditorConfig(
       'desktop',
@@ -97,7 +95,7 @@ class OnlyofficeEditorController extends ControllerBase {
       document_info_owner: $media->getOwner()->getDisplayName(),
       document_info_uploaded: \Drupal::service('date.formatter')->format($media->getCreatedTime(), 'short'),
       document_permissions_edit: $edit_permission,
-      editorConfig_callbackUrl: $edit_permission ? $callbackUrl : null,
+      editorConfig_callbackUrl: $edit_permission ? OnlyofficeUrlHelper::getCallbackUrl($media) : null,
       editorConfig_mode: $edit_permission && $can_edit ? 'edit' : 'view',
       editorConfig_lang: \Drupal::languageManager()->getCurrentLanguage()->getId(),
       editorConfig_user_id: $user->id(),
