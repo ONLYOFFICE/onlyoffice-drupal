@@ -1,0 +1,5 @@
+Module ONLYOFFICE connector uses code from the following 3rd party projects:
+
+PHP-JWT       - A simple library to encode and decode JSON Web Tokens (JWT) in PHP, conforming to RFC 7519. (https://github.com/firebase/php-jwt/blob/master/LICENSE)
+License:        BSD-3-Clause
+License File:   PHP-JWT.license
