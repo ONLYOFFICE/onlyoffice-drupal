@@ -24,6 +24,7 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\onlyoffice_connector\OnlyofficeAppConfig;
 use Drupal\onlyoffice_connector\OnlyofficeUrlHelper;
+use Drupal\user\UserStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -46,12 +47,22 @@ class OnlyofficeDownloadController extends ControllerBase {
   protected $entityRepository;
 
   /**
+   * The user storage.
+   *
+   * @var \Drupal\user\UserStorageInterface
+   */
+  protected $userStorage;
+
+  /**
    *
    * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
    * The entity repository.
+   * @param \Drupal\user\UserStorageInterface $user_storage
+   * The user storage.
    */
-  public function __construct(EntityRepositoryInterface $entity_repository) {
+  public function __construct(EntityRepositoryInterface $entity_repository, UserStorageInterface $user_storage) {
     $this->entityRepository = $entity_repository;
+    $this->userStorage = $user_storage;
   }
 
   /**
@@ -59,7 +70,8 @@ class OnlyofficeDownloadController extends ControllerBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity.repository')
+      $container->get('entity.repository'),
+      $container->get('entity_type.manager')->getStorage('user')
     );
   }
 
@@ -88,7 +100,10 @@ class OnlyofficeDownloadController extends ControllerBase {
     }
 
     $uuid = $linkParameters[0];
-    $userId = $linkParameters[1]; //ToDo : check access
+    $userId = $linkParameters[1];
+
+    $account = $this->userStorage->load($userId);
+    \Drupal::currentUser()->setAccount($account);
 
     if (!$uuid || !Uuid::isValid($uuid)) {
       throw new BadRequestHttpException('Invalid parameter UUID.');
