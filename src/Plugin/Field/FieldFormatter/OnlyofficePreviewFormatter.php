@@ -21,6 +21,7 @@ namespace Drupal\onlyoffice_connector\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\file\Plugin\Field\FieldFormatter\FileFormatterBase;
 use Drupal\file\Entity\File;
 use Drupal\onlyoffice_connector\OnlyofficeDocumentHelper;
