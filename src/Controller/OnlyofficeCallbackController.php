@@ -35,8 +35,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Firebase\JWT\JWT;
 use Drupal\onlyoffice_connector\OnlyofficeAppConfig;
 use Drupal\onlyoffice_connector\OnlyofficeDocumentHelper;
@@ -95,6 +93,13 @@ class OnlyofficeCallbackController extends ControllerBase {
   protected $time;
 
   /**
+   * A logger instance.
+   *
+   * @var \Psr\Log\LoggerInterface
+   */
+  protected $logger;
+
+  /**
    *
    * @param \Drupal\user\UserStorageInterface $user_storage
    * The user storage.
@@ -114,6 +119,7 @@ class OnlyofficeCallbackController extends ControllerBase {
     $this->fileSystem = $file_system;
     $this->streamWrapperManager = $streamWrapperManager;
     $this->time = $time;
+    $this->logger = $this->getLogger('onlyoffice_connector');
   }
 
   /**
@@ -132,9 +138,11 @@ class OnlyofficeCallbackController extends ControllerBase {
   public function callback($key, Request $request) {
 
     $body = json_decode($request->getContent());
+    $this->logger->debug('Request from Document Editing Service: <br><pre><code>' . print_r($body, TRUE) . '</code></pre>' );
 
     if (!$body) {
-        throw new BadRequestHttpException("The request body is missing.");
+        $this->logger->error('The request body is missing.');
+        return new JsonResponse(['error' => 1, 'message' => 'The request body is missing.'], 400);
     }
 
     if (\Drupal::config('onlyoffice_connector.settings')->get('doc_server_jwt')) {
@@ -149,7 +157,8 @@ class OnlyofficeCallbackController extends ControllerBase {
       }
 
       if (empty($token)) {
-        throw new UnauthorizedHttpException("Try save without JWT");
+        $this->logger->error('The request token is missing.');
+        return new JsonResponse(['error' => 1, 'message' => 'The request token is missing.'], 401);
       }
 
       try {
@@ -157,27 +166,33 @@ class OnlyofficeCallbackController extends ControllerBase {
 
         $body = $inBody ? $bodyFromToken : $bodyFromToken->payload;
       } catch (\Exception $e) {
-        throw new UnauthorizedHttpException("Try save with wrong JWT");
+        $this->logger->error('Invalid request token.');
+        return new JsonResponse(['error' => 1, 'message' => 'Invalid request token.'], 401);
       }
     }
 
     $linkParameters = OnlyofficeUrlHelper::verifyLinkKey($key);
 
     if(!$linkParameters) {
-      throw new BadRequestHttpException('Invalid link key.');
+      $this->logger->error('Invalid link key: @key.', [ '@key' => $key ]);
+      return new JsonResponse(['error' => 1, 'message' => 'Invalid link key: ' . $key . '.'], 400);
     }
 
     $uuid = $linkParameters[0];
 
     if (!$uuid || !Uuid::isValid($uuid)) {
-      throw new BadRequestHttpException("Invalid parameter UUID.");
+      $this->logger->error('Invalid parameter UUID: @uuid.', [ '@uuid' => $uuid ]);
+      return new JsonResponse(['error' => 1, 'message' => 'Invalid parameter UUID: ' . $uuid . '.'], 400);
     }
 
     $media = $this->entityRepository->loadEntityByUuid('media', $uuid);
 
     if (!$media) {
-      throw new BadRequestHttpException("The targeted media resource with UUID `{$uuid}` does not exist.");
+      $this->logger->error('The targeted media resource with UUID @uuid does not exist.', [ '@uuid' => $uuid ]);
+      return new JsonResponse(['error' => 1, 'message' => 'The targeted media resource with UUID ' . $uuid . ' does not exist.'], 404);
     }
+
+    $context = ['@type' => $media->bundle(), '%label' => $media->label(), 'link' => OnlyofficeUrlHelper::getEditorLink($media)->toString()];
 
     $userId = isset($body->actions) ? $body->actions[0]->userid : null;
 
@@ -188,11 +203,21 @@ class OnlyofficeCallbackController extends ControllerBase {
 
     switch ($status) {
       case "Editing":
-        // ToDo: check if locking mechanisms exist
+        switch ($body->actions[0]->type) {
+          case 0:
+            $this->logger->notice('Disconnected from the media @type %label co-editing.', $context);
+            break;
+          case 1:
+            $this->logger->notice('Connected to the media @type %label co-editing.', $context);
+            break;
+        }
         break;
       case "MustSave":
       case "Corrupted":
-        return $this->proccess_save($body, $media);
+        return $this->proccess_save($body, $media, $context);
+      case "Closed":
+        $this->logger->notice('Media @type %label was closed with no changes.', $context);
+        break;
       case "MustForceSave":
       case "CorruptedForceSave":
         break;
@@ -201,16 +226,18 @@ class OnlyofficeCallbackController extends ControllerBase {
     return new JsonResponse(['error' => 0], 200);
   }
 
-  private function proccess_save($body, Media $media) {
+  private function proccess_save($body, Media $media, $context) {
     $edit_permission = $media->access("update", \Drupal::currentUser()->getAccount());
 
     if (!$edit_permission) {
+      $this->logger->error('Denied access to edit media @type %label.', $context);
       return new JsonResponse(['error' => 1, 'message' => 'User does not have edit access to this media.'], 403);
     }
 
     $download_url = $body->url;
     if ($download_url === null) {
-      return new JsonResponse(['error' => 1, 'message' => 'Url not found'], 400);
+      $this->logger->error('URL parameter not found when saving media @type %label.', $context);
+      return new JsonResponse(['error' => 1, 'message' => 'Url parameter not found'], 400);
     }
 
     $file = $media->get(OnlyofficeDocumentHelper::getSourceFieldName($media))->entity;
@@ -229,6 +256,7 @@ class OnlyofficeCallbackController extends ControllerBase {
     $media->setRevisionLogMessage('');
     $media->save();
 
+    $this->logger->notice('Media @type %label was successfully saved.', $context);
     return new JsonResponse(['error' => 0], 200);
   }
 

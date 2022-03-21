@@ -51,6 +51,13 @@ class OnlyofficeEditorController extends ControllerBase {
   protected $documentHelper;
 
   /**
+   * A logger instance.
+   *
+   * @var \Psr\Log\LoggerInterface
+   */
+  protected $logger;
+
+  /**
    * Constructs an OnlyofficeEditorController object.
    *
    * @param \Drupal\Core\Render\RendererInterface $renderer
@@ -61,6 +68,7 @@ class OnlyofficeEditorController extends ControllerBase {
   public function __construct(RendererInterface $renderer, OnlyofficeDocumentHelper $document_helper) {
     $this->renderer = $renderer;
     $this->documentHelper = $document_helper;
+    $this->logger = $this->getLogger('onlyoffice_connector');
   }
 
   /**
@@ -92,11 +100,14 @@ class OnlyofficeEditorController extends ControllerBase {
   }
 
   private function getDocumentConfig(Media $media) {
+    $context = ['@type' => $media->bundle(), '%label' => $media->label(), 'link' => OnlyofficeUrlHelper::getEditorLink($media)->toString()];
+
     $file = $media->get(OnlyofficeDocumentHelper::getSourceFieldName($media))->entity;
     $extension = OnlyofficeDocumentHelper::getExtension($file->getFilename());
     $documentType = OnlyofficeDocumentHelper::getDocumentType($extension);
 
     if (!$documentType) {
+      $this->logger->warning('Media @type %label is not supported current module.', $context);
       return ['#error' => $this->t("Sorry, this file format isn't supported (@extension)", ['@extension' => $extension])];
     }
 
@@ -119,6 +130,8 @@ class OnlyofficeEditorController extends ControllerBase {
       editorConfig_user_name: $user->getDisplayName(),
       editorConfig_customization_goback_url: OnlyofficeUrlHelper::getGoBackUrl($media)
     );
+
+    $this->logger->debug('Generated config for media @type %label: <br><pre><code>' . print_r($editorConfig, TRUE) . '</code></pre>', $context);
 
     $options = \Drupal::config('onlyoffice_connector.settings');
 
