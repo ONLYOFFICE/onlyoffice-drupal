@@ -65,10 +65,10 @@ class OnlyofficeAppConfig {
     "ots" => [ "type" => "cell" ],
     "xls" => [ "type" => "cell" ],
     "xlsm" => [ "type" => "cell" ],
-    "xlsx" => [ "type" => "cell" ],
+    "xlsx" => [ "type" => "cell", "edit" => true ],
     "xlt" => [ "type" => "cell" ],
     "xltm" => [ "type" => "cell" ],
-    "xltx" => [ "type" => "cell", "edit" => true ],
+    "xltx" => [ "type" => "cell" ],
 
     "fodp" => [ "type" => "slide" ],
     "odp" => [ "type" => "slide" ],
