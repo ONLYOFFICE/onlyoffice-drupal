@@ -25,8 +25,8 @@
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\onlyoffice_connector\OnlyofficeDocumentHelper;
 use Drupal\onlyoffice_connector\OnlyofficeAppConfig;
-use Drupal\Core\Url;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\onlyoffice_connector\OnlyofficeUrlHelper;
 
 /**
  * Implements hook_help().
@@ -99,16 +99,11 @@ function onlyoffice_connector_entity_operation(EntityInterface $entity) {
     $title =  t("Fill in form in ONLYOFFICE");
   }
 
-  $route_name = "onlyoffice_connector.editor";
-  $route_parameters = [
-    'media' => $media->id(),
-  ];
-
   return [
     'onlyoffice' => [
       'title' => $title,
       'weight' => 50,
-      'url' => Url::fromRoute($route_name, $route_parameters),
+      'url' => OnlyofficeUrlHelper::getEditorUrl($media),
     ],
   ];
 }

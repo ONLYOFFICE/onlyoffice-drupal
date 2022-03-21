@@ -19,13 +19,35 @@
 
 namespace Drupal\onlyoffice_connector;
 
+use Drupal\Core\Link;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Url;
 use Drupal\file\Entity\File;
 use Drupal\media\Entity\Media;
+use Drupal\onlyoffice_connector\OnlyofficeDocumentHelper;
 use Firebase\JWT\JWT;
 
-class OnlyofficeUrlHelper {
+class OnlyofficeUrlHelper
+{
+
+  public static function getEditorUrl(Media $media) {
+    return Url::fromRoute('onlyoffice_connector.editor', ['media' => $media->id()]);
+  }
+
+  public static function getEditorLink(Media $media) {
+    $title = t("View in ONLYOFFICE");
+
+    if (OnlyofficeDocumentHelper::isEditable($media)) {
+      $title = t("Edit in ONLYOFFICE");
+    } elseif (OnlyofficeDocumentHelper::isFillForms($media)) {
+      $title = t("Fill in form in ONLYOFFICE");
+    }
+
+    return new Link(
+      $title,
+      Url::fromRoute('onlyoffice_connector.editor', ['media' => $media->id()])
+    );
+  }
 
   public static function getCallbackUrl (Media $media) {
     $linkParameters = [
