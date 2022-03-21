@@ -21,15 +21,10 @@ namespace Drupal\onlyoffice_connector\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
-use Drupal\Component\Utility\Html;
-use Drupal\Core\Template\Attribute;
 use Drupal\file\Plugin\Field\FieldFormatter\FileFormatterBase;
-use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Cache\Cache;
-use Drupal\Core\Field\EntityReferenceFieldItemListInterface;
 use Drupal\file\Entity\File;
 use Drupal\onlyoffice_connector\OnlyofficeDocumentHelper;
-use Drupal\Core\Url;
+use Drupal\onlyoffice_connector\OnlyofficeUrlHelper;
 use Symfony\Component\Mime\MimeTypeGuesserInterface;
 
 /**
@@ -182,7 +177,7 @@ class OnlyofficePreviewFormatter extends FileFormatterBase {
       'embedded',
       OnlyofficeDocumentHelper::getEditingKey($file, true),
       $file->getFilename(),
-      Url::fromRoute('onlyoffice_connector.download', ['uuid' => $file->uuid()], ['absolute' => true])->toString(),
+      OnlyofficeUrlHelper::getDownloadFileUrl($file),
       document_info_owner: $file->getOwner()->getDisplayName(),
       document_info_uploaded: $file->getCreatedTime(),
       editor_width: $editor_width,
