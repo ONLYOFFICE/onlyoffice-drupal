@@ -91,11 +91,11 @@ function onlyoffice_connector_entity_operation(EntityInterface $entity) {
 
   $title = t("View in ONLYOFFICE");
 
-  if (OnlyofficeDocumentHelper::isEditable($extension) && $media->access("update", $account)) {
+  if (OnlyofficeDocumentHelper::isEditable($media) && $media->access("update", $account)) {
     $title =  t("Edit in ONLYOFFICE");
   }
 
-  if (OnlyofficeDocumentHelper::isFillForms($extension) && $media->access("update", $account)) {
+  if (OnlyofficeDocumentHelper::isFillForms($media) && $media->access("update", $account)) {
     $title =  t("Fill in form in ONLYOFFICE");
   }
 

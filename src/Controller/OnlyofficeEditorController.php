@@ -101,7 +101,7 @@ class OnlyofficeEditorController extends ControllerBase {
     }
 
     $user = \Drupal::currentUser()->getAccount();
-    $can_edit = $this->documentHelper->isEditable($extension) || $this->documentHelper->isFillForms($extension);
+    $can_edit = $this->documentHelper->isEditable($media) || $this->documentHelper->isFillForms($media);
     $edit_permission = $media->access("update", $user);
 
     $editorConfig = $this->documentHelper->createEditorConfig(
