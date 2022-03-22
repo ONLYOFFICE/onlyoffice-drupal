@@ -103,14 +103,8 @@ class OnlyofficePreviewFormatter extends FileFormatterBase {
    */
   public function settingsSummary() {
     $summary = parent::settingsSummary();
-    $summary[] = $this->t('Width: %width%width_unit', [
-      '%width' => $this->getSetting('width'),
-      '%width_unit' => $this->getSetting('width_unit'),
-    ]);
-    $summary[] = $this->t('Height: %height%height_unit', [
-      '%height' => $this->getSetting('height'),
-      '%height_unit' => $this->getSetting('height_unit'),
-    ]);
+    $summary[] = $this->t('Width') . ': ' . $this->getSetting('width') . $this->getSetting('width_unit');
+    $summary[] = $this->t('Height') . ': ' . $this->getSetting('height') . $this->getSetting('height_unit');
     return $summary;
   }
 

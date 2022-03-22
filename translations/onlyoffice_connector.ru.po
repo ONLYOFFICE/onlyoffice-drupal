@@ -43,7 +43,17 @@ msgstr "Неподдерживаемая версия Сервера докум�
 msgid "Please update ONLYOFFICE Docs to version 7.0 to work on fillable forms online."
 msgstr "Обновите сервер ONLYOFFICE Docs до версии 7.0 для работы с формами онлайн."
 
+msgid "Sorry, this file format isn't supported (@extension)."
+msgstr "Извините, этот формат файла не поддерживается (@extension)."
 
+msgid "Width units"
+msgstr "Единицы ширины"
 
+msgid "Height units"
+msgstr "Единицы высоты"
 
+msgid "Percents"
+msgstr "Проценты"
 
+msgid "Pixels"
+msgstr "Пиксели"
