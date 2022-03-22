@@ -83,7 +83,7 @@ class OnlyofficeUrlHelper
   private static function signLinkParameters(array $parameters) {
     $payload = \implode('?', $parameters);
 
-    $signature = JWT::sign($payload, Settings::getHashSalt() . \Drupal::service('private_key')->get());
+    $signature = JWT::sign($payload, Settings::getHashSalt() . \Drupal::service('private_key')->get(), 'HS256');
 
     return JWT::urlsafeB64Encode($signature . '?' . $payload);
   }
@@ -97,7 +97,7 @@ class OnlyofficeUrlHelper
       $hash = $segments[0];
       $parameters = array_slice($segments, 1);
 
-      if ($hash == JWT::sign(\implode('?', $parameters), Settings::getHashSalt() . \Drupal::service('private_key')->get())) {
+      if ($hash == JWT::sign(\implode('?', $parameters), Settings::getHashSalt() . \Drupal::service('private_key')->get(), 'HS256')) {
           return $parameters;
       }
     }

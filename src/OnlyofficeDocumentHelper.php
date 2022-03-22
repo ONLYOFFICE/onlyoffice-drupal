@@ -130,7 +130,7 @@ class OnlyofficeDocumentHelper {
       $options = \Drupal::config('onlyoffice_connector.settings');
 
       if ($options->get('doc_server_jwt')) {
-        $token = JWT::encode($config, $options->get('doc_server_jwt'));
+        $token = JWT::encode($config, $options->get('doc_server_jwt'), 'HS256');
         $config["token"] = $token;
       }
 
