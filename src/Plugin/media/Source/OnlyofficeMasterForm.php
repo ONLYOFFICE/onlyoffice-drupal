@@ -1,0 +1,48 @@
+<?php
+/**
+ *
+ * (c) Copyright Ascensio System SIA 2022
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+namespace Drupal\onlyoffice_connector\Plugin\media\Source;
+
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\media\MediaTypeInterface;
+use Drupal\media\Plugin\media\Source\File;
+
+/**
+ * Onlyoffice Master Form entity media source.
+ *
+ * @see \Drupal\file\FileInterface
+ *
+ * @MediaSource(
+ *   id = "onlyoffice_m_form",
+ *   label = @Translation("Onlyoffice Master Form"),
+ *   description = @Translation("Use onlyoffice master form files for reusable media."),
+ *   allowed_field_types = {"file"},
+ *   default_thumbnail_filename = "docxf.png"
+ * )
+ */
+class OnlyofficeMasterForm extends File {
+
+  /**
+   * {@inheritdoc}
+   */
+  public function createSourceField(MediaTypeInterface $type) {
+    return parent::createSourceField($type)->set('settings', ['file_extensions' => 'docxf']);
+  }
+
+}
