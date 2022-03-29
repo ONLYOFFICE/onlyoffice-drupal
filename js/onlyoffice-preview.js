@@ -1,4 +1,4 @@
-(function () {
+(function (Drupal) {
   if (typeof DocsAPI !== 'undefined') {
 
     let editors = document.getElementsByClassName("onlyoffice-editor");
@@ -10,4 +10,4 @@
       new DocsAPI.DocEditor(editors[0].id, drupalSettings.onlyofficeData[dataId].config);
     }
   }
-})();
+})(Drupal);
