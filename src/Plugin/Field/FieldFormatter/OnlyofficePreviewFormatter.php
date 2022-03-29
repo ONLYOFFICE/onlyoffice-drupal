@@ -146,15 +146,14 @@ class OnlyofficePreviewFormatter extends FileFormatterBase {
       $extension = OnlyofficeDocumentHelper::getExtension($file->getFilename());
 
       if (OnlyofficeDocumentHelper::getDocumentType($extension)) {
-        $editor_id = sprintf('%s-%s-iframeEditor',
+        $editor_id = sprintf('%s-%s-iframeOnlyofficeEditor',
           $file->getEntityTypeId(),
           $file->id()
         );
 
-        $element[$delta] = ['#markup' => sprintf('<div id="%s"></div>', $editor_id)];
+        $element[$delta] = ['#markup' => sprintf('<div id="%s" class="onlyoffice-editor"></div>', $editor_id)];
 
-        $element['#attached']['drupalSettings']['onlyofficeData'][] = [
-          'editor_id' => $editor_id,
+        $element['#attached']['drupalSettings']['onlyofficeData'][$editor_id] = [
           'config' => $this->getEditorConfig($file),
         ];
       }
