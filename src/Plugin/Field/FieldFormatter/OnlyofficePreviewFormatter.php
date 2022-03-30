@@ -173,7 +173,8 @@ class OnlyofficePreviewFormatter extends FileFormatterBase {
       $file->getFilename(),
       OnlyofficeUrlHelper::getDownloadFileUrl($file),
       document_info_owner: $file->getOwner()->getDisplayName(),
-      document_info_uploaded: $file->getCreatedTime(),
+      document_info_uploaded: \Drupal::service('date.formatter')->format($file->getCreatedTime(), 'short'),
+      editorConfig_lang: \Drupal::languageManager()->getCurrentLanguage()->getId(),
       editor_width: $editor_width,
       editor_height: $editor_height
     );
