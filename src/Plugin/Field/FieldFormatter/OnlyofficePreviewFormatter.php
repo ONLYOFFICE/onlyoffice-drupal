@@ -136,7 +136,7 @@ class OnlyofficePreviewFormatter extends FileFormatterBase {
       '#attached' => [
         'library' => [
           'onlyoffice_connector/onlyoffice.api',
-          'onlyoffice_connector/onlyoffice.preview'
+          'onlyoffice_connector/onlyoffice.editor'
         ]
       ]
     ];

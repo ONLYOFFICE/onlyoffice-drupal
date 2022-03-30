@@ -1,5 +1,5 @@
-onlyoffice.preview:
+onlyoffice.editor:
   js:
-    js/onlyoffice-preview.js: {}
+    js/onlyoffice-editor.js: {}
   dependencies:
     - core/drupal
