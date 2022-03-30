@@ -33,7 +33,10 @@ use Drupal\media\Plugin\media\Source\File;
  *   label = @Translation("Onlyoffice Master Form"),
  *   description = @Translation("Use onlyoffice master form files for reusable media."),
  *   allowed_field_types = {"file"},
- *   default_thumbnail_filename = "docxf.png"
+ *   default_thumbnail_filename = "docxf.png",
+ *   forms = {
+ *     "media_library_add" = "\Drupal\media_library\Form\FileUploadForm",
+ *   },
  * )
  */
 class OnlyofficeMasterForm extends File {

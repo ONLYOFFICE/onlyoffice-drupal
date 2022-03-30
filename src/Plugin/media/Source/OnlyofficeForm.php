@@ -33,7 +33,10 @@ use Drupal\media\Plugin\media\Source\File;
  *   label = @Translation("Onlyoffice Form"),
  *   description = @Translation("Use onlyoffice form files for reusable media."),
  *   allowed_field_types = {"file"},
- *   default_thumbnail_filename = "oform.png"
+ *   default_thumbnail_filename = "oform.png",
+ *   forms = {
+ *     "media_library_add" = "\Drupal\media_library\Form\FileUploadForm",
+ *   },
  * )
  */
 class OnlyofficeForm extends File {
