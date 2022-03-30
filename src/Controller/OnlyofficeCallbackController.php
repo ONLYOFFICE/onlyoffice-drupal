@@ -179,6 +179,10 @@ class OnlyofficeCallbackController extends ControllerBase {
       return new JsonResponse(['error' => 1, 'message' => 'Invalid link key: ' . $key . '.'], 400);
     }
 
+    if ($linkParameters[1] == 'fillForm') {
+      return new JsonResponse(['error' => 0], 200);
+    }
+
     $uuid = $linkParameters[0];
 
     if (!$uuid || !Uuid::isValid($uuid)) {

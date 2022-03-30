@@ -71,8 +71,9 @@ function onlyoffice_connector_entity_operation(EntityInterface $entity) {
   }
   /** @var \Drupal\media\Entity\Media $media */
   $media = $entity;
+  $pluginId = $media->getSource()->getPluginId();
 
-  if ($media->getSource()->getPluginId() != "file"){
+  if ($pluginId != "file" && $pluginId != "onlyoffice_m_form" && $pluginId != "onlyoffice_form") {
     return null;
   }
 
@@ -91,12 +92,8 @@ function onlyoffice_connector_entity_operation(EntityInterface $entity) {
 
   $title = t("View in ONLYOFFICE");
 
-  if (OnlyofficeDocumentHelper::isEditable($media) && $media->access("update", $account)) {
-    $title =  t("Edit in ONLYOFFICE");
-  }
-
-  if (OnlyofficeDocumentHelper::isFillForms($media) && $media->access("update", $account)) {
-    $title =  t("Fill in form in ONLYOFFICE");
+  if ((OnlyofficeDocumentHelper::isEditable($media) || OnlyofficeDocumentHelper::isFillForms($media)) && $media->access("update", $account)) {
+    $title = t("Edit in ONLYOFFICE");
   }
 
   return [
