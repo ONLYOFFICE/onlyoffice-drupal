@@ -27,6 +27,7 @@ use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
 use Drupal\file\Entity\File;
 use Drupal\file\FileInterface;
 use Drupal\onlyoffice_connector\OnlyofficeUrlHelper;
+use Drupal\user\Entity\User;
 use Drupal\user\UserStorageInterface;
 use Drupal\media\Entity\Media;
 use Drupal\Core\Entity\EntityRepositoryInterface;
@@ -197,7 +198,12 @@ class OnlyofficeCallbackController extends ControllerBase {
     $userId = isset($body->actions) ? $body->actions[0]->userid : null;
 
     $account = $this->userStorage->load($userId);
-    \Drupal::currentUser()->setAccount($account);
+
+    if ($account) {
+      \Drupal::currentUser()->setAccount($account);
+    } else {
+      \Drupal::currentUser()->setAccount(User::getAnonymousUser());
+    }
 
     $status = OnlyofficeCallbackController::CALLBACK_STATUS[$body->status];
 
