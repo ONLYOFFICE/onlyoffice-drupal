@@ -53,7 +53,9 @@ class OnlyofficeFormFormatter extends OnlyofficeBaseFormatter {
       $handler_settings = $field_definition->getSetting('handler_settings');
 
       if (!empty($handler_settings['target_bundles']) && count($handler_settings['target_bundles']) == 1) {
-        return isset($handler_settings['target_bundles']['onlyoffice_form']);
+        /** @var \Drupal\media\MediaTypeInterface $media_type */
+        $media_type = \Drupal::entityTypeManager()->getStorage('media_type')->load(array_key_first($handler_settings['target_bundles']));
+        return $media_type->getSource()->getPluginId() == 'onlyoffice_form';
       }
     }
 
