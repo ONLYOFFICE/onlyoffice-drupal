@@ -27,7 +27,6 @@ use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
 use Drupal\file\Entity\File;
 use Drupal\onlyoffice_connector\OnlyofficeDocumentHelper;
 use Drupal\onlyoffice_connector\OnlyofficeUrlHelper;
-use Symfony\Component\Mime\MimeTypeGuesserInterface;
 
 /**
  * Plugin implementation of the 'onlyoffice_preview' formatter.

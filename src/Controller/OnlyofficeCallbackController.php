@@ -34,7 +34,6 @@ use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Component\Datetime\TimeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Firebase\JWT\JWT;
 use Drupal\onlyoffice_connector\OnlyofficeAppConfig;
