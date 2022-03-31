@@ -27,13 +27,10 @@ use Drupal\onlyoffice_connector\OnlyofficeUrlHelper;
 use Drupal\user\UserStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Firebase\JWT\JWT;
+
 /**
  * Returns responses for ONLYOFFICE Connector routes.
  */

@@ -26,7 +26,6 @@ use Drupal\file\Plugin\Field\FieldFormatter\FileFormatterBase;
 use Drupal\file\Entity\File;
 use Drupal\onlyoffice_connector\OnlyofficeDocumentHelper;
 use Drupal\onlyoffice_connector\OnlyofficeUrlHelper;
-use Symfony\Component\Mime\MimeTypeGuesserInterface;
 
 /**
  * Plugin implementation of the 'file_document' formatter.

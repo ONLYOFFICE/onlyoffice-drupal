@@ -19,7 +19,6 @@
 
 namespace Drupal\onlyoffice_connector;
 
-use Drupal\Core\Url;
 use Drupal\onlyoffice_connector\OnlyofficeAppConfig;
 use Drupal\media\Entity\Media;
 use Firebase\JWT\JWT;
@@ -87,7 +86,7 @@ class OnlyofficeDocumentHelper {
       $editorConfig_user_name = null,
       $editorConfig_customization_goback_url = null,
       $editor_width = "100%",
-      $editor_height = "100%",
+      $editor_height = "100%"
     ) {
 
       $document_fileType = static::getExtension($document_title);

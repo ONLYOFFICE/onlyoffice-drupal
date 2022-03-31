@@ -27,7 +27,6 @@ use Drupal\onlyoffice_connector\OnlyofficeUrlHelper;
 use Drupal\onlyoffice_connector\OnlyofficeAppConfig;
 use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -77,7 +76,7 @@ class OnlyofficeEditorController extends ControllerBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('renderer'),
-      $container->get('onlyoffice_connector.document_helper'),
+      $container->get('onlyoffice_connector.document_helper')
     );
   }
 
