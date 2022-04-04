@@ -1,0 +1,61 @@
+# Russian translation of ONLYOFFICE Connector
+# Copyright (c) 2022 by the Russian translation team
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: ONLYOFFICE Connector\n"
+"POT-Creation-Date: 2022-03-03 11:00+0000\n"
+"PO-Revision-Date: 2022-04-04 13:01+0300\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: de_DE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.0.1\n"
+
+msgid "Configure ONLYOFFICE Connector."
+msgstr "ONLYOFFICE-Konnektor konfigurieren."
+
+msgid "ONLYOFFICE Connector settings"
+msgstr "Einstellungen vom ONLYOFFICE-Konnektor"
+
+msgid "Document Editing Service address"
+msgstr "Die Adresse des Dokumentenbearbeitungsservices"
+
+msgid "Secret key (leave blank to disable)"
+msgstr "Geheimer Schlüssel (freilassen, um zu deaktivieren)"
+
+msgid "Edit in ONLYOFFICE"
+msgstr "Mit ONLYOFFICE bearbeiten"
+
+msgid "View in ONLYOFFICE"
+msgstr "In ONLYOFFICE öffnen"
+
+msgid "Fill in form in ONLYOFFICE"
+msgstr "Formular in ONLYOFFICE ausfüllen"
+
+msgid "ONLYOFFICE cannot be reached. Please contact admin."
+msgstr "ONLYOFFICE ist nicht zugänglich. Bitte wende Dich an Deinen Administrator."
+
+msgid "Not supported version DocumentServer."
+msgstr "Version vom Document Server nicht unterstützt."
+
+msgid "Please update ONLYOFFICE Docs to version 7.0 to work on fillable forms online."
+msgstr "Für Online-Arbeit mit Formularen ist Version 7.0 von ONLYOFFICE Docs erforderlich."
+
+msgid "Sorry, this file format isn't supported (@extension)."
+msgstr "Dieses Dateiformat wird leider nicht unterstützt (@extension)."
+
+msgid "Width units"
+msgstr "Breiteneinheiten"
+
+msgid "Height units"
+msgstr "Höheneinheiten"
+
+msgid "Percents"
+msgstr "Prozentsätze"
+
+msgid "Pixels"
+msgstr "Bildpunkte"
