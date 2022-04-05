@@ -37,11 +37,10 @@ function onlyoffice_connector_help($route_name, RouteMatchInterface $route_match
   switch ($route_name) {
     case 'help.page.onlyoffice_connector':
       $output = '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('????????????????') . '</p>';
+      $output .= '<p>' . t('The ONLYOFFICE connector allows users to edit office documents, spreadsheets, and presentations in the Media module from Drupal using ONLYOFFICE Docs packaged as Document Server. Users are able to collaborate on documents in real-time and preview files on public pages.') . '</p>';
 
-
-      $output .= '<h3>' . t('Uses') . '</h3>';
-      $output .= '<p>' . t('????????????????') . '</p>';
+      $output .= '<h3>' . t('Installation and configuration') . '</h3>';
+      $output .= '<p>' . t('Explore how to install and configure the ONLYOFFICE connector for Drupal on the <a href=":onlyoffice-drupal">official project page</a>.', [':onlyoffice-drupal' => 'https://github.com/ONLYOFFICE/onlyoffice-drupal']) . '</p>';
 
       return $output;
   }
