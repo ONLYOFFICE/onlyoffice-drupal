@@ -13,8 +13,17 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=((((n%10)==1)&&((n%100)!=11))?(0):(((((n%10)>=2)&&((n%10)<=4))&&(((n%100)<10)||((n%100)>=20)))?(1):2));\n"
 
 
-msgid "Configure ONLYOFFICE Connector."
-msgstr "Настройка коннектора ONLYOFFICE."
+msgid "The ONLYOFFICE connector allows users to edit office documents, spreadsheets, and presentations in the Media module from Drupal using ONLYOFFICE Docs packaged as Document Server. Users are able to collaborate on documents in real-time and preview files on public pages."
+msgstr ""
+
+msgid "Installation and configuration"
+msgstr ""
+
+msgid 'Explore how to install and configure the ONLYOFFICE connector for Drupal on the <a href=":onlyoffice-drupal">official project page</a>.'
+msgstr ""
+
+msgid "Manage ONLYOFFICE Connector settings."
+msgstr "Управление настройками ONLYOFFICE Connector."
 
 msgid "ONLYOFFICE Connector settings"
 msgstr "Настройки коннектора ONLYOFFICE"
