@@ -15,8 +15,8 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 3.0.1\n"
 
-msgid "Configure ONLYOFFICE Connector."
-msgstr "Configurar el conector de ONLYOFFICE."
+msgid "Manage ONLYOFFICE Connector settings."
+msgstr ""
 
 msgid "ONLYOFFICE Connector settings"
 msgstr "Ajustes del conector de ONLYOFFICE"
