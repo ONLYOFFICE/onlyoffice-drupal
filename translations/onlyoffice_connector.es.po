@@ -1,5 +1,5 @@
-# Russian translation of ONLYOFFICE Connector
-# Copyright (c) 2022 by the Russian translation team
+# Spanish translation of ONLYOFFICE Connector
+# (c) Copyright Ascensio System SIA 2022
 #
 msgid ""
 msgstr ""
