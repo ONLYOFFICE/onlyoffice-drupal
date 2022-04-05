@@ -22,8 +22,8 @@ msgstr ""
 msgid 'Explore how to install and configure the ONLYOFFICE connector for Drupal on the <a href=":onlyoffice-drupal">official project page</a>.'
 msgstr ""
 
-msgid "Configure ONLYOFFICE Connector."
-msgstr "Настройка коннектора ONLYOFFICE."
+msgid "Manage ONLYOFFICE Connector settings."
+msgstr "Управление настройками ONLYOFFICE Connector."
 
 msgid "ONLYOFFICE Connector settings"
 msgstr "Настройки коннектора ONLYOFFICE"
