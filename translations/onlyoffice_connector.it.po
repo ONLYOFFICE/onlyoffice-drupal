@@ -15,8 +15,17 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 3.0.1\n"
 
+msgid "The ONLYOFFICE connector allows users to edit office documents, spreadsheets, and presentations in the Media module from Drupal using ONLYOFFICE Docs packaged as Document Server. Users are able to collaborate on documents in real-time and preview files on public pages."
+msgstr "Il connettore ONLYOFFICE consente agli utenti di modificare file d'ufficio: documenti, fogli di calcolo e presentazioni nel modulo Media da Drupal utilizzando ONLYOFFICE Docs impacchettato come Document Server. Gli utenti possono collaborare su documenti in tempo reale e visualizzare i file in anteprima su pagine pubbliche."
+
+msgid "Installation and configuration"
+msgstr "Installazione e configurazione"
+
+msgid "Explore how to install and configure the ONLYOFFICE connector for Drupal on the <a href=\":onlyoffice-drupal\">official project page</a>."
+msgstr "Scopri come installare e configurare il connettore ONLYOFFICE per Drupal sulla <a href=\":onlyoffice-drupal\">pagina ufficiale del progetto</a>."
+
 msgid "Manage ONLYOFFICE Connector settings."
-msgstr ""
+msgstr "Gestisci le impostazioni del connettore ONLYOFFICE."
 
 msgid "ONLYOFFICE Connector settings"
 msgstr "Impostazioni del connettore ONLYOFFICE"
