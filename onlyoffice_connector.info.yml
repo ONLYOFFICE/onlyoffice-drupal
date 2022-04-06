@@ -1,6 +1,6 @@
 name: 'ONLYOFFICE Connector'
 type: module
-description: '?????'
+description: 'Allows editing office files.'
 core_version_requirement: ^9 || ^10
 package: Media
 configure: onlyoffice_connector.settings_form

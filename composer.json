@@ -1,7 +1,7 @@
 {
     "name": "drupal/onlyoffice_connector",
     "type": "drupal-module",
-    "description": "?????",
+    "description": "Allows editing office files.",
     "keywords": ["drupal"],
     "license": "GPL-2.0+",
     "homepage": "https://www.drupal.org/project/onlyoffice_connector",
@@ -14,7 +14,9 @@
     ],
     "support": {
         "issues": "https://github.com/ONLYOFFICE/onlyoffice-drupal/issues",
-        "source": "https://github.com/ONLYOFFICE/onlyoffice-drupal"
+        "source": "https://github.com/ONLYOFFICE/onlyoffice-drupal",
+        "email": "support@onlyoffice.com",
+        "forum": "https://forum.onlyoffice.com/"
     },
     "require": {
         "drupal/core": "^9 || ^10",
