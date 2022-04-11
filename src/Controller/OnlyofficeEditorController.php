@@ -139,7 +139,7 @@ class OnlyofficeEditorController extends ControllerBase {
     return [
       '#config' => json_encode($editorConfig),
       '#filename' => $file->getFilename(),
-      '#doc_type' => $documentType,
+      '#favicon_path' => '/' . \Drupal::service('extension.list.module')->getPath('onlyoffice_connector') . '/images/' . $documentType . '.ico',
       '#doc_server_url' => $options->get('doc_server_url') . OnlyofficeAppConfig::getDocServiceApiUrl(),
     ];
   }

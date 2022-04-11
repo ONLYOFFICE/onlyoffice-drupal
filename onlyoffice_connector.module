@@ -54,7 +54,7 @@ function onlyoffice_connector_theme($existing, $type, $theme, $path) {
     'onlyoffice_editor' => [
       'variables' => [
           'filename' => 'noname',
-          'doc_type' => 'docx',
+          'favicon_path' => 'none',
           'doc_server_url' => 'http://127.0.0.1/',
           'config' => '{}',
           'error' => null
