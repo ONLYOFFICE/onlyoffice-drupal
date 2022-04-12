@@ -197,6 +197,9 @@ class OnlyofficeEditorFormatter extends OnlyofficeBaseFormatter {
       editorConfig_lang: \Drupal::languageManager()->getCurrentLanguage()->getId(),
       editorConfig_user_id: $account->id(),
       editorConfig_user_name: $account->getDisplayName(),
+      editorConfig_customization_hideRightMenu: true,
+      editorConfig_customization_compactToolbar: true,
+      editorConfig_customization_hideRulers: true,
       editor_width: $editor_width,
       editor_height: $editor_height
     );

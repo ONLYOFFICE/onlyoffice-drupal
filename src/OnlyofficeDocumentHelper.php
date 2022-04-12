@@ -88,6 +88,9 @@ class OnlyofficeDocumentHelper {
       $editorConfig_user_id = null,
       $editorConfig_user_name = null,
       $editorConfig_customization_goback_url = null,
+      $editorConfig_customization_hideRightMenu = null,
+      $editorConfig_customization_compactToolbar = null,
+      $editorConfig_customization_hideRulers= null,
       $editor_width = "100%",
       $editor_height = "100%"
     ) {
@@ -125,7 +128,10 @@ class OnlyofficeDocumentHelper {
           'customization' => [
             'goback' => [
               'url' => $editorConfig_customization_goback_url
-            ]
+            ],
+            'hideRightMenu' => $editorConfig_customization_hideRightMenu,
+            'compactToolbar' => $editorConfig_customization_compactToolbar,
+            'hideRulers' => $editorConfig_customization_hideRulers
           ]
         ]
       ];
