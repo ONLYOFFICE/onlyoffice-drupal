@@ -68,3 +68,6 @@ msgstr "Проценты"
 
 msgid "Pixels"
 msgstr "Пиксели"
+
+msgid "The selected media @filename cannot be edited with the ONLYOFFICE Editor. Only media with the following extensions are allowed: @extensions."
+msgstr "Выбранный медиафайл @filename нельзя редактировать в редакторе ONLYOFFICE. Разрешены только медиафайлы со следующими расширениями: @extensions."
