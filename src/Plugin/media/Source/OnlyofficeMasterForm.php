@@ -32,7 +32,7 @@ use Drupal\media\Plugin\media\Source\File;
  *
  * @MediaSource(
  *   id = "onlyoffice_m_form",
- *   label = @Translation("Onlyoffice Master Form"),
+ *   label = @Translation("ONLYOFFICE Master Form"),
  *   description = @Translation("Use onlyoffice master form files for reusable media."),
  *   allowed_field_types = {"file"},
  *   default_thumbnail_filename = "docxf.png",

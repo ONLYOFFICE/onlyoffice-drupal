@@ -32,7 +32,7 @@ use Drupal\media\Plugin\media\Source\File;
  *
  * @MediaSource(
  *   id = "onlyoffice_form",
- *   label = @Translation("Onlyoffice Form"),
+ *   label = @Translation("ONLYOFFICE Form"),
  *   description = @Translation("Use onlyoffice form files for reusable media."),
  *   allowed_field_types = {"file"},
  *   default_thumbnail_filename = "oform.png",
