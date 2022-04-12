@@ -34,7 +34,7 @@ use Drupal\Core\Session\AccountInterface;
  *
  * @FieldType(
  *   id = "onlyoffice_editor",
- *   label = @Translation("Onlyoffice editor"),
+ *   label = @Translation("ONLYOFFICE Editor"),
  *   default_formatter = "onlyoffice_editor",
  *   default_widget = "onlyoffice_editor_widget",
  *   list_class = "Drupal\onlyoffice_connector\Plugin\Field\FieldType\OnlyofficeEditorFieldItemList",
