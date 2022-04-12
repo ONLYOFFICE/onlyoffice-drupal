@@ -103,8 +103,8 @@ class OnlyofficeAppConfig {
    */
   private const ONLYOFFICE_PERMISSIONS = [
     'full_access' => ['title' => 'Full access', 'priority' => 3],
-    'read' => ['title' => 'Read', 'priority' => 2],
-    'comment' => ['title' => 'Comment', 'priority' => 1],
+    'read' => ['title' => 'Read', 'priority' => 1],
+    'comment' => ['title' => 'Comment', 'priority' => 2],
     'deny_access'=> ['title' => 'Deny access', 'priority' => 0],
   ];
 
