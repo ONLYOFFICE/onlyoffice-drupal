@@ -7,7 +7,7 @@ onlyoffice_connector.settings_form:
     _permission: 'administer onlyoffice_connector configuration'
 
 onlyoffice_connector.editor:
-  path: 'admin/media/{media}/onlyoffice-editor'
+  path: '/admin/media/{media}/onlyoffice-editor'
   defaults:
     _title: 'ONLYOFFICE'
     _controller: '\Drupal\onlyoffice_connector\Controller\OnlyofficeEditorController::editor'
@@ -17,7 +17,7 @@ onlyoffice_connector.editor:
       media:
         type: entity:media
   requirements:
-    _permission: 'view media'
+    _permission: 'view media, access media overview'
     media: '\d+'
 
 onlyoffice_connector.callback:
