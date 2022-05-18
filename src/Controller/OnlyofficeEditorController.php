@@ -87,8 +87,14 @@ class OnlyofficeEditorController extends ControllerBase {
       throw new UnsupportedMediaTypeHttpException();
     }
 
+    $editorType = 'desktop';
+
+    if (preg_match( OnlyofficeAppConfig::USER_AGENT_MOBILE, $request->headers->get('User-Agent'))) {
+      $editorType = 'mobile';
+    }
+
     $build = [
-      'page' => $this->getDocumentConfig($media)
+      'page' => $this->getDocumentConfig($editorType, $media)
     ];
 
     $build['page']['#theme'] = 'onlyoffice_editor';
@@ -100,7 +106,7 @@ class OnlyofficeEditorController extends ControllerBase {
     return $response;
   }
 
-  private function getDocumentConfig(Media $media) {
+  private function getDocumentConfig($editorType, Media $media) {
     $context = ['@type' => $media->bundle(), '%label' => $media->label(), 'link' => OnlyofficeUrlHelper::getEditorLink($media)->toString()];
 
     $file = $media->get(OnlyofficeDocumentHelper::getSourceFieldName($media))->entity;
@@ -117,7 +123,7 @@ class OnlyofficeEditorController extends ControllerBase {
     $edit_permission = $media->access("update", $user);
 
     $editorConfig = $this->documentHelper->createEditorConfig(
-      'desktop',
+      $editorType,
       $this->documentHelper->getEditingKey($file),
       $file->getFilename(),
       OnlyofficeUrlHelper::getDownloadFileUrl($file),
