@@ -17,7 +17,7 @@ onlyoffice_connector.editor:
       media:
         type: entity:media
   requirements:
-    _permission: 'view media, access media overview'
+    _permission: 'view media,access media overview'
     media: '\d+'
 
 onlyoffice_connector.callback:
