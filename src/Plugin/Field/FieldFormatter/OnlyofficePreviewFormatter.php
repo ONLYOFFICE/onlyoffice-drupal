@@ -35,7 +35,7 @@ use Drupal\onlyoffice_connector\OnlyofficeUrlHelper;
  * @FieldFormatter(
  *   id = "onlyoffice_preview",
  *   label = @Translation("ONLYOFFICE Preview"),
- *   description = @Translation("Display the file using ONLYOFFICE Editor."),
+ *   description = @Translation("Displaying files using the ONLYOFFICE editor."),
  *   field_types = {
  *     "file"
  *   }
