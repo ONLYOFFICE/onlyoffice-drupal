@@ -15,6 +15,9 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 3.0.1\n"
 
+msgid "Allows editing office files."
+msgstr "Permite editar archivos de oficina."
+
 msgid "The ONLYOFFICE connector allows users to edit office documents, spreadsheets, and presentations in the Media module from Drupal using ONLYOFFICE Docs packaged as Document Server. Users are able to collaborate on documents in real-time and preview files on public pages."
 msgstr "El conector de ONLYOFFICE permite a los usuarios editar documentos de oficina, hojas de cálculo y presentaciones en el módulo Media de Drupal utilizando ONLYOFFICE Docs empaquetado como Servidor de documentos. Los usuarios pueden colaborar en los documentos en tiempo real y previsualizar los archivos en las páginas públicas."
 
@@ -56,6 +59,12 @@ msgstr "Por favor, actualice ONLYOFFICE Docs a la versión 7.0 para poder trabaj
 
 msgid "Sorry, this file format isn't supported (@extension)."
 msgstr "Lo sentimos, este formato de archivo no es compatible (@extension)."
+
+msgid "ONLYOFFICE Preview"
+msgstr "Vista previa de ONLYOFFICE"
+
+msgid "Displaying files using the ONLYOFFICE editor."
+msgstr "Visualización de archivos usando el editor ONLYOFFICE."
 
 msgid "Width units"
 msgstr "Unidades de ancho"
