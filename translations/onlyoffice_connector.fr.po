@@ -45,17 +45,11 @@ msgstr "Modifier dans ONLYOFFICE"
 msgid "View in ONLYOFFICE"
 msgstr "Afficher dans ONLYOFFICE"
 
-msgid "Fill in form in ONLYOFFICE"
-msgstr "Remplir le formulaire dans ONLYOFFICE"
-
 msgid "ONLYOFFICE cannot be reached. Please contact admin."
 msgstr "Impossible de joindre ONLYOFFICE. Veuillez contacter l'administrateur."
 
 msgid "Not supported version DocumentServer."
 msgstr "Version de Document Server non prise en charge."
-
-msgid "Please update ONLYOFFICE Docs to version 7.0 to work on fillable forms online."
-msgstr "Veuillez mettre à jour ONLYOFFICE Docs vers la version 7.0 pour travailler sur les formulaires à remplir en ligne."
 
 msgid "Sorry, this file format isn't supported (@extension)."
 msgstr "Malheureusement, ce format de fichier n'est pas pris en charge (@extension)."

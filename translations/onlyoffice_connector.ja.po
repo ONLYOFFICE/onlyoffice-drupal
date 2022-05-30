@@ -45,17 +45,11 @@ msgstr "ONLYOFFICEで編集する"
 msgid "View in ONLYOFFICE"
 msgstr "ONLYOFFICEで表示"
 
-msgid "Fill in form in ONLYOFFICE"
-msgstr "ONLYOFFICEでフォームを記入する"
-
 msgid "ONLYOFFICE cannot be reached. Please contact admin."
 msgstr "ONLYOFFICE に接続できません。管理者にお問い合わせください"
 
 msgid "Not supported version DocumentServer."
 msgstr "サポートされていないバージョン DocumentServer"
-
-msgid "Please update ONLYOFFICE Docs to version 7.0 to work on fillable forms online."
-msgstr "オンラインで入力可能なフォームを作成するには、ONLYOFFICE Docs 7.0版まで更新してください"
 
 msgid "Sorry, this file format isn't supported (@extension)."
 msgstr "申し訳ありませんが、このファイル形式はサポートされていません（@extension）。"

@@ -45,17 +45,11 @@ msgstr "在ONLYOFFICE中编辑"
 msgid "View in ONLYOFFICE"
 msgstr "用ONLYOFFICE查看"
 
-msgid "Fill in form in ONLYOFFICE"
-msgstr "在ONLYOFFICE上填写表单"
-
 msgid "ONLYOFFICE cannot be reached. Please contact admin."
 msgstr "无法联系到ONLYOFFICE。请联系管理员"
 
 msgid "Not supported version DocumentServer."
 msgstr "不支持的DocumentServer版本。"
-
-msgid "Please update ONLYOFFICE Docs to version 7.0 to work on fillable forms online."
-msgstr "请将ONLYOFFICE Docs更新到7.0版本，以便在线编辑可填写的表单"
 
 msgid "Sorry, this file format isn't supported (@extension)."
 msgstr "对不起，无法支持该文件格式（@extension）。"

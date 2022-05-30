@@ -57,15 +57,6 @@ class OnlyofficeDocumentHelper {
       return isset($format["edit"]) && $format["edit"];
     }
 
-    public static function isFillForms(Media $media) {
-      $file = $media->get(static::getSourceFieldName($media))->entity;
-      $extension = static::getExtension($file->getFilename());
-
-      $format = OnlyofficeAppConfig::getSupportedFormats()[$extension] ?? null;
-
-      return isset($format["fillForms"]) && $format["fillForms"];
-    }
-
     public static function getSourceFieldName(Media $media) {
       return $media->getSource()
         ->getSourceFieldDefinition($media->bundle->entity)

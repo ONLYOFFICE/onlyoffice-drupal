@@ -41,8 +41,6 @@ class OnlyofficeUrlHelper
 
     if (OnlyofficeDocumentHelper::isEditable($media)) {
       $title = t("Edit in ONLYOFFICE");
-    } elseif (OnlyofficeDocumentHelper::isFillForms($media)) {
-      $title = t("Fill in form in ONLYOFFICE");
     }
 
     return new Link(

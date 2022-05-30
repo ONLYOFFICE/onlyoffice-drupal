@@ -50,7 +50,6 @@ class OnlyofficeAppConfig {
     "doc" => [ "type" => "word" ],
     "docm" => [ "type" => "word" ],
     "docx" => [ "type" => "word", "edit" => true ],
-    "docxf" => [ "type" => "word", "edit" => true ],
     "dot" => [ "type" => "word" ],
     "dotm" => [ "type" => "word" ],
     "dotx" => [ "type" => "word" ],
@@ -67,7 +66,6 @@ class OnlyofficeAppConfig {
     "txt" => [ "type" => "word" ],
     "xps" => [ "type" => "word" ],
     "xml" => [ "type" => "word" ],
-    "oform" => [ "type" => "word", "fillForms" => true ],
 
     "csv" => [ "type" => "cell" ],
     "fods" => [ "type" => "cell" ],
