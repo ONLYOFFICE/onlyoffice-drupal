@@ -1,4 +1,4 @@
-# ONLYOFFICE integration module for Drupal 
+# ONLYOFFICE integration module for Drupal
 
 This module enables users to edit files in the Media module from [Drupal](https://www.drupal.org) using ONLYOFFICE Docs packaged as Document Server - [Community or Enterprise Edition](#onlyoffice-docs-editions).
 
@@ -13,7 +13,7 @@ The module allows to:
 Supported formats:
 
 * For editing: DOCX, XLSX, PPTX.
-* For viewing only: DJVU, DOC, DOCM, DOT, DOTM, DOTX, EPUB, FB2, FODT, HTML, MHT, ODT, OTT, OXPS, PDF, RTF, TXT, XPS, XML, CSV, FODS, ODS, OTS, XLS, XLSM, XLT, XLTM, FODP, ODP, OTP, POT, POTM, POTX, PPS, PPSM, PPSX, PPT, PPTM.
+* For viewing only: DJVU, DOC, DOCM, DOT, DOTM, DOTX, EPUB, FB2, FODT, HTML, MHT, ODT, OTT, OXPS, PDF, RTF, TXT, XPS, XML, CSV, FODS, ODS, OTS, XLS, XLSM, XLT, XLTM, XLTX, FODP, ODP, OTP, POT, POTM, POTX, PPS, PPSM, PPSX, PPT, PPTM.
 
 ## Installing ONLYOFFICE Docs
 
@@ -110,7 +110,7 @@ Specify title and select a file (if the content contains File fields).
 
 For Media section, specify the name of the previously uploaded file.
 
-Your site visitors will also be able to view the created page (People –> Permissions –> View published content).
+Your site visitors will also be able to view the created page (People ï¿½> Permissions ï¿½> View published content).
 
 ## ONLYOFFICE Docs editions
 
