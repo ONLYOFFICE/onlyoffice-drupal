@@ -19,9 +19,9 @@
  *
  */
 
-namespace Drupal\onlyoffice_connector;
+namespace Drupal\onlyoffice;
 
-use Drupal\onlyoffice_connector\OnlyofficeAppConfig;
+use Drupal\onlyoffice\OnlyofficeAppConfig;
 use Drupal\media\Entity\Media;
 use Firebase\JWT\JWT;
 
@@ -119,7 +119,7 @@ class OnlyofficeDocumentHelper {
         ]
       ];
 
-      $options = \Drupal::config('onlyoffice_connector.settings');
+      $options = \Drupal::config('onlyoffice.settings');
 
       if ($options->get('doc_server_jwt')) {
         $token = JWT::encode($config, $options->get('doc_server_jwt'), 'HS256');

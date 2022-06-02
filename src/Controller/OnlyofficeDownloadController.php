@@ -19,13 +19,13 @@
  *
  */
 
-namespace Drupal\onlyoffice_connector\Controller;
+namespace Drupal\onlyoffice\Controller;
 
 use Drupal\Component\Uuid\Uuid;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityRepositoryInterface;
-use Drupal\onlyoffice_connector\OnlyofficeAppConfig;
-use Drupal\onlyoffice_connector\OnlyofficeUrlHelper;
+use Drupal\onlyoffice\OnlyofficeAppConfig;
+use Drupal\onlyoffice\OnlyofficeUrlHelper;
 use Drupal\user\UserStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -69,7 +69,7 @@ class OnlyofficeDownloadController extends ControllerBase {
   public function __construct(EntityRepositoryInterface $entity_repository, UserStorageInterface $user_storage) {
     $this->entityRepository = $entity_repository;
     $this->userStorage = $user_storage;
-    $this->logger = $this->getLogger('onlyoffice_connector');
+    $this->logger = $this->getLogger('onlyoffice');
   }
 
   /**
@@ -84,7 +84,7 @@ class OnlyofficeDownloadController extends ControllerBase {
 
   public function download($key, Request $request) {
 
-    if (\Drupal::config('onlyoffice_connector.settings')->get('doc_server_jwt')) {
+    if (\Drupal::config('onlyoffice.settings')->get('doc_server_jwt')) {
       $jwtHeader = OnlyofficeAppConfig::getJwtHeader();
       $header = $request->headers->get($jwtHeader);
       $token = $header !== NULL ?  substr($header, strlen("Bearer ")) : $header;
@@ -95,7 +95,7 @@ class OnlyofficeDownloadController extends ControllerBase {
       }
 
       try {
-        JWT::decode($token, \Drupal::config('onlyoffice_connector.settings')->get('doc_server_jwt'), array("HS256"));
+        JWT::decode($token, \Drupal::config('onlyoffice.settings')->get('doc_server_jwt'), array("HS256"));
       } catch (\Exception $e) {
         $this->logger->error('Invalid request token.');
         return new JsonResponse(['error' => 1, 'message' => 'Invalid request token.'], 401);

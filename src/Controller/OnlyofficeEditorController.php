@@ -19,14 +19,14 @@
  *
  */
 
-namespace Drupal\onlyoffice_connector\Controller;
+namespace Drupal\onlyoffice\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\media\Entity\Media;
-use Drupal\onlyoffice_connector\OnlyofficeDocumentHelper;
-use Drupal\onlyoffice_connector\OnlyofficeUrlHelper;
-use Drupal\onlyoffice_connector\OnlyofficeAppConfig;
+use Drupal\onlyoffice\OnlyofficeDocumentHelper;
+use Drupal\onlyoffice\OnlyofficeUrlHelper;
+use Drupal\onlyoffice\OnlyofficeAppConfig;
 use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -47,7 +47,7 @@ class OnlyofficeEditorController extends ControllerBase {
   /**
    * The onlyoffice document helper service.
    *
-   * @var \Drupal\onlyoffice_connector\OnlyofficeDocumentHelper
+   * @var \Drupal\onlyoffice\OnlyofficeDocumentHelper
    */
   protected $documentHelper;
 
@@ -63,13 +63,13 @@ class OnlyofficeEditorController extends ControllerBase {
    *
    * @param \Drupal\Core\Render\RendererInterface $renderer
    * The renderer service.
-   * @param \Drupal\onlyoffice_connector\OnlyofficeDocumentHelper $document_helper
+   * @param \Drupal\onlyoffice\OnlyofficeDocumentHelper $document_helper
    * The onlyoffice document helper service.
    */
   public function __construct(RendererInterface $renderer, OnlyofficeDocumentHelper $document_helper) {
     $this->renderer = $renderer;
     $this->documentHelper = $document_helper;
-    $this->logger = $this->getLogger('onlyoffice_connector');
+    $this->logger = $this->getLogger('onlyoffice');
   }
 
   /**
@@ -78,7 +78,7 @@ class OnlyofficeEditorController extends ControllerBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('renderer'),
-      $container->get('onlyoffice_connector.document_helper')
+      $container->get('onlyoffice.document_helper')
     );
   }
 
@@ -140,12 +140,12 @@ class OnlyofficeEditorController extends ControllerBase {
 
     $this->logger->debug('Generated config for media @type %label: <br><pre><code>' . print_r($editorConfig, TRUE) . '</code></pre>', $context);
 
-    $options = \Drupal::config('onlyoffice_connector.settings');
+    $options = \Drupal::config('onlyoffice.settings');
 
     return [
       '#config' => json_encode($editorConfig),
       '#filename' => $file->getFilename(),
-      '#favicon_path' => '/' . \Drupal::service('extension.list.module')->getPath('onlyoffice_connector') . '/images/' . $documentType . '.ico',
+      '#favicon_path' => '/' . \Drupal::service('extension.list.module')->getPath('onlyoffice') . '/images/' . $documentType . '.ico',
       '#doc_server_url' => $options->get('doc_server_url') . OnlyofficeAppConfig::getDocServiceApiUrl(),
     ];
   }

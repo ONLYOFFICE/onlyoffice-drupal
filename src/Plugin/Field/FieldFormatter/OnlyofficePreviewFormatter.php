@@ -19,15 +19,15 @@
  *
  */
 
-namespace Drupal\onlyoffice_connector\Plugin\Field\FieldFormatter;
+namespace Drupal\onlyoffice\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\file\Plugin\Field\FieldFormatter\FileFormatterBase;
 use Drupal\file\Entity\File;
-use Drupal\onlyoffice_connector\OnlyofficeDocumentHelper;
-use Drupal\onlyoffice_connector\OnlyofficeUrlHelper;
+use Drupal\onlyoffice\OnlyofficeDocumentHelper;
+use Drupal\onlyoffice\OnlyofficeUrlHelper;
 
 /**
  * Plugin implementation of the 'file_document' formatter.
@@ -136,8 +136,8 @@ class OnlyofficePreviewFormatter extends FileFormatterBase {
     $element = [
       '#attached' => [
         'library' => [
-          'onlyoffice_connector/onlyoffice.api',
-          'onlyoffice_connector/onlyoffice.preview'
+          'onlyoffice/onlyoffice.api',
+          'onlyoffice/onlyoffice.preview'
         ]
       ]
     ];

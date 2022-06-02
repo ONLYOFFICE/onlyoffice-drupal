@@ -1,4 +1,4 @@
-﻿# ONLYOFFICE integration module for Drupal
+﻿# ONLYOFFICE Connector module for Drupal
 
 Contents of this file
 ---------------------
@@ -49,7 +49,7 @@ Second way: Add a module with [Composer](https://www.drupal.org/docs/extending-d
 Enter the following command at the root of your site:
 
 ```
-composer require drupal/onlyoffice_connector
+composer require drupal/onlyoffice
 ```
 
 **Step 2: Enable the module**
@@ -63,13 +63,13 @@ Second way: Using the command line (advanced, but very efficient).
 1. Run the following Drush command, giving the project name as a parameter:
 
 ```
-drush pm:enable onlyoffice_connector
+drush pm:enable onlyoffice
 ```
 2. Follow the instructions on the screen.
 
 ## Configuration
 
-In Drupal, open the `~/config/system/onlyoffice-connector` page with administrative settings for **ONLYOFFICE** section.
+In Drupal, open the `~/config/system/onlyoffice` page with administrative settings for **ONLYOFFICE** section.
 Enter the address to connect ONLYOFFICE Document Server:
 
 ```

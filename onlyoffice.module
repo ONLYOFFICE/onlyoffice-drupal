@@ -25,17 +25,17 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\onlyoffice_connector\OnlyofficeDocumentHelper;
-use Drupal\onlyoffice_connector\OnlyofficeAppConfig;
+use Drupal\onlyoffice\OnlyofficeDocumentHelper;
+use Drupal\onlyoffice\OnlyofficeAppConfig;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\onlyoffice_connector\OnlyofficeUrlHelper;
+use Drupal\onlyoffice\OnlyofficeUrlHelper;
 
 /**
  * Implements hook_help().
  */
-function onlyoffice_connector_help($route_name, RouteMatchInterface $route_match) {
+function onlyoffice_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
-    case 'help.page.onlyoffice_connector':
+    case 'help.page.onlyoffice':
       $output = '<h3>' . t('About') . '</h3>';
       $output .= '<p>' . t('The ONLYOFFICE connector allows users to edit office documents, spreadsheets, and presentations in the Media module from Drupal using ONLYOFFICE Docs packaged as Document Server. Users are able to collaborate on documents in real-time and preview files on public pages.') . '</p>';
 
@@ -49,7 +49,7 @@ function onlyoffice_connector_help($route_name, RouteMatchInterface $route_match
 /**
  * Implements hook_theme().
  */
-function onlyoffice_connector_theme($existing, $type, $theme, $path) {
+function onlyoffice_theme($existing, $type, $theme, $path) {
   return [
     'onlyoffice_editor' => [
       'variables' => [
@@ -66,7 +66,7 @@ function onlyoffice_connector_theme($existing, $type, $theme, $path) {
 /**
  * Implements hook_entity_operation().
  */
-function onlyoffice_connector_entity_operation(EntityInterface $entity) {
+function onlyoffice_entity_operation(EntityInterface $entity) {
   if ($entity->getEntityTypeId() != "media") {
     return null;
   }
@@ -108,9 +108,9 @@ function onlyoffice_connector_entity_operation(EntityInterface $entity) {
 /**
  * Implements hook_library_info_build().
  */
-function onlyoffice_connector_library_info_build() {
+function onlyoffice_library_info_build() {
 
-  $options = \Drupal::config('onlyoffice_connector.settings');
+  $options = \Drupal::config('onlyoffice.settings');
 
   if ($doc_server_url = $options->get('doc_server_url')) {
     $api_url = $doc_server_url . OnlyofficeAppConfig::getDocServiceApiUrl();

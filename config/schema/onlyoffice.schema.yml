@@ -1,5 +1,5 @@
 # Schema for the configuration files of the ONLYOFFICE Connector module.
-onlyoffice_connector.settings:
+onlyoffice.settings:
   type: config_object
   label: 'ONLYOFFICE Connector settings'
   mapping:

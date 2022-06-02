@@ -19,7 +19,7 @@
  *
  */
 
-namespace Drupal\onlyoffice_connector\Controller;
+namespace Drupal\onlyoffice\Controller;
 
 use Drupal\Component\Uuid\Uuid;
 use Drupal\Core\Controller\ControllerBase;
@@ -28,7 +28,7 @@ use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
 use Drupal\file\Entity\File;
 use Drupal\file\FileInterface;
-use Drupal\onlyoffice_connector\OnlyofficeUrlHelper;
+use Drupal\onlyoffice\OnlyofficeUrlHelper;
 use Drupal\user\Entity\User;
 use Drupal\user\UserStorageInterface;
 use Drupal\media\Entity\Media;
@@ -38,8 +38,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Firebase\JWT\JWT;
-use Drupal\onlyoffice_connector\OnlyofficeAppConfig;
-use Drupal\onlyoffice_connector\OnlyofficeDocumentHelper;
+use Drupal\onlyoffice\OnlyofficeAppConfig;
+use Drupal\onlyoffice\OnlyofficeDocumentHelper;
 
 /**
  * Returns responses for ONLYOFFICE Connector routes.
@@ -121,7 +121,7 @@ class OnlyofficeCallbackController extends ControllerBase {
     $this->fileSystem = $file_system;
     $this->streamWrapperManager = $streamWrapperManager;
     $this->time = $time;
-    $this->logger = $this->getLogger('onlyoffice_connector');
+    $this->logger = $this->getLogger('onlyoffice');
   }
 
   /**
@@ -147,7 +147,7 @@ class OnlyofficeCallbackController extends ControllerBase {
         return new JsonResponse(['error' => 1, 'message' => 'The request body is missing.'], 400);
     }
 
-    if (\Drupal::config('onlyoffice_connector.settings')->get('doc_server_jwt')) {
+    if (\Drupal::config('onlyoffice.settings')->get('doc_server_jwt')) {
       $token = $body->token;
       $inBody = true;
 
@@ -164,7 +164,7 @@ class OnlyofficeCallbackController extends ControllerBase {
       }
 
       try {
-        $bodyFromToken = JWT::decode($token, \Drupal::config('onlyoffice_connector.settings')->get('doc_server_jwt'), array("HS256"));
+        $bodyFromToken = JWT::decode($token, \Drupal::config('onlyoffice.settings')->get('doc_server_jwt'), array("HS256"));
 
         $body = $inBody ? $bodyFromToken : $bodyFromToken->payload;
       } catch (\Exception $e) {

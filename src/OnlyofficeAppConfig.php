@@ -19,7 +19,7 @@
  *
  */
 
-namespace Drupal\onlyoffice_connector;
+namespace Drupal\onlyoffice;
 
 use Drupal\Core\Site\Settings;
 

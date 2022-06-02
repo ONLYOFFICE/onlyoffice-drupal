@@ -19,21 +19,21 @@
  *
  */
 
-namespace Drupal\onlyoffice_connector;
+namespace Drupal\onlyoffice;
 
 use Drupal\Core\Link;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Url;
 use Drupal\file\Entity\File;
 use Drupal\media\Entity\Media;
-use Drupal\onlyoffice_connector\OnlyofficeDocumentHelper;
+use Drupal\onlyoffice\OnlyofficeDocumentHelper;
 use Firebase\JWT\JWT;
 
 class OnlyofficeUrlHelper
 {
 
   public static function getEditorUrl(Media $media) {
-    return Url::fromRoute('onlyoffice_connector.editor', ['media' => $media->id()]);
+    return Url::fromRoute('onlyoffice.editor', ['media' => $media->id()]);
   }
 
   public static function getEditorLink(Media $media) {
@@ -45,7 +45,7 @@ class OnlyofficeUrlHelper
 
     return new Link(
       $title,
-      Url::fromRoute('onlyoffice_connector.editor', ['media' => $media->id()])
+      Url::fromRoute('onlyoffice.editor', ['media' => $media->id()])
     );
   }
 
@@ -56,7 +56,7 @@ class OnlyofficeUrlHelper
 
     $key = static::signLinkParameters($linkParameters);
 
-    return Url::fromRoute('onlyoffice_connector.callback', ['key' => $key])->setAbsolute()->toString();
+    return Url::fromRoute('onlyoffice.callback', ['key' => $key])->setAbsolute()->toString();
   }
 
   public static function getDownloadFileUrl (File $file) {
@@ -67,7 +67,7 @@ class OnlyofficeUrlHelper
 
     $key = static::signLinkParameters($linkParameters);
 
-    return Url::fromRoute('onlyoffice_connector.download', ['key' => $key])->setAbsolute()->toString();
+    return Url::fromRoute('onlyoffice.download', ['key' => $key])->setAbsolute()->toString();
   }
 
   public static function getGoBackUrl(Media $media) {

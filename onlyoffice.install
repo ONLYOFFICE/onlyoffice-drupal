@@ -29,21 +29,21 @@ use Drupal\Core\Cache\Cache;
 /**
  * Implements hook_install().
  */
-function onlyoffice_connector_install() {
+function onlyoffice_install() {
   Cache::invalidateTags(['rendered']);
 }
 
 /**
  * Implements hook_uninstall().
  */
-function onlyoffice_connector_uninstall() {
+function onlyoffice_uninstall() {
   Cache::invalidateTags(['rendered']);
 }
 
 /**
  * Implements hook_requirements().
  */
-function onlyoffice_connector_requirements($phase) {
+function onlyoffice_requirements($phase) {
   $requirements = [];
 
   if ($phase == 'install') {

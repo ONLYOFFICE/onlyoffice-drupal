@@ -1,10 +1,10 @@
 {
-    "name": "drupal/onlyoffice_connector",
+    "name": "drupal/onlyoffice",
     "type": "drupal-module",
     "description": "Allows editing office files.",
     "keywords": ["drupal"],
     "license": "GPL-2.0+",
-    "homepage": "https://www.drupal.org/project/onlyoffice_connector",
+    "homepage": "https://www.drupal.org/project/onlyoffice",
     "authors": [
         {
             "name": "Ascensio System SIA",

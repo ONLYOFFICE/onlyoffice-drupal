@@ -1,3 +1,0 @@
-services:
-  onlyoffice_connector.document_helper:
-    class: Drupal\onlyoffice_connector\OnlyofficeDocumentHelper
