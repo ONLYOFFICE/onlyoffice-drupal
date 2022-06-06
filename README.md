@@ -1,8 +1,18 @@
-# ONLYOFFICE integration module for Drupal
+﻿# ONLYOFFICE integration module for Drupal
 
-This module enables users to edit files in the Media module from [Drupal](https://www.drupal.org) using ONLYOFFICE Docs packaged as Document Server - [Community or Enterprise Edition](#onlyoffice-docs-editions).
+Contents of this file
+---------------------
 
-## Features
+ * Introduction
+ * Requirements
+ * Installation
+ * Configuration
+ * Usage
+ * Installing ONLYOFFICE Docs
+ 
+## Introduction
+
+The ONLYOFFICE module enables users to edit files in the Media module from [Drupal](https://www.drupal.org) using ONLYOFFICE Docs packaged as Document Server - [Community or Enterprise Edition](#installing-onlyoffice-docs).
 
 The module allows to:
 
@@ -15,19 +25,13 @@ Supported formats:
 * For editing: DOCX, XLSX, PPTX.
 * For viewing only: DJVU, DOC, DOCM, DOT, DOTM, DOTX, EPUB, FB2, FODT, HTML, MHT, ODT, OTT, OXPS, PDF, RTF, TXT, XPS, XML, CSV, FODS, ODS, OTS, XLS, XLSM, XLT, XLTM, XLTX, FODP, ODP, OTP, POT, POTM, POTX, PPS, PPSM, PPSX, PPT, PPTM.
 
-## Installing ONLYOFFICE Docs
+In case of technical problems, the best way to get help is to submit your issues [here](https://github.com/ONLYOFFICE/onlyoffice-drupal/issues). Alternatively, you can contact ONLYOFFICE team on [forum.onlyoffice.com](https://forum.onlyoffice.com/).
 
-You will need an instance of ONLYOFFICE Docs (Document Server) that is resolvable and connectable both from Drupal and any end clients. ONLYOFFICE Document Server must also be able to POST to Drupal directly.
+## Requirements
 
-You can install free Community version of ONLYOFFICE Docs or scalable Enterprise Edition.
+This module requires no modules outside of Drupal core.
 
-To install free Community version, use [Docker](https://github.com/onlyoffice/Docker-DocumentServer) (recommended) or follow [these instructions](https://helpcenter.onlyoffice.com/installation/docs-community-install-ubuntu.aspx) for Debian, Ubuntu, or derivatives.
-
-To install Enterprise Edition, follow the instructions [here](https://helpcenter.onlyoffice.com/installation/docs-enterprise-index.aspx).
-
-Community Edition vs Enterprise Edition comparison can be found [here](#onlyoffice-docs-editions).
-
-## Installing ONLYOFFICE integration module for Drupal
+## Installation
 
 **Step 1: Add the module**
 
@@ -63,7 +67,7 @@ drush pm:enable onlyoffice_connector
 ```
 2. Follow the instructions on the screen.
 
-## Configuring ONLYOFFICE integration module for Drupal
+## Configuration
 
 In Drupal, open the `~/config/system/onlyoffice-connector` page with administrative settings for **ONLYOFFICE** section.
 Enter the address to connect ONLYOFFICE Document Server:
@@ -80,7 +84,7 @@ To restrict access to ONLYOFFICE Document Server and for security reasons and da
 Specify the _Secret key_ in the Drupal administrative configuration.
 In the ONLYOFFICE Document Server [config file](https://api.onlyoffice.com/editors/signature/) specify the same secret key and enable the validation.
 
-## Using ONLYOFFICE integration module for Drupal
+## Usage
 
 **Edit files already uploaded to Drupal**
 
@@ -110,11 +114,17 @@ Specify title and select a file (if the content contains File fields).
 
 For Media section, specify the name of the previously uploaded file.
 
-Your site visitors will also be able to view the created page (People �> Permissions �> View published content).
+Your site visitors will also be able to view the created page (People -> Permissions -> View published content).
 
-## ONLYOFFICE Docs editions
+## Installing ONLYOFFICE Docs
 
-ONLYOFFICE offers different versions of its online document editors that can be deployed on your own servers.
+You will need an instance of ONLYOFFICE Docs (Document Server) that is resolvable and connectable both from Drupal and any end clients. ONLYOFFICE Document Server must also be able to POST to Drupal directly.
+
+You can install free Community version of ONLYOFFICE Docs or scalable Enterprise Edition.
+
+To install free Community version, use [Docker](https://github.com/onlyoffice/Docker-DocumentServer) (recommended) or follow [these instructions](https://helpcenter.onlyoffice.com/installation/docs-community-install-ubuntu.aspx) for Debian, Ubuntu, or derivatives.
+
+To install Enterprise Edition, follow the instructions [here](https://helpcenter.onlyoffice.com/installation/docs-enterprise-index.aspx).
 
 **ONLYOFFICE Docs** packaged as Document Server: 
 
@@ -187,5 +197,3 @@ The table below will help you make the right choice.
 | | [Get it now](https://www.onlyoffice.com/download-docs.aspx?utm_source=github&utm_medium=cpc&utm_campaign=GitHubDrupal#docs-community)  | [Start Free Trial](https://www.onlyoffice.com/download-docs.aspx?utm_source=github&utm_medium=cpc&utm_campaign=GitHubDrupal#docs-enterprise)  |
 
 \* If supported by DMS.
-
-In case of technical problems, the best way to get help is to submit your issues [here](https://github.com/ONLYOFFICE/onlyoffice-drupal/issues). Alternatively, you can contact ONLYOFFICE team on [forum.onlyoffice.com](https://forum.onlyoffice.com/).
