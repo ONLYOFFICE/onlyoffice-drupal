@@ -1,0 +1,73 @@
+# Chinese translation of ONLYOFFICE Connector
+# (c) Copyright Ascensio System SIA 2022
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: ONLYOFFICE Connector\n"
+"POT-Creation-Date: 2022-03-03 11:00+0000\n"
+"PO-Revision-Date: 2022-04-04 13:00+0300\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: zh-hans\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Poedit 3.0.1\n"
+
+msgid "Allows editing office files."
+msgstr "允许编辑办公文件。"
+
+msgid "The ONLYOFFICE connector allows users to edit office documents, spreadsheets, and presentations in the Media module from Drupal using ONLYOFFICE Docs packaged as Document Server. Users are able to collaborate on documents in real-time and preview files on public pages."
+msgstr "ONLYOFFICE连接器允许用户使用ONLYOFFICE文档编辑器（并入文档服务器）在Drupal的媒体模块中编辑办公文档、电子表格和演示文稿。用户可以实时协作处理文件，并在公共页面上预览文件。"
+
+msgid "Installation and configuration"
+msgstr "安装与配置"
+
+msgid "Explore how to install and configure the ONLYOFFICE connector for Drupal on the <a href=\":onlyoffice-drupal\">official project page</a>."
+msgstr "访问 <a href=\":onlyoffice-drupal\">官方项目网页</a>，了解如何安装并配置ONLYOFFICE的Drupal连接器。"
+
+msgid "Manage ONLYOFFICE Connector settings."
+msgstr "管理ONLYOFFICE连接器设置。"
+
+msgid "ONLYOFFICE Connector settings"
+msgstr "ONLYOFFICE连接器的设置"
+
+msgid "Document Editing Service address"
+msgstr "文件编辑服务地址"
+
+msgid "Secret key (leave blank to disable)"
+msgstr "秘钥(留空为关闭)"
+
+msgid "Edit in ONLYOFFICE"
+msgstr "在ONLYOFFICE中编辑"
+
+msgid "View in ONLYOFFICE"
+msgstr "用ONLYOFFICE查看"
+
+msgid "ONLYOFFICE cannot be reached. Please contact admin."
+msgstr "无法联系到ONLYOFFICE。请联系管理员"
+
+msgid "Not supported version DocumentServer."
+msgstr "不支持的DocumentServer版本。"
+
+msgid "Sorry, this file format isn't supported (@extension)."
+msgstr "对不起，无法支持该文件格式（@extension）。"
+
+msgid "ONLYOFFICE Preview"
+msgstr "ONLYOFFICE 预览"
+
+msgid "Displaying files using the ONLYOFFICE editor."
+msgstr "使用 ONLYOFFICE 编辑器查看文件。"
+
+msgid "Width units"
+msgstr "宽度单位"
+
+msgid "Height units"
+msgstr "高度单位"
+
+msgid "Percents"
+msgstr "百分数"
+
+msgid "Pixels"
+msgstr "像素"

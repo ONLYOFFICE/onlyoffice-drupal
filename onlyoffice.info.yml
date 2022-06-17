@@ -1,0 +1,11 @@
+name: 'ONLYOFFICE Connector'
+type: module
+description: 'Allows editing office files.'
+core_version_requirement: ^9 || ^10
+package: Media
+configure: onlyoffice.settings_form
+dependencies:
+  - drupal:media
+project: onlyoffice
+'interface translation project': onlyoffice
+'interface translation server pattern': modules/onlyoffice-drupal/translations/onlyoffice.%language.po

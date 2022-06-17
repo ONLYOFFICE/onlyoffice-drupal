@@ -1,0 +1,73 @@
+# German translation of ONLYOFFICE Connector
+# (c) Copyright Ascensio System SIA 2022
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: ONLYOFFICE Connector\n"
+"POT-Creation-Date: 2022-03-03 11:00+0000\n"
+"PO-Revision-Date: 2022-04-04 13:01+0300\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: de_DE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.0.1\n"
+
+msgid "Allows editing office files."
+msgstr "Erlaubt Bearbeitung von Office-Dateien."
+
+msgid "The ONLYOFFICE connector allows users to edit office documents, spreadsheets, and presentations in the Media module from Drupal using ONLYOFFICE Docs packaged as Document Server. Users are able to collaborate on documents in real-time and preview files on public pages."
+msgstr "Der ONLYOFFICE-Konnektor ermöglicht die Bearbeitung von Office-Dokumenten, Tabellenkalkulationen und Präsentationen im Media-Modul von Drupal. Dazu wird ONLYOFFICE Docs verwendet, das als Document Server verpackt ist. Außerdem wird die Echtzeit-Zusammenarbeit an Dokumenten und eine Vorschau der Dateien auf öffentlichen Seiten verfügbar."
+
+msgid "Installation and configuration"
+msgstr "Installation und Konfiguration"
+
+msgid "Explore how to install and configure the ONLYOFFICE connector for Drupal on the <a href=\":onlyoffice-drupal\">official project page</a>."
+msgstr "Erfahren Sie auf der <a href=\":onlyoffice-drupal\">offiziellen Seite des Projekts</a>, wie Sie den ONLYOFFICE-Konnektor für Drupal installieren und konfigurieren können."
+
+msgid "Manage ONLYOFFICE Connector settings."
+msgstr "Einstellungen des ONLYOFFICE-Konnektors verwalten."
+
+msgid "ONLYOFFICE Connector settings"
+msgstr "Einstellungen vom ONLYOFFICE-Konnektor"
+
+msgid "Document Editing Service address"
+msgstr "Die Adresse des Dokumentenbearbeitungsservices"
+
+msgid "Secret key (leave blank to disable)"
+msgstr "Geheimer Schlüssel (freilassen, um zu deaktivieren)"
+
+msgid "Edit in ONLYOFFICE"
+msgstr "Mit ONLYOFFICE bearbeiten"
+
+msgid "View in ONLYOFFICE"
+msgstr "In ONLYOFFICE öffnen"
+
+msgid "ONLYOFFICE cannot be reached. Please contact admin."
+msgstr "ONLYOFFICE ist nicht zugänglich. Bitte wende Dich an Deinen Administrator."
+
+msgid "Not supported version DocumentServer."
+msgstr "Version vom Document Server nicht unterstützt."
+
+msgid "Sorry, this file format isn't supported (@extension)."
+msgstr "Dieses Dateiformat wird leider nicht unterstützt (@extension)."
+
+msgid "ONLYOFFICE Preview"
+msgstr "Vorschau in ONLYOFFICE"
+
+msgid "Displaying files using the ONLYOFFICE editor."
+msgstr "Anzeigen von Dateien im ONLYOFFICE-Editor."
+
+msgid "Width units"
+msgstr "Breiteneinheiten"
+
+msgid "Height units"
+msgstr "Höheneinheiten"
+
+msgid "Percents"
+msgstr "Prozentsätze"
+
+msgid "Pixels"
+msgstr "Bildpunkte"

@@ -1,0 +1,25 @@
+{
+    "name": "drupal/onlyoffice",
+    "type": "drupal-module",
+    "description": "Allows editing office files.",
+    "keywords": ["drupal"],
+    "license": "GPL-2.0+",
+    "homepage": "https://www.drupal.org/project/onlyoffice",
+    "authors": [
+        {
+            "name": "Ascensio System SIA",
+            "email": "integration@onlyoffice.com",
+            "homepage": "https://www.onlyoffice.com/"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/ONLYOFFICE/onlyoffice-drupal/issues",
+        "source": "https://github.com/ONLYOFFICE/onlyoffice-drupal",
+        "email": "support@onlyoffice.com",
+        "forum": "https://forum.onlyoffice.com/"
+    },
+    "require": {
+        "drupal/core": "^9 || ^10",
+        "firebase/php-jwt": "^4.0 | ^5.0"
+    }
+}

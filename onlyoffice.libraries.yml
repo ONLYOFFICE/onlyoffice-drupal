@@ -1,0 +1,8 @@
+onlyoffice.preview:
+  js:
+    js/onlyoffice-preview.js: {}
+  css:
+    base:
+      css/onlyoffice-preview.css: { }
+  dependencies:
+    - core/drupal

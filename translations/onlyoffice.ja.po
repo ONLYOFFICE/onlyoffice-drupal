@@ -1,0 +1,73 @@
+# Japanese translation of ONLYOFFICE Connector
+# (c) Copyright Ascensio System SIA 2022
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: ONLYOFFICE Connector\n"
+"POT-Creation-Date: 2022-03-03 11:00+0000\n"
+"PO-Revision-Date: 2022-04-04 13:01+0300\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: ja\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n!=1);\n"
+"X-Generator: Poedit 3.0.1\n"
+
+msgid "Allows editing office files."
+msgstr "オフィスファイルの編集を可能にします"
+
+msgid "The ONLYOFFICE connector allows users to edit office documents, spreadsheets, and presentations in the Media module from Drupal using ONLYOFFICE Docs packaged as Document Server. Users are able to collaborate on documents in real-time and preview files on public pages."
+msgstr "ONLYOFFICEコネクタを使用すると、ユーザーは、ドキュメントサーバーとしてパッケージ化されたONLYOFFICE Docsを使用して、DrupalからMediaモジュールのドキュメント、スプレッドシート、およびプレゼンテーションを編集できます。ユーザーは、リアルタイムでドキュメントを共同編集したり、公開ページでファイルをプレビューしたりできます。"
+
+msgid "Installation and configuration"
+msgstr "インストールと構成"
+
+msgid "Explore how to install and configure the ONLYOFFICE connector for Drupal on the <a href=\":onlyoffice-drupal\">official project page</a>."
+msgstr "Drupal用のONLYOFFICEコネクターをインストールして構成する方法を<a href=\":onlyoffice-drupal\">official project page</a>にご覧ください"
+
+msgid "Manage ONLYOFFICE Connector settings."
+msgstr "ONLYOFFICEコネクタ設定を管理する"
+
+msgid "ONLYOFFICE Connector settings"
+msgstr "ONLYOFFICEコネクタ設定"
+
+msgid "Document Editing Service address"
+msgstr "文書編集サービスアドレス"
+
+msgid "Secret key (leave blank to disable)"
+msgstr "シークレットキー (ブランクで無効)"
+
+msgid "Edit in ONLYOFFICE"
+msgstr "ONLYOFFICEで編集する"
+
+msgid "View in ONLYOFFICE"
+msgstr "ONLYOFFICEで表示"
+
+msgid "ONLYOFFICE cannot be reached. Please contact admin."
+msgstr "ONLYOFFICE に接続できません。管理者にお問い合わせください"
+
+msgid "Not supported version DocumentServer."
+msgstr "サポートされていないバージョン DocumentServer"
+
+msgid "Sorry, this file format isn't supported (@extension)."
+msgstr "申し訳ありませんが、このファイル形式はサポートされていません（@extension）。"
+
+msgid "ONLYOFFICE Preview"
+msgstr "ONLYOFFICEプレビュー"
+
+msgid "Displaying files using the ONLYOFFICE editor."
+msgstr "ONLYOFFICEエディタを使用してファイルを表示します"
+
+msgid "Width units"
+msgstr "幅の単位"
+
+msgid "Height units"
+msgstr "高さの単位"
+
+msgid "Percents"
+msgstr "パーセント"
+
+msgid "Pixels"
+msgstr "ピクセル"
