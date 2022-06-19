@@ -69,7 +69,7 @@ drush pm:enable onlyoffice
 
 ## Configuration
 
-In Drupal, open the `~/config/system/onlyoffice` page with administrative settings for **ONLYOFFICE** section.
+In Drupal, open the `~/config/system/onlyoffice-settings` page with administrative settings for **ONLYOFFICE** section.
 Enter the address to connect ONLYOFFICE Document Server:
 
 ```
