@@ -27,6 +27,12 @@ Supported formats:
 
 In case of technical problems, the best way to get help is to submit your issues [here](https://github.com/ONLYOFFICE/onlyoffice-drupal/issues). Alternatively, you can contact ONLYOFFICE team on [forum.onlyoffice.com](https://forum.onlyoffice.com/).
 
+ * For a full description of the module, visit the project page:
+   https://www.drupal.org/project/onlyoffice
+
+ * To submit bug reports and feature suggestions, or track changes:
+   https://www.drupal.org/project/issues/onlyoffice
+
 ## Requirements
 
 This module requires no modules outside of Drupal core.
