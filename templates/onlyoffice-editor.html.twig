@@ -1,0 +1,79 @@
+{# onlyoffice/templates/onlyoffice-editor.html.twig #}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>{{ filename }} | Drupal</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <link rel="icon" href="{{ favicon_path }}" type="image/vnd.microsoft.icon" />
+
+    <style>
+        html {
+            height: 100%;
+            width: 100%;
+        }
+
+        body {
+            background: #fff;
+            color: #333;
+            font-family: Arial, Tahoma, sans-serif;
+            font-size: 12px;
+            font-weight: normal;
+            height: 100%;
+            margin: 0;
+            overflow-y: hidden;
+            padding: 0;
+            text-decoration: none;
+        }
+
+    </style>
+
+    <script type="text/javascript" src="{{ doc_server_url }}"></script>
+</head>
+
+<body>
+    <div id="iframeEditor"></div>
+
+    <script type="text/javascript">
+        var docEditor;
+
+        var connectEditor = function() {
+            if (typeof DocsAPI === "undefined") {
+              alert("{{ 'ONLYOFFICE cannot be reached. Please contact admin.'|t }}");
+              return;
+            }
+
+            var docsVersion = DocsAPI.DocEditor.version().split(".");
+
+            if (docsVersion[0] < 6 || docsVersion[0] == 6 && docsVersion[1] == 0) {
+              alert("{{ 'Not supported version DocumentServer.'|t }}");
+              return;
+            }
+
+            var config = {{ config|raw }};
+            var error =  "{{ error }}";
+
+            if (error) {
+              config.events = {
+                onAppReady: function() {
+                  docEditor.showMessage(error);
+                }
+              }
+            }
+
+            docEditor = new DocsAPI.DocEditor("iframeEditor", config);
+        };
+
+        if (window.addEventListener) {
+            window.addEventListener("load", connectEditor);
+        } else if (window.attachEvent) {
+            window.attachEvent("load", connectEditor);
+        }
+    </script>
+</body>
+
+</html>

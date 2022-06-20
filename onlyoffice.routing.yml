@@ -1,0 +1,37 @@
+onlyoffice.settings_form:
+  path: '/admin/config/system/onlyoffice-settings'
+  defaults:
+    _title: 'ONLYOFFICE Connector settings'
+    _form: 'Drupal\onlyoffice\Form\SettingsForm'
+  requirements:
+    _permission: 'administer onlyoffice configuration'
+
+onlyoffice.editor:
+  path: '/admin/media/{media}/onlyoffice-editor'
+  defaults:
+    _title: 'ONLYOFFICE'
+    _controller: '\Drupal\onlyoffice\Controller\OnlyofficeEditorController::editor'
+  methods: [GET]
+  options:
+    parameters:
+      media:
+        type: entity:media
+  requirements:
+    _permission: 'view media,access media overview'
+    media: '\d+'
+
+onlyoffice.callback:
+  path: '/onlyoffice-callback/{key}'
+  defaults:
+    _controller: '\Drupal\onlyoffice\Controller\OnlyofficeCallbackController::callback'
+  methods: [POST]
+  requirements:
+    _access: 'TRUE'
+
+onlyoffice.download:
+  path: '/onlyoffice-download/{key}'
+  defaults:
+    _controller: '\Drupal\onlyoffice\Controller\OnlyofficeDownloadController::download'
+  methods: [ GET ]
+  requirements:
+    _access: 'TRUE'

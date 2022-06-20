@@ -1,0 +1,73 @@
+# Russian translation of ONLYOFFICE Connector
+# (c) Copyright Ascensio System SIA 2022
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: ONLYOFFICE Connector\n"
+"POT-Creation-Date: 2022-03-03 11:00+0000\n"
+"PO-Revision-Date: 2022-04-04 13:01+0300\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: ru_RU\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=((((n%10)==1)&&((n%100)!=11))?(0):(((((n%10)>=2)&&((n%10)<=4))&&(((n%100)<10)||((n%100)>=20)))?(1):2));\n"
+"X-Generator: Poedit 3.0.1\n"
+
+msgid "Allows editing office files."
+msgstr "Позволяет редактировать офисные файлы."
+
+msgid "The ONLYOFFICE connector allows users to edit office documents, spreadsheets, and presentations in the Media module from Drupal using ONLYOFFICE Docs packaged as Document Server. Users are able to collaborate on documents in real-time and preview files on public pages."
+msgstr "Коннектор ONLYOFFICE позволяет пользователям редактировать текстовые документы, электронные таблицы и презентации в модуле Media в Drupal, используя редакторы документов ONLYOFFICE (объединенные в Сервер документов). Пользователи могут работать над документами совместно в режиме реального времени и просматривать файлы на публичных страницах."
+
+msgid "Installation and configuration"
+msgstr "Установка и настройка"
+
+msgid "Explore how to install and configure the ONLYOFFICE connector for Drupal on the <a href=\":onlyoffice-drupal\">official project page</a>."
+msgstr "Узнайте, как установить и настроить коннектор ONLYOFFICE для Drupal, на <a href=\":onlyoffice-drupal\">официальной странице проекта</a>."
+
+msgid "Manage ONLYOFFICE Connector settings."
+msgstr "Управление настройками ONLYOFFICE Connector."
+
+msgid "ONLYOFFICE Connector settings"
+msgstr "Настройки коннектора ONLYOFFICE"
+
+msgid "Document Editing Service address"
+msgstr "Адрес службы редактирования документов"
+
+msgid "Secret key (leave blank to disable)"
+msgstr "Секретный ключ (оставьте пустым для отключения)"
+
+msgid "Edit in ONLYOFFICE"
+msgstr "Редактировать в ONLYOFFICE"
+
+msgid "View in ONLYOFFICE"
+msgstr "Открыть в ONLYOFFICE"
+
+msgid "ONLYOFFICE cannot be reached. Please contact admin."
+msgstr "Приложение ONLYOFFICE недоступно. Пожалуйста, свяжитесь с администратором."
+
+msgid "Not supported version DocumentServer."
+msgstr "Неподдерживаемая версия Сервера документов."
+
+msgid "Sorry, this file format isn't supported (@extension)."
+msgstr "Извините, этот формат файла не поддерживается (@extension)."
+
+msgid "ONLYOFFICE Preview"
+msgstr "ONLYOFFICE Предварительный просмотр"
+
+msgid "Displaying files using the ONLYOFFICE editor."
+msgstr "Отображение файлов с помощью редактора ONLYOFFICE."
+
+msgid "Width units"
+msgstr "Единицы ширины"
+
+msgid "Height units"
+msgstr "Единицы высоты"
+
+msgid "Percents"
+msgstr "Проценты"
+
+msgid "Pixels"
+msgstr "Пиксели"
