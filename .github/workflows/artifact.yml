@@ -1,0 +1,32 @@
+name: Artifact
+
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [opened, reopened]
+    branches: [main]
+  
+jobs:
+  artifact:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Get Info 
+        run: | 
+          echo "::set-output name=version::$(grep -Eo '[0-9]+(\.[0-9]+)+' CHANGELOG.md)"
+        id: info
+      - name: Build Artifact
+        run: |
+          cd ${{ github.workspace }}
+          mkdir -p ./deploy/onlyoffice-drupal
+          rsync -av --exclude='deploy' ./ ./deploy/onlyoffice-drupal
+          cd ./deploy/onlyoffice-drupal
+          rm -rf ./.github/
+          rm -rf ./.git/
+          rm ./.gitignore
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: onlyoffice-drupal-${{ steps.info.outputs.version }}
+          path: deploy
