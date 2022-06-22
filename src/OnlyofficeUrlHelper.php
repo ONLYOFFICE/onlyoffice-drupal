@@ -32,76 +32,83 @@ use Firebase\JWT\JWT;
 class OnlyofficeUrlHelper
 {
 
-  public static function getEditorUrl(Media $media) {
-    return Url::fromRoute('onlyoffice.editor', ['media' => $media->id()]);
-  }
-
-  public static function getEditorLink(Media $media) {
-    $title = t("View in ONLYOFFICE");
-
-    if (OnlyofficeDocumentHelper::isEditable($media)) {
-      $title = t("Edit in ONLYOFFICE");
+    public static function getEditorUrl(Media $media)
+    {
+        return Url::fromRoute('onlyoffice.editor', ['media' => $media->id()]);
     }
 
-    return new Link(
-      $title,
-      Url::fromRoute('onlyoffice.editor', ['media' => $media->id()])
-    );
-  }
+    public static function getEditorLink(Media $media)
+    {
+        $title = t("View in ONLYOFFICE");
 
-  public static function getCallbackUrl (Media $media) {
-    $linkParameters = [
-      $media->uuid()
-    ];
+        if (OnlyofficeDocumentHelper::isEditable($media)) {
+            $title = t("Edit in ONLYOFFICE");
+        }
 
-    $key = static::signLinkParameters($linkParameters);
-
-    return Url::fromRoute('onlyoffice.callback', ['key' => $key])->setAbsolute()->toString();
-  }
-
-  public static function getDownloadFileUrl (File $file) {
-    $linkParameters = [
-      $file->uuid(),
-      \Drupal::currentUser()->getAccount()->id()
-    ];
-
-    $key = static::signLinkParameters($linkParameters);
-
-    return Url::fromRoute('onlyoffice.download', ['key' => $key])->setAbsolute()->toString();
-  }
-
-  public static function getGoBackUrl(Media $media) {
-    $url = Url::fromRoute('entity.media.collection')->setAbsolute();
-
-    if ($media->hasField('directory') && $media->get('directory')->getString()) {
-      $url->setRouteParameter('directory', $media->get('directory')->getString());
+        return new Link(
+            $title,
+            Url::fromRoute('onlyoffice.editor', ['media' => $media->id()])
+        );
     }
 
-    return $url->toString();
-  }
+    public static function getCallbackUrl(Media $media)
+    {
+        $linkParameters = [
+        $media->uuid()
+        ];
 
-  private static function signLinkParameters(array $parameters) {
-    $payload = \implode('?', $parameters);
+        $key = static::signLinkParameters($linkParameters);
 
-    $signature = JWT::urlsafeB64Encode(JWT::sign($payload, Settings::getHashSalt() . \Drupal::service('private_key')->get(), 'HS256'));
-
-    return JWT::urlsafeB64Encode($signature . '?' . $payload);
-  }
-
-  public static function verifyLinkKey($key) {
-    $signature = JWT::urlsafeB64Decode($key);
-
-    if ($signature) {
-      $segments = \explode('?', $signature);
-
-      $hash = $segments[0];
-      $parameters = array_slice($segments, 1);
-
-      if ($hash == JWT::urlsafeB64Encode(JWT::sign(\implode('?', $parameters), Settings::getHashSalt() . \Drupal::service('private_key')->get(), 'HS256'))) {
-          return $parameters;
-      }
+        return Url::fromRoute('onlyoffice.callback', ['key' => $key])->setAbsolute()->toString();
     }
 
-    return false;
-  }
+    public static function getDownloadFileUrl(File $file)
+    {
+        $linkParameters = [
+        $file->uuid(),
+        \Drupal::currentUser()->getAccount()->id()
+        ];
+
+        $key = static::signLinkParameters($linkParameters);
+
+        return Url::fromRoute('onlyoffice.download', ['key' => $key])->setAbsolute()->toString();
+    }
+
+    public static function getGoBackUrl(Media $media)
+    {
+        $url = Url::fromRoute('entity.media.collection')->setAbsolute();
+
+        if ($media->hasField('directory') && $media->get('directory')->getString()) {
+            $url->setRouteParameter('directory', $media->get('directory')->getString());
+        }
+
+        return $url->toString();
+    }
+
+    private static function signLinkParameters(array $parameters)
+    {
+        $payload = \implode('?', $parameters);
+
+        $signature = JWT::urlsafeB64Encode(JWT::sign($payload, Settings::getHashSalt() . \Drupal::service('private_key')->get(), 'HS256'));
+
+        return JWT::urlsafeB64Encode($signature . '?' . $payload);
+    }
+
+    public static function verifyLinkKey($key)
+    {
+        $signature = JWT::urlsafeB64Decode($key);
+
+        if ($signature) {
+            $segments = \explode('?', $signature);
+
+            $hash = $segments[0];
+            $parameters = array_slice($segments, 1);
+
+            if ($hash == JWT::urlsafeB64Encode(JWT::sign(\implode('?', $parameters), Settings::getHashSalt() . \Drupal::service('private_key')->get(), 'HS256'))) {
+                return $parameters;
+            }
+        }
+
+        return false;
+    }
 }

@@ -41,25 +41,28 @@ use Drupal\onlyoffice\OnlyofficeUrlHelper;
  *   }
  * )
  */
-class OnlyofficePreviewFormatter extends FileFormatterBase {
+class OnlyofficePreviewFormatter extends FileFormatterBase
+{
 
-  /**
-   * {@inheritdoc}
-   */
-  public static function defaultSettings() {
-    return [
+    /**
+     * {@inheritdoc}
+     */
+    public static function defaultSettings()
+    {
+        return [
         'width_unit' => '%',
         'width' => 100,
         'height_unit' => 'px',
         'height' => 640,
-      ] + parent::defaultSettings();
-  }
+        ] + parent::defaultSettings();
+    }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function settingsForm(array $form, FormStateInterface $form_state) {
-    return parent::settingsForm($form, $form_state) + [
+    /**
+     * {@inheritdoc}
+     */
+    public function settingsForm(array $form, FormStateInterface $form_state)
+    {
+        return parent::settingsForm($form, $form_state) + [
         'width_unit' => [
           '#type' => 'radios',
           '#title' => $this->t('Width units'),
@@ -76,7 +79,7 @@ class OnlyofficePreviewFormatter extends FileFormatterBase {
           '#size' => 5,
           '#maxlength' => 5,
           '#min' => 0,
-          '#required' => TRUE,
+          '#required' => true,
         ],
         'height_unit' => [
           '#type' => 'radios',
@@ -94,90 +97,95 @@ class OnlyofficePreviewFormatter extends FileFormatterBase {
           '#size' => 5,
           '#maxlength' => 5,
           '#min' => 0,
-          '#required' => TRUE,
+          '#required' => true,
         ],
-      ];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function settingsSummary() {
-    $summary = parent::settingsSummary();
-    $summary[] = $this->t('Width') . ': ' . $this->getSetting('width') . $this->getSetting('width_unit');
-    $summary[] = $this->t('Height') . ': ' . $this->getSetting('height') . $this->getSetting('height_unit');
-    return $summary;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function isApplicable(FieldDefinitionInterface $field_definition) {
-    if (!parent::isApplicable($field_definition)) {
-      return FALSE;
+        ];
     }
 
-    $extension_list = array_filter(preg_split('/\s+/', $field_definition->getSetting('file_extensions')));
-
-    foreach ($extension_list as $extension) {
-      if (OnlyofficeDocumentHelper::getDocumentType($extension)) {
-        return TRUE;
-      }
+    /**
+     * {@inheritdoc}
+     */
+    public function settingsSummary()
+    {
+        $summary = parent::settingsSummary();
+        $summary[] = $this->t('Width') . ': ' . $this->getSetting('width') . $this->getSetting('width_unit');
+        $summary[] = $this->t('Height') . ': ' . $this->getSetting('height') . $this->getSetting('height_unit');
+        return $summary;
     }
 
-    return FALSE;
-  }
+    /**
+     * {@inheritdoc}
+     */
+    public static function isApplicable(FieldDefinitionInterface $field_definition)
+    {
+        if (!parent::isApplicable($field_definition)) {
+            return false;
+        }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function viewElements(FieldItemListInterface $items, $langcode) {
+        $extension_list = array_filter(preg_split('/\s+/', $field_definition->getSetting('file_extensions')));
 
-    $element = [
-      '#attached' => [
+        foreach ($extension_list as $extension) {
+            if (OnlyofficeDocumentHelper::getDocumentType($extension)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function viewElements(FieldItemListInterface $items, $langcode)
+    {
+
+        $element = [
+        '#attached' => [
         'library' => [
           'onlyoffice/onlyoffice.api',
           'onlyoffice/onlyoffice.preview'
         ]
-      ]
-    ];
-
-    /** @var \Drupal\file\Entity\File $file */
-    foreach ($this->getEntitiesToView($items, $langcode) as $delta => $file) {
-      $extension = OnlyofficeDocumentHelper::getExtension($file->getFilename());
-
-      if (OnlyofficeDocumentHelper::getDocumentType($extension)) {
-        $editor_id = sprintf('%s-%s-iframeOnlyofficeEditor',
-          $file->getEntityTypeId(),
-          $file->id()
-        );
-
-        $element[$delta] = ['#markup' => sprintf('<div id="%s" class="onlyoffice-editor"></div>', $editor_id)];
-
-        $element['#attached']['drupalSettings']['onlyofficeData'][$editor_id] = [
-          'config' => $this->getEditorConfig($file),
+        ]
         ];
-      }
+
+        /** @var \Drupal\file\Entity\File $file */
+        foreach ($this->getEntitiesToView($items, $langcode) as $delta => $file) {
+            $extension = OnlyofficeDocumentHelper::getExtension($file->getFilename());
+
+            if (OnlyofficeDocumentHelper::getDocumentType($extension)) {
+                $editor_id = sprintf(
+                    '%s-%s-iframeOnlyofficeEditor',
+                    $file->getEntityTypeId(),
+                    $file->id()
+                );
+
+                $element[$delta] = ['#markup' => sprintf('<div id="%s" class="onlyoffice-editor"></div>', $editor_id)];
+
+                $element['#attached']['drupalSettings']['onlyofficeData'][$editor_id] = [
+                'config' => $this->getEditorConfig($file),
+                ];
+            }
+        }
+
+        return $element;
     }
 
-    return $element;
-  }
+    private function getEditorConfig(File $file)
+    {
 
-  private function getEditorConfig (File $file) {
+        $editor_width = $this->getSetting('width') . $this->getSetting('width_unit');
+        $editor_height = $this->getSetting('height') . $this->getSetting('height_unit');
 
-    $editor_width = $this->getSetting('width') . $this->getSetting('width_unit');
-    $editor_height = $this->getSetting('height') . $this->getSetting('height_unit');
-
-    return OnlyofficeDocumentHelper::createEditorConfig(
-      'embedded',
-      OnlyofficeDocumentHelper::getEditingKey($file, true),
-      $file->getFilename(),
-      OnlyofficeUrlHelper::getDownloadFileUrl($file),
-      document_info_owner: $file->getOwner()->getDisplayName(),
-      document_info_uploaded: \Drupal::service('date.formatter')->format($file->getCreatedTime(), 'short'),
-      editorConfig_lang: \Drupal::languageManager()->getCurrentLanguage()->getId(),
-      editor_width: $editor_width,
-      editor_height: $editor_height
-    );
-  }
+        return OnlyofficeDocumentHelper::createEditorConfig(
+            'embedded',
+            OnlyofficeDocumentHelper::getEditingKey($file, true),
+            $file->getFilename(),
+            OnlyofficeUrlHelper::getDownloadFileUrl($file),
+            document_info_owner: $file->getOwner()->getDisplayName(),
+            document_info_uploaded: \Drupal::service('date.formatter')->format($file->getCreatedTime(), 'short'),
+            editorConfig_lang: \Drupal::languageManager()->getCurrentLanguage()->getId(),
+            editor_width: $editor_width,
+            editor_height: $editor_height
+        );
+    }
 }

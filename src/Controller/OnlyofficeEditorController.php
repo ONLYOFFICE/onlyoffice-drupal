@@ -35,118 +35,123 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Returns responses for ONLYOFFICE Connector routes.
  */
-class OnlyofficeEditorController extends ControllerBase {
+class OnlyofficeEditorController extends ControllerBase
+{
 
-  /**
-   * The renderer service.
-   *
-   * @var \Drupal\Core\Render\RendererInterface
-   */
-  protected $renderer;
+    /**
+     * The renderer service.
+     *
+     * @var \Drupal\Core\Render\RendererInterface
+     */
+    protected $renderer;
 
-  /**
-   * The onlyoffice document helper service.
-   *
-   * @var \Drupal\onlyoffice\OnlyofficeDocumentHelper
-   */
-  protected $documentHelper;
+    /**
+     * The onlyoffice document helper service.
+     *
+     * @var \Drupal\onlyoffice\OnlyofficeDocumentHelper
+     */
+    protected $documentHelper;
 
-  /**
-   * A logger instance.
-   *
-   * @var \Psr\Log\LoggerInterface
-   */
-  protected $logger;
+    /**
+     * A logger instance.
+     *
+     * @var \Psr\Log\LoggerInterface
+     */
+    protected $logger;
 
-  /**
-   * Constructs an OnlyofficeEditorController object.
-   *
-   * @param \Drupal\Core\Render\RendererInterface $renderer
-   * The renderer service.
-   * @param \Drupal\onlyoffice\OnlyofficeDocumentHelper $document_helper
-   * The onlyoffice document helper service.
-   */
-  public function __construct(RendererInterface $renderer, OnlyofficeDocumentHelper $document_helper) {
-    $this->renderer = $renderer;
-    $this->documentHelper = $document_helper;
-    $this->logger = $this->getLogger('onlyoffice');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('renderer'),
-      $container->get('onlyoffice.document_helper')
-    );
-  }
-
-  public function editor(Media $media, Request $request) {
-    if ($media->getSource()->getPluginId() != "file") {
-      throw new UnsupportedMediaTypeHttpException();
+    /**
+     * Constructs an OnlyofficeEditorController object.
+     *
+     * @param \Drupal\Core\Render\RendererInterface $renderer
+     * The renderer service.
+     * @param \Drupal\onlyoffice\OnlyofficeDocumentHelper $document_helper
+     * The onlyoffice document helper service.
+     */
+    public function __construct(RendererInterface $renderer, OnlyofficeDocumentHelper $document_helper)
+    {
+        $this->renderer = $renderer;
+        $this->documentHelper = $document_helper;
+        $this->logger = $this->getLogger('onlyoffice');
     }
 
-    $editorType = 'desktop';
-
-    if (preg_match( OnlyofficeAppConfig::USER_AGENT_MOBILE, $request->headers->get('User-Agent'))) {
-      $editorType = 'mobile';
+    /**
+     * {@inheritdoc}
+     */
+    public static function create(ContainerInterface $container)
+    {
+        return new static(
+            $container->get('renderer'),
+            $container->get('onlyoffice.document_helper')
+        );
     }
 
-    $build = [
-      'page' => $this->getDocumentConfig($editorType, $media)
-    ];
+    public function editor(Media $media, Request $request)
+    {
+        if ($media->getSource()->getPluginId() != "file") {
+            throw new UnsupportedMediaTypeHttpException();
+        }
 
-    $build['page']['#theme'] = 'onlyoffice_editor';
+        $editorType = 'desktop';
 
-    $html = $this->renderer->renderRoot($build);
-    $response = new Response();
-    $response->setContent($html);
+        if (preg_match(OnlyofficeAppConfig::USER_AGENT_MOBILE, $request->headers->get('User-Agent'))) {
+            $editorType = 'mobile';
+        }
 
-    return $response;
-  }
+        $build = [
+        'page' => $this->getDocumentConfig($editorType, $media)
+        ];
 
-  private function getDocumentConfig($editorType, Media $media) {
-    $context = ['@type' => $media->bundle(), '%label' => $media->label(), 'link' => OnlyofficeUrlHelper::getEditorLink($media)->toString()];
+        $build['page']['#theme'] = 'onlyoffice_editor';
 
-    $file = $media->get(OnlyofficeDocumentHelper::getSourceFieldName($media))->entity;
-    $extension = OnlyofficeDocumentHelper::getExtension($file->getFilename());
-    $documentType = OnlyofficeDocumentHelper::getDocumentType($extension);
+        $html = $this->renderer->renderRoot($build);
+        $response = new Response();
+        $response->setContent($html);
 
-    if (!$documentType) {
-      $this->logger->warning('Media @type %label is not supported current module.', $context);
-      return ['#error' => $this->t("Sorry, this file format isn't supported (@extension)", ['@extension' => $extension])];
+        return $response;
     }
 
-    $user = \Drupal::currentUser()->getAccount();
-    $can_edit = $this->documentHelper->isEditable($media);
-    $edit_permission = $media->access("update", $user);
+    private function getDocumentConfig($editorType, Media $media)
+    {
+        $context = ['@type' => $media->bundle(), '%label' => $media->label(), 'link' => OnlyofficeUrlHelper::getEditorLink($media)->toString()];
 
-    $editorConfig = $this->documentHelper->createEditorConfig(
-      $editorType,
-      $this->documentHelper->getEditingKey($file),
-      $file->getFilename(),
-      OnlyofficeUrlHelper::getDownloadFileUrl($file),
-      document_info_owner: $media->getOwner()->getDisplayName(),
-      document_info_uploaded: \Drupal::service('date.formatter')->format($media->getCreatedTime(), 'short'),
-      document_permissions_edit: $edit_permission,
-      editorConfig_callbackUrl: $edit_permission ? OnlyofficeUrlHelper::getCallbackUrl($media) : null,
-      editorConfig_mode: $edit_permission && $can_edit ? 'edit' : 'view',
-      editorConfig_lang: \Drupal::languageManager()->getCurrentLanguage()->getId(),
-      editorConfig_user_id: $user->id(),
-      editorConfig_user_name: $user->getDisplayName(),
-      editorConfig_customization_goback_url: OnlyofficeUrlHelper::getGoBackUrl($media)
-    );
+        $file = $media->get(OnlyofficeDocumentHelper::getSourceFieldName($media))->entity;
+        $extension = OnlyofficeDocumentHelper::getExtension($file->getFilename());
+        $documentType = OnlyofficeDocumentHelper::getDocumentType($extension);
 
-    $this->logger->debug('Generated config for media @type %label: <br><pre><code>' . print_r($editorConfig, TRUE) . '</code></pre>', $context);
+        if (!$documentType) {
+            $this->logger->warning('Media @type %label is not supported current module.', $context);
+            return ['#error' => $this->t("Sorry, this file format isn't supported (@extension)", ['@extension' => $extension])];
+        }
 
-    $options = \Drupal::config('onlyoffice.settings');
+        $user = \Drupal::currentUser()->getAccount();
+        $can_edit = $this->documentHelper->isEditable($media);
+        $edit_permission = $media->access("update", $user);
 
-    return [
-      '#config' => json_encode($editorConfig),
-      '#filename' => $file->getFilename(),
-      '#favicon_path' => '/' . \Drupal::service('extension.list.module')->getPath('onlyoffice') . '/images/' . $documentType . '.ico',
-      '#doc_server_url' => $options->get('doc_server_url') . OnlyofficeAppConfig::getDocServiceApiUrl(),
-    ];
-  }
+        $editorConfig = $this->documentHelper->createEditorConfig(
+            $editorType,
+            $this->documentHelper->getEditingKey($file),
+            $file->getFilename(),
+            OnlyofficeUrlHelper::getDownloadFileUrl($file),
+            document_info_owner: $media->getOwner()->getDisplayName(),
+            document_info_uploaded: \Drupal::service('date.formatter')->format($media->getCreatedTime(), 'short'),
+            document_permissions_edit: $edit_permission,
+            editorConfig_callbackUrl: $edit_permission ? OnlyofficeUrlHelper::getCallbackUrl($media) : null,
+            editorConfig_mode: $edit_permission && $can_edit ? 'edit' : 'view',
+            editorConfig_lang: \Drupal::languageManager()->getCurrentLanguage()->getId(),
+            editorConfig_user_id: $user->id(),
+            editorConfig_user_name: $user->getDisplayName(),
+            editorConfig_customization_goback_url: OnlyofficeUrlHelper::getGoBackUrl($media)
+        );
+
+        $this->logger->debug('Generated config for media @type %label: <br><pre><code>' . print_r($editorConfig, true) . '</code></pre>', $context);
+
+        $options = \Drupal::config('onlyoffice.settings');
+
+        return [
+        '#config' => json_encode($editorConfig),
+        '#filename' => $file->getFilename(),
+        '#favicon_path' => '/' . \Drupal::service('extension.list.module')->getPath('onlyoffice') . '/images/' . $documentType . '.ico',
+        '#doc_server_url' => $options->get('doc_server_url') . OnlyofficeAppConfig::getDocServiceApiUrl(),
+        ];
+    }
 }
