@@ -21,11 +21,14 @@ namespace Drupal\onlyoffice\Plugin\Field\FieldFormatter;
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+use Drupal\Core\Datetime\DateFormatterInterface;
+use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\file\Plugin\Field\FieldFormatter\FileFormatterBase;
 use Drupal\file\Entity\File;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\onlyoffice\OnlyofficeDocumentHelper;
 use Drupal\onlyoffice\OnlyofficeUrlHelper;
 
@@ -42,6 +45,76 @@ use Drupal\onlyoffice\OnlyofficeUrlHelper;
  * )
  */
 class OnlyofficePreviewFormatter extends FileFormatterBase {
+
+  /**
+   * The date formatter service.
+   *
+   * @var \Drupal\Core\Datetime\DateFormatterInterface
+   */
+  protected $dateFormatter;
+
+  /**
+   * The language manager.
+   *
+   * @var \Drupal\Core\Language\LanguageManagerInterface
+   */
+  protected $languageManager;
+
+  /**
+   * Construct the OnlyofficePreviewFormatter.
+   *
+   * @param string $plugin_id
+   *   The plugin_id for the formatter.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
+   *   The definition of the field to which the formatter is associated.
+   * @param array $settings
+   *   The formatter settings.
+   * @param string $label
+   *   The formatter label display setting.
+   * @param string $view_mode
+   *   The view mode.
+   * @param array $third_party_settings
+   *   Any third party settings.
+   * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
+   *   The date formatter service.
+   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   *   The language manager.
+   */
+  public function __construct(
+    $plugin_id,
+    $plugin_definition,
+    FieldDefinitionInterface $field_definition,
+    array $settings,
+    $label,
+    $view_mode,
+    array $third_party_settings,
+    DateFormatterInterface $date_formatter,
+    LanguageManagerInterface $language_manager
+  ) {
+    parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings);
+
+    $this->dateFormatter = $date_formatter;
+    $this->languageManager = $language_manager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $plugin_id,
+      $plugin_definition,
+      $configuration['field_definition'],
+      $configuration['settings'],
+      $configuration['label'],
+      $configuration['view_mode'],
+      $configuration['third_party_settings'],
+      $container->get('date.formatter'),
+      $container->get('language_manager')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -180,8 +253,8 @@ class OnlyofficePreviewFormatter extends FileFormatterBase {
           $file->getFilename(),
           OnlyofficeUrlHelper::getDownloadFileUrl($file),
           document_info_owner: $file->getOwner()->getDisplayName(),
-          document_info_uploaded: \Drupal::service('date.formatter')->format($file->getCreatedTime(), 'short'),
-          editorConfig_lang: \Drupal::languageManager()->getCurrentLanguage()->getId(),
+          document_info_uploaded: $this->dateFormatter->format($file->getCreatedTime(), 'short'),
+          editorConfig_lang: $this->languageManager->getCurrentLanguage()->getId(),
           editor_width: $editor_width,
           editor_height: $editor_height
       );

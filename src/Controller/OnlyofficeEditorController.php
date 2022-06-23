@@ -21,7 +21,12 @@ namespace Drupal\onlyoffice\Controller;
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+use Drupal\Core\Config\Config;
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Datetime\DateFormatterInterface;
+use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\media\Entity\Media;
 use Drupal\onlyoffice\OnlyofficeDocumentHelper;
@@ -52,6 +57,41 @@ class OnlyofficeEditorController extends ControllerBase {
   protected $documentHelper;
 
   /**
+   * The current user.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  protected $currentUser;
+
+  /**
+   * The onlyoffice settings.
+   *
+   * @var \Drupal\Core\Config\Config
+   */
+  protected $moduleSettings;
+
+  /**
+   * The date formatter service.
+   *
+   * @var \Drupal\Core\Datetime\DateFormatterInterface
+   */
+  protected $dateFormatter;
+
+  /**
+   * The language manager.
+   *
+   * @var \Drupal\Core\Language\LanguageManagerInterface
+   */
+  protected $languageManager;
+
+  /**
+   * The list of available modules.
+   *
+   * @var \Drupal\Core\Extension\ModuleExtensionList
+   */
+  protected $extensionListModule;
+
+  /**
    * A logger instance.
    *
    * @var \Psr\Log\LoggerInterface
@@ -65,10 +105,33 @@ class OnlyofficeEditorController extends ControllerBase {
    *   The renderer service.
    * @param \Drupal\onlyoffice\OnlyofficeDocumentHelper $document_helper
    *   The onlyoffice document helper service.
+   * @param Drupal\Core\Config\Config $module_settings
+   *   The onlyoffice settings.
+   * @param \Drupal\Core\Session\AccountInterface $current_user
+   *   The current user.
+   * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
+   *   The date formatter service.
+   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   *   The language manager.
+   * @param \Drupal\Core\Extension\ModuleExtensionList $extension_list_module
+   *   The list of available modules.
    */
-  public function __construct(RendererInterface $renderer, OnlyofficeDocumentHelper $document_helper) {
+  public function __construct(
+    RendererInterface $renderer,
+    OnlyofficeDocumentHelper $document_helper,
+    Config $module_settings,
+    AccountInterface $current_user,
+    DateFormatterInterface $date_formatter,
+    LanguageManagerInterface $language_manager,
+    ModuleExtensionList $extension_list_module
+  ) {
     $this->renderer = $renderer;
     $this->documentHelper = $document_helper;
+    $this->moduleSettings = $module_settings;
+    $this->currentUser = $current_user;
+    $this->dateFormatter = $date_formatter;
+    $this->languageManager = $language_manager;
+    $this->extensionListModule = $extension_list_module;
     $this->logger = $this->getLogger('onlyoffice');
   }
 
@@ -78,7 +141,12 @@ class OnlyofficeEditorController extends ControllerBase {
   public static function create(ContainerInterface $container) {
     return new static(
           $container->get('renderer'),
-          $container->get('onlyoffice.document_helper')
+          $container->get('onlyoffice.document_helper'),
+          $container->get('config.factory')->get('onlyoffice.settings'),
+          $container->get('current_user'),
+          $container->get('date.formatter'),
+          $container->get('language_manager'),
+          $container->get('extension.list.module')
       );
   }
 
@@ -128,7 +196,7 @@ class OnlyofficeEditorController extends ControllerBase {
       return ['#error' => $this->t("Sorry, this file format isn't supported (@extension)", ['@extension' => $extension])];
     }
 
-    $user = \Drupal::currentUser()->getAccount();
+    $user = $this->currentUser->getAccount();
     $can_edit = $this->documentHelper->isEditable($media);
     $edit_permission = $media->access("update", $user);
 
@@ -138,11 +206,11 @@ class OnlyofficeEditorController extends ControllerBase {
           $file->getFilename(),
           OnlyofficeUrlHelper::getDownloadFileUrl($file),
           document_info_owner: $media->getOwner()->getDisplayName(),
-          document_info_uploaded: \Drupal::service('date.formatter')->format($media->getCreatedTime(), 'short'),
+          document_info_uploaded: $this->dateFormatter->format($media->getCreatedTime(), 'short'),
           document_permissions_edit: $edit_permission,
           editorConfig_callbackUrl: $edit_permission ? OnlyofficeUrlHelper::getCallbackUrl($media) : NULL,
           editorConfig_mode: $edit_permission && $can_edit ? 'edit' : 'view',
-          editorConfig_lang: \Drupal::languageManager()->getCurrentLanguage()->getId(),
+          editorConfig_lang: $this->languageManager->getCurrentLanguage()->getId(),
           editorConfig_user_id: $user->id(),
           editorConfig_user_name: $user->getDisplayName(),
           editorConfig_customization_goback_url: OnlyofficeUrlHelper::getGoBackUrl($media)
@@ -150,13 +218,11 @@ class OnlyofficeEditorController extends ControllerBase {
 
     $this->logger->debug('Generated config for media @type %label: <br><pre><code>' . print_r($editorConfig, TRUE) . '</code></pre>', $context);
 
-    $options = \Drupal::config('onlyoffice.settings');
-
     return [
       '#config' => json_encode($editorConfig),
       '#filename' => $file->getFilename(),
-      '#favicon_path' => '/' . \Drupal::service('extension.list.module')->getPath('onlyoffice') . '/images/' . $documentType . '.ico',
-      '#doc_server_url' => $options->get('doc_server_url') . OnlyofficeAppConfig::getDocServiceApiUrl(),
+      '#favicon_path' => '/' . $this->extensionListModule->getPath('onlyoffice') . '/images/' . $documentType . '.ico',
+      '#doc_server_url' => $this->moduleSettings->get('doc_server_url') . OnlyofficeAppConfig::getDocServiceApiUrl(),
     ];
   }
 
