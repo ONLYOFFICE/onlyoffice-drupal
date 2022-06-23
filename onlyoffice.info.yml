@@ -6,6 +6,6 @@ package: Media
 configure: onlyoffice.settings_form
 dependencies:
   - drupal:media
-project: onlyoffice
+
 'interface translation project': onlyoffice
 'interface translation server pattern': modules/onlyoffice-drupal/translations/onlyoffice.%language.po

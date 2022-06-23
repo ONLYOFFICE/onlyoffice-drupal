@@ -10,7 +10,7 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
-      - name: Get Info 
+      - name: Get Info
         run: |
           echo "::set-output name=version::$(grep -Eo '[0-9]+(\.[0-9]+)+' CHANGELOG.md)"
         id: info
