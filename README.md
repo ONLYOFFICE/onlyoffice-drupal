@@ -1,4 +1,4 @@
-﻿# ONLYOFFICE Connector module for Drupal
+# ONLYOFFICE Connector module for Drupal
 
 Contents of this file
 ---------------------
@@ -18,12 +18,16 @@ The module allows to:
 
 * Edit text documents, spreadsheets, and presentations.
 * Preview files on public pages.
-* Collaborate on documents using two co-editing modes (real-time and paragraph-locking).
+* Collaborate on documents using two co-editing modes (real-time and 
+paragraph-locking).
 
 Supported formats:
 
 * For editing: DOCX, XLSX, PPTX.
-* For viewing only: DJVU, DOC, DOCM, DOT, DOTM, DOTX, EPUB, FB2, FODT, HTML, MHT, ODT, OTT, OXPS, PDF, RTF, TXT, XPS, XML, CSV, FODS, ODS, OTS, XLS, XLSM, XLT, XLTM, XLTX, FODP, ODP, OTP, POT, POTM, POTX, PPS, PPSM, PPSX, PPT, PPTM.
+* For viewing only: DJVU, DOC, DOCM, DOT, DOTM, DOTX, EPUB, FB2, FODT, HTML, 
+MHT, ODT, OTT, OXPS, PDF, RTF, TXT, XPS, XML, CSV, FODS, ODS, OTS, XLS, 
+XLSM, XLT, XLTM, XLTX, FODP, ODP, OTP, POT, POTM, POTX, PPS, PPSM, PPSX,
+PPT, PPTM.
 
 In case of technical problems, the best way to get help is to submit your issues [here](https://github.com/ONLYOFFICE/onlyoffice-drupal/issues). Alternatively, you can contact ONLYOFFICE team on [forum.onlyoffice.com](https://forum.onlyoffice.com/).
 
@@ -43,12 +47,17 @@ This module requires no modules outside of Drupal core.
 
 First way: Add a module using [Drupal's User Interface (easy)](https://www.drupal.org/docs/extending-drupal/installing-modules#s-add-a-module-using-drupals-user-interface-easy).
 
-1. On the Admin toolbar project page on drupal.org (https://www.drupal.org/project), scroll to the Downloads section at the bottom of the page.
-2. Copy the address of the tar.gz link. Depending on your device and browser, you might do this by right clicking and selecting Copy link address.
-3. In the Manage administrative menu, navigate to Extend (admin/modules). The Extend page appears.
+1. On the Admin toolbar project page on drupal.org 
+(https://www.drupal.org/project), scroll to the Downloads section 
+at the bottom of the page.
+2. Copy the address of the tar.gz link. Depending on your device and 
+browser, you might do this by right clicking and selecting Copy link address.
+3. In the Manage administrative menu, navigate to Extend (admin/modules).
+The Extend page appears.
 4. Click Install new module. The Install new module page appears.
 5. In the field Install from a URL, paste the copied download link.
-6. Click Install to upload and unpack the new module on the server. The files are being downloaded to the modules directory.
+6. Click Install to upload and unpack the new module on the server. 
+The files are being downloaded to the modules directory.
 
 Second way: Add a module with [Composer](https://www.drupal.org/docs/extending-drupal/installing-modules#s-add-a-module-with-composer).
 
@@ -61,7 +70,8 @@ composer require drupal/onlyoffice
 **Step 2: Enable the module**
 
 First way: Using the Drupal User Interface (easy).
-1. Navigate to the Extend page (admin/modules) via the Manage administrative menu.
+1. Navigate to the Extend page (admin/modules) via the Manage 
+administrative menu.
 2. Locate the ONLYOFFICE Connector module and check the box.
 3. Click Install to enable.
 
@@ -75,18 +85,22 @@ drush pm:enable onlyoffice
 
 ## Configuration
 
-In Drupal, open the `~/config/system/onlyoffice-settings` page with administrative settings for **ONLYOFFICE** section.
+In Drupal, open the `~/config/system/onlyoffice-settings` page with 
+administrative settings for **ONLYOFFICE** section.
 Enter the address to connect ONLYOFFICE Document Server:
 
 ```
 https://<documentserver>/
 ```
 
-Where **documentserver** is the name of the server with the ONLYOFFICE Document Server installed.
+Where **documentserver** is the name of the server with the ONLYOFFICE 
+Document Server installed.
 The address must be accessible for the user browser and from the Drupal server.
-The Drupal server address must also be accessible from ONLYOFFICE Document Server for correct work.
+The Drupal server address must also be accessible from ONLYOFFICE 
+Document Server for correct work.
 
-To restrict access to ONLYOFFICE Document Server and for security reasons and data integrity the encrypted signature is used.
+To restrict access to ONLYOFFICE Document Server and for security reasons
+and data integrity the encrypted signature is used.
 Specify the _Secret key_ in the Drupal administrative configuration.
 In the ONLYOFFICE Document Server [config file](https://api.onlyoffice.com/editors/signature/) specify the same secret key and enable the validation.
 
@@ -94,39 +108,48 @@ In the ONLYOFFICE Document Server [config file](https://api.onlyoffice.com/edito
 
 **Edit files already uploaded to Drupal**
 
-All office files added to Media can be opened for editing. In the last table column, 
-call the drop-down list and select the Edit in ONLYOFFICE action. 
-The editor opens in the same tab. Users with Administrator rights are able to co-edit files 
-using ONLYOFFICE Docs. All changes are saved in the same file.
+All office files added to Media can be opened for editing. In the last
+table column, call the drop-down list and select the Edit in ONLYOFFICE action. 
+The editor opens in the same tab. Users with Administrator rights are able 
+to co-edit files using ONLYOFFICE Docs. All changes are saved in the same file.
 
 **Create new posts**
 
 When creating a post, you can add the new ONLYOFFICE element.
 
-1. Go to Structure -> Content types -> Manage fields. On the opened page, click *Add field*. 
-Add a new field: File or Media. Set the label and save.
+1. Go to Structure -> Content types -> Manage fields. On the opened page, click
+*Add field*. Add a new field: File or Media. Set the label and save.
 
-2. For the added File field, specify the file extensions. Go to Structure -> Content types -> Manage fields. In the *Allowed file extensions* field, specify the file formats that will be shown in the editors (docx,xlsx,pptx).
+2. For the added File field, specify the file extensions. Go to Structure ->
+Content types -> Manage fields. In the *Allowed file extensions* field, specify
+the file formats that will be shown in the editors (docx,xlsx,pptx).
 
    For the added Media field, click the Document checkbox.
 
 3. Go to Structure -> Media types -> Document -> Manage display.
 
-   For the Document field, specify the *ONLYOFFICE Preview* format. By clicking on the gear symbol, you can specify the dimensions of the embedded editor window.
+   For the Document field, specify the *ONLYOFFICE Preview* format. By clicking 
+on the gear symbol, you can specify the dimensions of the embedded editor 
+window.
 
-When you are done with the pre-settings, you can create posts on the Content tab. Click on the *Add Content* button and select the created content. 
+When you are done with the pre-settings, you can create posts on the Content 
+tab. Click on the *Add Content* button and select the created content. 
 
 Specify title and select a file (if the content contains File fields).
 
 For Media section, specify the name of the previously uploaded file.
 
-Your site visitors will also be able to view the created page (People -> Permissions -> View published content).
+Your site visitors will also be able to view the created page
+(People -> Permissions -> View published content).
 
 ## Installing ONLYOFFICE Docs
 
-You will need an instance of ONLYOFFICE Docs (Document Server) that is resolvable and connectable both from Drupal and any end clients. ONLYOFFICE Document Server must also be able to POST to Drupal directly.
+You will need an instance of ONLYOFFICE Docs (Document Server) that 
+is resolvable and connectable both from Drupal and any end clients. 
+ONLYOFFICE Document Server must also be able to POST to Drupal directly.
 
-You can install free Community version of ONLYOFFICE Docs or scalable Enterprise Edition.
+You can install free Community version of ONLYOFFICE Docs or scalable
+Enterprise Edition.
 
 To install free Community version, use [Docker](https://github.com/onlyoffice/Docker-DocumentServer) (recommended) or follow [these instructions](https://helpcenter.onlyoffice.com/installation/docs-community-install-ubuntu.aspx) for Debian, Ubuntu, or derivatives.
 

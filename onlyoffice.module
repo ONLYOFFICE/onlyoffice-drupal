@@ -1,7 +1,12 @@
 <?php
+
 /**
- *
- * (c) Copyright Ascensio System SIA 2022
+ * @file
+ * Primary module hooks for ONLYOFFICE Connector module.
+ */
+
+/**
+ * Copyright (c) Ascensio System SIA 2022.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -15,13 +20,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- *
- */
-
-/**
- * @file
- * Primary module hooks for ONLYOFFICE Connector module.
+ * Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
 use Drupal\Core\Entity\EntityInterface;
@@ -53,12 +53,12 @@ function onlyoffice_theme($existing, $type, $theme, $path) {
   return [
     'onlyoffice_editor' => [
       'variables' => [
-          'filename' => 'noname',
-          'favicon_path' => 'none',
-          'doc_server_url' => 'http://127.0.0.1/',
-          'config' => '{}',
-          'error' => null
-        ],
+        'filename' => 'noname',
+        'favicon_path' => 'none',
+        'doc_server_url' => 'http://127.0.0.1/',
+        'config' => '{}',
+        'error' => NULL,
+      ],
     ],
   ];
 }
@@ -68,32 +68,32 @@ function onlyoffice_theme($existing, $type, $theme, $path) {
  */
 function onlyoffice_entity_operation(EntityInterface $entity) {
   if ($entity->getEntityTypeId() != "media") {
-    return null;
+    return NULL;
   }
   /** @var \Drupal\media\Entity\Media $media */
   $media = $entity;
 
-  if ($media->getSource()->getPluginId() != "file"){
-    return null;
+  if ($media->getSource()->getPluginId() != "file") {
+    return NULL;
   }
 
   $account = \Drupal::currentUser()->getAccount();
 
   if (!$media->access("view", $account)) {
-    return null;
+    return NULL;
   }
 
   $file = $media->get(OnlyofficeDocumentHelper::getSourceFieldName($media))->entity;
   $extension = OnlyofficeDocumentHelper::getExtension($file->getFilename());
 
-  if (OnlyofficeDocumentHelper::getDocumentType($extension) == null) {
-    return null;
+  if (OnlyofficeDocumentHelper::getDocumentType($extension) == NULL) {
+    return NULL;
   }
 
   $title = t("View in ONLYOFFICE");
 
   if (OnlyofficeDocumentHelper::isEditable($media) && $media->access("update", $account)) {
-    $title =  t("Edit in ONLYOFFICE");
+    $title = t("Edit in ONLYOFFICE");
   }
 
   return [

@@ -1,7 +1,9 @@
 <?php
+
+namespace Drupal\onlyoffice\Plugin\Field\FieldFormatter;
+
 /**
- *
- * (c) Copyright Ascensio System SIA 2022
+ * Copyright (c) Ascensio System SIA 2022.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -15,11 +17,9 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- *
+ * Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-
-namespace Drupal\onlyoffice\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
@@ -41,151 +41,150 @@ use Drupal\onlyoffice\OnlyofficeUrlHelper;
  *   }
  * )
  */
-class OnlyofficePreviewFormatter extends FileFormatterBase
-{
+class OnlyofficePreviewFormatter extends FileFormatterBase {
 
-    /**
-     * {@inheritdoc}
-     */
-    public static function defaultSettings()
-    {
-        return [
-        'width_unit' => '%',
-        'width' => 100,
-        'height_unit' => 'px',
-        'height' => 640,
-        ] + parent::defaultSettings();
+  /**
+   * {@inheritdoc}
+   */
+  public static function defaultSettings() {
+    return [
+      'width_unit' => '%',
+      'width' => 100,
+      'height_unit' => 'px',
+      'height' => 640,
+    ] + parent::defaultSettings();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function settingsForm(array $form, FormStateInterface $form_state) {
+    return parent::settingsForm($form, $form_state) + [
+      'width_unit' => [
+        '#type' => 'radios',
+        '#title' => $this->t('Width units'),
+        '#default_value' => $this->getSetting('width_unit'),
+        '#options' => [
+          '%' => $this->t('Percents'),
+          'px' => $this->t('Pixels'),
+        ],
+      ],
+      'width' => [
+        '#type' => 'number',
+        '#title' => $this->t('Width'),
+        '#default_value' => $this->getSetting('width'),
+        '#size' => 5,
+        '#maxlength' => 5,
+        '#min' => 0,
+        '#required' => TRUE,
+      ],
+      'height_unit' => [
+        '#type' => 'radios',
+        '#title' => $this->t('Height units'),
+        '#default_value' => $this->getSetting('height_unit'),
+        '#options' => [
+          '%' => $this->t('Percents'),
+          'px' => $this->t('Pixels'),
+        ],
+      ],
+      'height' => [
+        '#type' => 'number',
+        '#title' => $this->t('Height'),
+        '#default_value' => $this->getSetting('height'),
+        '#size' => 5,
+        '#maxlength' => 5,
+        '#min' => 0,
+        '#required' => TRUE,
+      ],
+    ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function settingsSummary() {
+    $summary = parent::settingsSummary();
+    $widthName = $this->t('Width');
+    $heightName = $this->t('Height');
+    $summary[] = $widthName . ': ' . $this->getSetting('width') . $this->getSetting('width_unit');
+    $summary[] = $heightName . ': ' . $this->getSetting('height') . $this->getSetting('height_unit');
+    return $summary;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function isApplicable(FieldDefinitionInterface $field_definition) {
+    if (!parent::isApplicable($field_definition)) {
+      return FALSE;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function settingsForm(array $form, FormStateInterface $form_state)
-    {
-        return parent::settingsForm($form, $form_state) + [
-        'width_unit' => [
-          '#type' => 'radios',
-          '#title' => $this->t('Width units'),
-          '#default_value' => $this->getSetting('width_unit'),
-          '#options' => [
-            '%' => $this->t('Percents'),
-            'px' => $this->t('Pixels'),
-          ],
-        ],
-        'width' => [
-          '#type' => 'number',
-          '#title' => $this->t('Width'),
-          '#default_value' => $this->getSetting('width'),
-          '#size' => 5,
-          '#maxlength' => 5,
-          '#min' => 0,
-          '#required' => true,
-        ],
-        'height_unit' => [
-          '#type' => 'radios',
-          '#title' => $this->t('Height units'),
-          '#default_value' => $this->getSetting('height_unit'),
-          '#options' => [
-            '%' => $this->t('Percents'),
-            'px' => $this->t('Pixels'),
-          ],
-        ],
-        'height' => [
-          '#type' => 'number',
-          '#title' => $this->t('Height'),
-          '#default_value' => $this->getSetting('height'),
-          '#size' => 5,
-          '#maxlength' => 5,
-          '#min' => 0,
-          '#required' => true,
-        ],
-        ];
+    $extension_list = array_filter(preg_split('/\s+/', $field_definition->getSetting('file_extensions')));
+
+    foreach ($extension_list as $extension) {
+      if (OnlyofficeDocumentHelper::getDocumentType($extension)) {
+        return TRUE;
+      }
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function settingsSummary()
-    {
-        $summary = parent::settingsSummary();
-        $summary[] = $this->t('Width') . ': ' . $this->getSetting('width') . $this->getSetting('width_unit');
-        $summary[] = $this->t('Height') . ': ' . $this->getSetting('height') . $this->getSetting('height_unit');
-        return $summary;
-    }
+    return FALSE;
+  }
 
-    /**
-     * {@inheritdoc}
-     */
-    public static function isApplicable(FieldDefinitionInterface $field_definition)
-    {
-        if (!parent::isApplicable($field_definition)) {
-            return false;
-        }
+  /**
+   * {@inheritdoc}
+   */
+  public function viewElements(FieldItemListInterface $items, $langcode) {
 
-        $extension_list = array_filter(preg_split('/\s+/', $field_definition->getSetting('file_extensions')));
-
-        foreach ($extension_list as $extension) {
-            if (OnlyofficeDocumentHelper::getDocumentType($extension)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function viewElements(FieldItemListInterface $items, $langcode)
-    {
-
-        $element = [
-        '#attached' => [
+    $element = [
+      '#attached' => [
         'library' => [
           'onlyoffice/onlyoffice.api',
-          'onlyoffice/onlyoffice.preview'
-        ]
-        ]
+          'onlyoffice/onlyoffice.preview',
+        ],
+      ],
+    ];
+
+    /** @var \Drupal\file\Entity\File $file */
+    foreach ($this->getEntitiesToView($items, $langcode) as $delta => $file) {
+      $extension = OnlyofficeDocumentHelper::getExtension($file->getFilename());
+
+      if (OnlyofficeDocumentHelper::getDocumentType($extension)) {
+        $editor_id = sprintf(
+              '%s-%s-iframeOnlyofficeEditor',
+              $file->getEntityTypeId(),
+              $file->id()
+          );
+
+        $element[$delta] = ['#markup' => sprintf('<div id="%s" class="onlyoffice-editor"></div>', $editor_id)];
+
+        $element['#attached']['drupalSettings']['onlyofficeData'][$editor_id] = [
+          'config' => $this->getEditorConfig($file),
         ];
-
-        /** @var \Drupal\file\Entity\File $file */
-        foreach ($this->getEntitiesToView($items, $langcode) as $delta => $file) {
-            $extension = OnlyofficeDocumentHelper::getExtension($file->getFilename());
-
-            if (OnlyofficeDocumentHelper::getDocumentType($extension)) {
-                $editor_id = sprintf(
-                    '%s-%s-iframeOnlyofficeEditor',
-                    $file->getEntityTypeId(),
-                    $file->id()
-                );
-
-                $element[$delta] = ['#markup' => sprintf('<div id="%s" class="onlyoffice-editor"></div>', $editor_id)];
-
-                $element['#attached']['drupalSettings']['onlyofficeData'][$editor_id] = [
-                'config' => $this->getEditorConfig($file),
-                ];
-            }
-        }
-
-        return $element;
+      }
     }
 
-    private function getEditorConfig(File $file)
-    {
+    return $element;
+  }
 
-        $editor_width = $this->getSetting('width') . $this->getSetting('width_unit');
-        $editor_height = $this->getSetting('height') . $this->getSetting('height_unit');
+  /**
+   * Method getting configuration for document editor service.
+   */
+  private function getEditorConfig(File $file) {
 
-        return OnlyofficeDocumentHelper::createEditorConfig(
-            'embedded',
-            OnlyofficeDocumentHelper::getEditingKey($file, true),
-            $file->getFilename(),
-            OnlyofficeUrlHelper::getDownloadFileUrl($file),
-            document_info_owner: $file->getOwner()->getDisplayName(),
-            document_info_uploaded: \Drupal::service('date.formatter')->format($file->getCreatedTime(), 'short'),
-            editorConfig_lang: \Drupal::languageManager()->getCurrentLanguage()->getId(),
-            editor_width: $editor_width,
-            editor_height: $editor_height
-        );
-    }
+    $editor_width = $this->getSetting('width') . $this->getSetting('width_unit');
+    $editor_height = $this->getSetting('height') . $this->getSetting('height_unit');
+
+    return OnlyofficeDocumentHelper::createEditorConfig(
+          'embedded',
+          OnlyofficeDocumentHelper::getEditingKey($file, TRUE),
+          $file->getFilename(),
+          OnlyofficeUrlHelper::getDownloadFileUrl($file),
+          document_info_owner: $file->getOwner()->getDisplayName(),
+          document_info_uploaded: \Drupal::service('date.formatter')->format($file->getCreatedTime(), 'short'),
+          editorConfig_lang: \Drupal::languageManager()->getCurrentLanguage()->getId(),
+          editor_width: $editor_width,
+          editor_height: $editor_height
+      );
+  }
+
 }
