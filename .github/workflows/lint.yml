@@ -52,8 +52,6 @@ jobs:
 
       - name: Run phpcs
         run: |
-          curl -OL https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar
           composer global require drupal/coder
           composer global show -P
-          php phpcs.phar --config-set installed_paths /home/runner/.composer/vendor/drupal/coder/coder_sniffer
-          php phpcs.phar **/*.php
+          phpcs --standard=Drupal,DrupalPractice --extensions=php,module,inc,install,test,profile,theme,css,info,txt,md,yml --ignore=node_modules,bower_components,vendor ./
