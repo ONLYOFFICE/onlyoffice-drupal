@@ -1,5 +1,9 @@
 # Change Log
 
+## 1.0.1
+## Changed
+- refactoring code according to Drupal practice
+
 ## 1.0.0
 ## Added
 - configuration page of plugin
