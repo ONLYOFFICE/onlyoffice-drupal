@@ -26,6 +26,7 @@ onlyoffice.callback:
     _controller: '\Drupal\onlyoffice\Controller\OnlyofficeCallbackController::callback'
   methods: [POST]
   requirements:
+    # Don't use standard access restriction because document editor service use jwt authorization.
     _access: 'TRUE'
 
 onlyoffice.download:
@@ -34,4 +35,5 @@ onlyoffice.download:
     _controller: '\Drupal\onlyoffice\Controller\OnlyofficeDownloadController::download'
   methods: [ GET ]
   requirements:
+    # Don't use standard access restriction because document editor service use jwt authorization.
     _access: 'TRUE'
