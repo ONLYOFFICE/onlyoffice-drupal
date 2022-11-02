@@ -98,10 +98,9 @@ The address must be accessible for the user browser and from the Drupal server.
 The Drupal server address must also be accessible from ONLYOFFICE 
 Document Server for correct work.
 
-To restrict access to ONLYOFFICE Document Server and for security reasons
-and data integrity the encrypted signature is used.
-Specify the _Secret key_ in the Drupal administrative configuration.
-In the ONLYOFFICE Document Server [config file](https://api.onlyoffice.com/editors/signature/) specify the same secret key and enable the validation.
+Starting from version 7.2, JWT is enabled by default and the secret key is generated automatically to restrict the access to ONLYOFFICE Docs and for security reasons and data integrity. 
+Specify your own **Secret key** in the Drupal administrative configuration. 
+In the ONLYOFFICE Docs [config file](https://api.onlyoffice.com/editors/signature/), specify the same secret key and enable the validation.
 
 ## Usage
 
