@@ -90,18 +90,17 @@ class OnlyofficeDocumentHelper {
         $document_key,
         $document_title,
         $document_url,
-        $document_info_owner = NULL,
-        $document_info_uploaded = NULL,
-        $document_permissions_download = TRUE,
-        $document_permissions_edit = FALSE,
-        $editorConfig_callbackUrl = 'null',
-        $editorConfig_mode = 'view',
-        $editorConfig_lang = 'en',
-        $editorConfig_user_id = NULL,
-        $editorConfig_user_name = NULL,
-        $editorConfig_customization_goback_url = NULL,
-        $editor_width = "100%",
-        $editor_height = "100%"
+        $document_info_owner,
+        $document_info_uploaded,
+        $document_permissions_edit,
+        $editorConfig_callbackUrl,
+        $editorConfig_mode,
+        $editorConfig_lang,
+        $editorConfig_user_id,
+        $editorConfig_user_name,
+        $editorConfig_customization_goback_url,
+        $editor_width,
+        $editor_height
     ) {
 
     $document_fileType = static::getExtension($document_title);
@@ -121,7 +120,7 @@ class OnlyofficeDocumentHelper {
           'uploaded' => $document_info_uploaded,
         ],
         'permissions' => [
-          'download' => $document_permissions_download,
+          'download' => TRUE,
           'edit' => $document_permissions_edit,
         ],
       ],
