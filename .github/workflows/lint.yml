@@ -41,7 +41,9 @@ jobs:
 
       - name: Get Composer cache directory
         id: composer-cache
-        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+        run: |
+          echo "::set-output name=dir::$(composer config cache-files-dir)"
+          composer global config --no-plugins allow-plugins.dealerdirect/phpcodesniffer-composer-installer true
 
       - name: Setup cache
         uses: pat-s/always-upload-cache@v1.1.4
