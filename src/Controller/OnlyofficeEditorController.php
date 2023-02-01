@@ -3,7 +3,7 @@
 namespace Drupal\onlyoffice\Controller;
 
 /**
- * Copyright (c) Ascensio System SIA 2022.
+ * Copyright (c) Ascensio System SIA 2023.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -205,15 +205,17 @@ class OnlyofficeEditorController extends ControllerBase {
           $this->documentHelper->getEditingKey($file),
           $file->getFilename(),
           OnlyofficeUrlHelper::getDownloadFileUrl($file),
-          document_info_owner: $media->getOwner()->getDisplayName(),
-          document_info_uploaded: $this->dateFormatter->format($media->getCreatedTime(), 'short'),
-          document_permissions_edit: $edit_permission,
-          editorConfig_callbackUrl: $edit_permission ? OnlyofficeUrlHelper::getCallbackUrl($media) : NULL,
-          editorConfig_mode: $edit_permission && $can_edit ? 'edit' : 'view',
-          editorConfig_lang: $this->languageManager->getCurrentLanguage()->getId(),
-          editorConfig_user_id: $user->id(),
-          editorConfig_user_name: $user->getDisplayName(),
-          editorConfig_customization_goback_url: OnlyofficeUrlHelper::getGoBackUrl($media)
+          $media->getOwner()->getDisplayName(),
+          $this->dateFormatter->format($media->getCreatedTime(), 'short'),
+          $edit_permission,
+          $edit_permission ? OnlyofficeUrlHelper::getCallbackUrl($media) : NULL,
+          $edit_permission && $can_edit ? 'edit' : 'view',
+          $this->languageManager->getCurrentLanguage()->getId(),
+          $user->id(),
+          $user->getDisplayName(),
+          OnlyofficeUrlHelper::getGoBackUrl($media),
+          "100%",
+          "100%"
       );
 
     $this->logger->debug('Generated config for media @type %label: <br><pre><code>' . print_r($editorConfig, TRUE) . '</code></pre>', $context);
