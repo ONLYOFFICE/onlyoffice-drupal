@@ -1,5 +1,9 @@
 # Change Log
 
+## 1.0.2
+## Changed
+- update dependency
+
 ## 1.0.1
 ## Changed
 - refactoring code according to Drupal practice
