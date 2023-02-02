@@ -1,10 +1,10 @@
 {
-    "name": "drupal/onlyoffice",
+    "name": "onlyoffice/drupal",
     "type": "drupal-module",
-    "description": "Allows editing office files.",
-    "keywords": ["drupal"],
+    "description": "The ONLYOFFICE module enables users to edit files in the Media module from Drupal using ONLYOFFICE Docs packaged as Document Server",
+    "keywords": ["onlyoffice", "drupal"],
     "license": "GPL-2.0-or-later",
-    "homepage": "https://www.drupal.org/project/onlyoffice",
+    "homepage": "https://www.onlyoffice.com",
     "authors": [
         {
             "name": "Ascensio System SIA",
