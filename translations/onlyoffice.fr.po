@@ -1,5 +1,5 @@
 # French translation of ONLYOFFICE Connector
-# (c) Copyright Ascensio System SIA 2022
+# (c) Copyright Ascensio System SIA 2023
 #
 msgid ""
 msgstr ""

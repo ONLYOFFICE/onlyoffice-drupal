@@ -3,7 +3,7 @@
 namespace Drupal\onlyoffice\Plugin\Field\FieldFormatter;
 
 /**
- * Copyright (c) Ascensio System SIA 2022.
+ * Copyright (c) Ascensio System SIA 2023.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -252,11 +252,17 @@ class OnlyofficePreviewFormatter extends FileFormatterBase {
           OnlyofficeDocumentHelper::getEditingKey($file, TRUE),
           $file->getFilename(),
           OnlyofficeUrlHelper::getDownloadFileUrl($file),
-          document_info_owner: $file->getOwner()->getDisplayName(),
-          document_info_uploaded: $this->dateFormatter->format($file->getCreatedTime(), 'short'),
-          editorConfig_lang: $this->languageManager->getCurrentLanguage()->getId(),
-          editor_width: $editor_width,
-          editor_height: $editor_height
+          $file->getOwner()->getDisplayName(),
+          $this->dateFormatter->format($file->getCreatedTime(), 'short'),
+          FALSE,
+          NULL,
+          "view",
+          $this->languageManager->getCurrentLanguage()->getId(),
+          NULL,
+          NULL,
+          NULL,
+          $editor_width,
+          $editor_height
       );
   }
 
