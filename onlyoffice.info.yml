@@ -8,4 +8,4 @@ dependencies:
   - drupal:media
 
 'interface translation project': onlyoffice
-'interface translation server pattern': modules/onlyoffice-drupal/translations/onlyoffice.%language.po
+'interface translation server pattern': modules/onlyoffice-drupal%/translations/onlyoffice.%language.po
