@@ -1,5 +1,5 @@
 {
-    "name": "onlyoffice/drupal",
+    "name": "onlyoffice/onlyoffice-drupal",
     "type": "drupal-module",
     "description": "The ONLYOFFICE module enables users to edit files in the Media module from Drupal using ONLYOFFICE Docs packaged as Document Server",
     "keywords": ["onlyoffice", "drupal"],

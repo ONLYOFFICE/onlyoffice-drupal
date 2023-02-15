@@ -1,5 +1,9 @@
 # Change Log
 
+## 1.0.3
+## Changed
+- update composer file
+
 ## 1.0.2
 ## Changed
 - update dependency
