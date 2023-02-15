@@ -1,6 +1,6 @@
 name: 'ONLYOFFICE Connector'
 type: module
-description: 'Allows editing office files.'
+description: 'The ONLYOFFICE module enables users to edit files in the Media module from Drupal using ONLYOFFICE Docs packaged as Document Server'
 core_version_requirement: ^9 || ^10
 package: Media
 configure: onlyoffice.settings_form
@@ -8,4 +8,4 @@ dependencies:
   - drupal:media
 
 'interface translation project': onlyoffice
-'interface translation server pattern': modules/onlyoffice-drupal/translations/onlyoffice.%language.po
+'interface translation server pattern': modules/contrib/onlyoffice-drupal/translations/onlyoffice.%language.po

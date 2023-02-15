@@ -63,7 +63,7 @@ Second way: Add a module with [Composer](https://www.drupal.org/docs/extending-d
 Enter the following command at the root of your site:
 
 ```
-composer require drupal/onlyoffice
+composer require onlyoffice/onlyoffice-drupal
 ```
 
 **Step 2: Enable the module**
