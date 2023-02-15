@@ -13,6 +13,8 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
+      - name: Install Zip
+        run: sudo apt-get install zip
       - name: Get Info
         run: |
           echo "version=$(grep -Eo '[0-9]+(\.[0-9]+)+' CHANGELOG.md | head -n 1)" >> $GITHUB_OUTPUT
@@ -20,9 +22,22 @@ jobs:
       - name: Generate Changelog
         run: |
           awk '/## [0-9]/{p++} p; /## [0-9]/{if (p > 1) exit}' CHANGELOG.md | awk 'NR>2 {print last} {last=$0}' > RELEASE.md
+      - name: Build Artifact
+        run: |
+          cd ${{ github.workspace }}
+          mkdir -p ./onlyoffice-drupal
+          rsync -av --exclude='onlyoffice-drupal' ./ ./onlyoffice-drupal
+          cd ./onlyoffice-drupal
+          rm -rf ./.github/
+          rm -rf ./.git/
+          rm ./.gitignore
+          cd $cwd
+      - name: Pack Artifact
+        run: zip -r onlyoffice-drupal-${{ steps.info.outputs.version }}.zip onlyoffice-drupal
       - name: Create Release
         uses: ncipollo/release-action@v1
         id: create_release
         with:
+          artifacts: "onlyoffice-drupal-${{ steps.info.outputs.version }}.zip"
           bodyFile: RELEASE.md
           tag: v${{ steps.info.outputs.version }}
