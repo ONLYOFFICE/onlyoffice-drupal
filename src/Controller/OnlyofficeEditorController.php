@@ -23,7 +23,6 @@ namespace Drupal\onlyoffice\Controller;
 
 use Drupal\Core\Config\Config;
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Extension\ModuleExtensionList;
@@ -55,13 +54,6 @@ class OnlyofficeEditorController extends ControllerBase {
    * @var \Drupal\onlyoffice\OnlyofficeDocumentHelper
    */
   protected $documentHelper;
-
-  /**
-   * The current user.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $currentUser;
 
   /**
    * The onlyoffice settings.
@@ -107,8 +99,6 @@ class OnlyofficeEditorController extends ControllerBase {
    *   The onlyoffice document helper service.
    * @param Drupal\Core\Config\Config $module_settings
    *   The onlyoffice settings.
-   * @param \Drupal\Core\Session\AccountInterface $current_user
-   *   The current user.
    * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
    *   The date formatter service.
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
@@ -120,7 +110,6 @@ class OnlyofficeEditorController extends ControllerBase {
     RendererInterface $renderer,
     OnlyofficeDocumentHelper $document_helper,
     Config $module_settings,
-    AccountInterface $current_user,
     DateFormatterInterface $date_formatter,
     LanguageManagerInterface $language_manager,
     ModuleExtensionList $extension_list_module
@@ -128,7 +117,6 @@ class OnlyofficeEditorController extends ControllerBase {
     $this->renderer = $renderer;
     $this->documentHelper = $document_helper;
     $this->moduleSettings = $module_settings;
-    $this->currentUser = $current_user;
     $this->dateFormatter = $date_formatter;
     $this->languageManager = $language_manager;
     $this->extensionListModule = $extension_list_module;
@@ -143,7 +131,6 @@ class OnlyofficeEditorController extends ControllerBase {
           $container->get('renderer'),
           $container->get('onlyoffice.document_helper'),
           $container->get('config.factory')->get('onlyoffice.settings'),
-          $container->get('current_user'),
           $container->get('date.formatter'),
           $container->get('language_manager'),
           $container->get('extension.list.module')
@@ -196,7 +183,7 @@ class OnlyofficeEditorController extends ControllerBase {
       return ['#error' => $this->t("Sorry, this file format isn't supported (@extension)", ['@extension' => $extension])];
     }
 
-    $user = $this->currentUser->getAccount();
+    $user = $this->currentUser()->getAccount();
     $can_edit = $this->documentHelper->isEditable($media);
     $edit_permission = $media->access("update", $user);
 

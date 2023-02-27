@@ -23,7 +23,6 @@ namespace Drupal\onlyoffice\Controller;
 
 use Drupal\Component\Uuid\Uuid;
 use Drupal\Core\Config\Config;
-use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\File\Exception\InvalidStreamWrapperException;
 use Drupal\Core\File\FileSystemInterface;
@@ -97,13 +96,6 @@ class OnlyofficeCallbackController extends ControllerBase {
   protected $time;
 
   /**
-   * The current user.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $currentUser;
-
-  /**
    * The onlyoffice settings.
    *
    * @var \Drupal\Core\Config\Config
@@ -132,8 +124,6 @@ class OnlyofficeCallbackController extends ControllerBase {
    *   The time service.
    * @param Drupal\Core\Config\Config $module_settings
    *   The onlyoffice settings.
-   * @param \Drupal\Core\Session\AccountInterface $current_user
-   *   The current user.
    */
   public function __construct(
         UserStorageInterface $user_storage,
@@ -141,8 +131,7 @@ class OnlyofficeCallbackController extends ControllerBase {
         FileSystemInterface $file_system,
         StreamWrapperManagerInterface $streamWrapperManager,
         TimeInterface $time,
-        Config $module_settings,
-        AccountInterface $current_user
+        Config $module_settings
     ) {
     $this->userStorage = $user_storage;
     $this->entityRepository = $entity_repository;
@@ -150,7 +139,6 @@ class OnlyofficeCallbackController extends ControllerBase {
     $this->streamWrapperManager = $streamWrapperManager;
     $this->time = $time;
     $this->moduleSettings = $module_settings;
-    $this->currentUser = $current_user;
     $this->logger = $this->getLogger('onlyoffice');
   }
 
@@ -164,8 +152,7 @@ class OnlyofficeCallbackController extends ControllerBase {
           $container->get('file_system'),
           $container->get('stream_wrapper_manager'),
           $container->get('datetime.time'),
-          $container->get('config.factory')->get('onlyoffice.settings'),
-          $container->get('current_user')
+          $container->get('config.factory')->get('onlyoffice.settings')
       );
   }
 
@@ -269,10 +256,10 @@ class OnlyofficeCallbackController extends ControllerBase {
     $account = $this->userStorage->load($userId);
 
     if ($account) {
-      $this->currentUser->setAccount($account);
+      $this->currentUser()->setAccount($account);
     }
     else {
-      $this->currentUser->setAccount(User::getAnonymousUser());
+      $this->currentUser()->setAccount(User::getAnonymousUser());
     }
 
     $status = OnlyofficeCallbackController::CALLBACK_STATUS[$body->status];
@@ -310,7 +297,7 @@ class OnlyofficeCallbackController extends ControllerBase {
    * Method for saving file.
    */
   private function proccessSave($body, Media $media, $context) {
-    $edit_permission = $media->access("update", $this->currentUser->getAccount());
+    $edit_permission = $media->access("update", $this->currentUser()->getAccount());
 
     if (!$edit_permission) {
       $this->logger->error('Denied access to edit media @type %label.', $context);
@@ -343,7 +330,7 @@ class OnlyofficeCallbackController extends ControllerBase {
 
     $media->set(OnlyofficeDocumentHelper::getSourceFieldName($media), $newFile);
     $media->setNewRevision();
-    $media->setRevisionUser($this->currentUser->getAccount());
+    $media->setRevisionUser($this->currentUser()->getAccount());
     $media->setRevisionCreationTime($this->time->getRequestTime());
     $media->setRevisionLogMessage('');
     $media->save();
@@ -362,7 +349,7 @@ class OnlyofficeCallbackController extends ControllerBase {
     $uri = $this->fileSystem->saveData($data, $destination, $replace);
 
     $file = File::create(['uri' => $uri]);
-    $file->setOwnerId($this->currentUser->getAccount()->id());
+    $file->setOwnerId($this->currentUser()->getAccount()->id());
 
     if ($replace === FileSystemInterface::EXISTS_RENAME && is_file($destination)) {
       $file->setFilename($this->fileSystem->basename($destination));

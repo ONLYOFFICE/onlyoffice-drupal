@@ -23,7 +23,6 @@ namespace Drupal\onlyoffice\Controller;
 
 use Drupal\Component\Uuid\Uuid;
 use Drupal\Core\Config\Config;
-use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\onlyoffice\OnlyofficeAppConfig;
@@ -55,13 +54,6 @@ class OnlyofficeDownloadController extends ControllerBase {
   protected $userStorage;
 
   /**
-   * The current user.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $currentUser;
-
-  /**
    * The onlyoffice settings.
    *
    * @var \Drupal\Core\Config\Config
@@ -84,19 +76,15 @@ class OnlyofficeDownloadController extends ControllerBase {
    *   The user storage.
    * @param Drupal\Core\Config\Config $module_settings
    *   The onlyoffice settings.
-   * @param \Drupal\Core\Session\AccountInterface $current_user
-   *   The current user.
    */
   public function __construct(
     EntityRepositoryInterface $entity_repository,
     UserStorageInterface $user_storage,
-    Config $module_settings,
-    AccountInterface $current_user
+    Config $module_settings
   ) {
     $this->entityRepository = $entity_repository;
     $this->userStorage = $user_storage;
     $this->moduleSettings = $module_settings;
-    $this->currentUser = $current_user;
     $this->logger = $this->getLogger('onlyoffice');
   }
 
@@ -107,8 +95,7 @@ class OnlyofficeDownloadController extends ControllerBase {
     return new static(
           $container->get('entity.repository'),
           $container->get('entity_type.manager')->getStorage('user'),
-          $container->get('config.factory')->get('onlyoffice.settings'),
-          $container->get('current_user')
+          $container->get('config.factory')->get('onlyoffice.settings')
       );
   }
 
@@ -156,7 +143,7 @@ class OnlyofficeDownloadController extends ControllerBase {
     $userId = $linkParameters[1];
 
     $account = $this->userStorage->load($userId);
-    $this->currentUser->setAccount($account);
+    $this->currentUser()->setAccount($account);
 
     if (!$uuid || !Uuid::isValid($uuid)) {
       $this->logger->error('Invalid parameter UUID: @uuid.', ['@uuid' => $uuid]);
