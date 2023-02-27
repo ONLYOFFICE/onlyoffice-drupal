@@ -2,28 +2,7 @@
 
 namespace Drupal\onlyoffice\Controller;
 
-/**
- * Copyright (c) Ascensio System SIA 2023.
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc.,
- * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- */
-
 use Drupal\Component\Uuid\Uuid;
-use Drupal\Core\Config\Config;
-use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\File\Exception\InvalidStreamWrapperException;
 use Drupal\Core\File\FileSystemInterface;
@@ -97,20 +76,6 @@ class OnlyofficeCallbackController extends ControllerBase {
   protected $time;
 
   /**
-   * The current user.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $currentUser;
-
-  /**
-   * The onlyoffice settings.
-   *
-   * @var \Drupal\Core\Config\Config
-   */
-  protected $moduleSettings;
-
-  /**
    * A logger instance.
    *
    * @var \Psr\Log\LoggerInterface
@@ -130,27 +95,19 @@ class OnlyofficeCallbackController extends ControllerBase {
    *   The stream wrapper manager.
    * @param \Drupal\Component\Datetime\TimeInterface $time
    *   The time service.
-   * @param Drupal\Core\Config\Config $module_settings
-   *   The onlyoffice settings.
-   * @param \Drupal\Core\Session\AccountInterface $current_user
-   *   The current user.
    */
   public function __construct(
         UserStorageInterface $user_storage,
         EntityRepositoryInterface $entity_repository,
         FileSystemInterface $file_system,
         StreamWrapperManagerInterface $streamWrapperManager,
-        TimeInterface $time,
-        Config $module_settings,
-        AccountInterface $current_user
+        TimeInterface $time
     ) {
     $this->userStorage = $user_storage;
     $this->entityRepository = $entity_repository;
     $this->fileSystem = $file_system;
     $this->streamWrapperManager = $streamWrapperManager;
     $this->time = $time;
-    $this->moduleSettings = $module_settings;
-    $this->currentUser = $current_user;
     $this->logger = $this->getLogger('onlyoffice');
   }
 
@@ -163,9 +120,7 @@ class OnlyofficeCallbackController extends ControllerBase {
           $container->get('entity.repository'),
           $container->get('file_system'),
           $container->get('stream_wrapper_manager'),
-          $container->get('datetime.time'),
-          $container->get('config.factory')->get('onlyoffice.settings'),
-          $container->get('current_user')
+          $container->get('datetime.time')
       );
   }
 
@@ -192,7 +147,7 @@ class OnlyofficeCallbackController extends ControllerBase {
       );
     }
 
-    if ($this->moduleSettings->get('doc_server_jwt')) {
+    if ($this->config('onlyoffice.settings')->get('doc_server_jwt')) {
       $token = $body->token;
       $inBody = TRUE;
 
@@ -212,7 +167,7 @@ class OnlyofficeCallbackController extends ControllerBase {
       }
 
       try {
-        $bodyFromToken = JWT::decode($token, $this->moduleSettings->get('doc_server_jwt'), ["HS256"]);
+        $bodyFromToken = JWT::decode($token, $this->config('onlyoffice.settings')->get('doc_server_jwt'), ["HS256"]);
 
         $body = $inBody ? $bodyFromToken : $bodyFromToken->payload;
       }
@@ -269,10 +224,10 @@ class OnlyofficeCallbackController extends ControllerBase {
     $account = $this->userStorage->load($userId);
 
     if ($account) {
-      $this->currentUser->setAccount($account);
+      $this->currentUser()->setAccount($account);
     }
     else {
-      $this->currentUser->setAccount(User::getAnonymousUser());
+      $this->currentUser()->setAccount(User::getAnonymousUser());
     }
 
     $status = OnlyofficeCallbackController::CALLBACK_STATUS[$body->status];
@@ -310,7 +265,7 @@ class OnlyofficeCallbackController extends ControllerBase {
    * Method for saving file.
    */
   private function proccessSave($body, Media $media, $context) {
-    $edit_permission = $media->access("update", $this->currentUser->getAccount());
+    $edit_permission = $media->access("update", $this->currentUser()->getAccount());
 
     if (!$edit_permission) {
       $this->logger->error('Denied access to edit media @type %label.', $context);
@@ -343,7 +298,7 @@ class OnlyofficeCallbackController extends ControllerBase {
 
     $media->set(OnlyofficeDocumentHelper::getSourceFieldName($media), $newFile);
     $media->setNewRevision();
-    $media->setRevisionUser($this->currentUser->getAccount());
+    $media->setRevisionUser($this->currentUser()->getAccount());
     $media->setRevisionCreationTime($this->time->getRequestTime());
     $media->setRevisionLogMessage('');
     $media->save();
@@ -362,7 +317,7 @@ class OnlyofficeCallbackController extends ControllerBase {
     $uri = $this->fileSystem->saveData($data, $destination, $replace);
 
     $file = File::create(['uri' => $uri]);
-    $file->setOwnerId($this->currentUser->getAccount()->id());
+    $file->setOwnerId($this->currentUser()->getAccount()->id());
 
     if ($replace === FileSystemInterface::EXISTS_RENAME && is_file($destination)) {
       $file->setFilename($this->fileSystem->basename($destination));
