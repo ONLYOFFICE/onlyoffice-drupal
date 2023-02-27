@@ -22,7 +22,6 @@ namespace Drupal\onlyoffice\Controller;
  */
 
 use Drupal\Component\Uuid\Uuid;
-use Drupal\Core\Config\Config;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\File\Exception\InvalidStreamWrapperException;
 use Drupal\Core\File\FileSystemInterface;
@@ -96,13 +95,6 @@ class OnlyofficeCallbackController extends ControllerBase {
   protected $time;
 
   /**
-   * The onlyoffice settings.
-   *
-   * @var \Drupal\Core\Config\Config
-   */
-  protected $moduleSettings;
-
-  /**
    * A logger instance.
    *
    * @var \Psr\Log\LoggerInterface
@@ -122,23 +114,19 @@ class OnlyofficeCallbackController extends ControllerBase {
    *   The stream wrapper manager.
    * @param \Drupal\Component\Datetime\TimeInterface $time
    *   The time service.
-   * @param Drupal\Core\Config\Config $module_settings
-   *   The onlyoffice settings.
    */
   public function __construct(
         UserStorageInterface $user_storage,
         EntityRepositoryInterface $entity_repository,
         FileSystemInterface $file_system,
         StreamWrapperManagerInterface $streamWrapperManager,
-        TimeInterface $time,
-        Config $module_settings
+        TimeInterface $time
     ) {
     $this->userStorage = $user_storage;
     $this->entityRepository = $entity_repository;
     $this->fileSystem = $file_system;
     $this->streamWrapperManager = $streamWrapperManager;
     $this->time = $time;
-    $this->moduleSettings = $module_settings;
     $this->logger = $this->getLogger('onlyoffice');
   }
 
@@ -151,8 +139,7 @@ class OnlyofficeCallbackController extends ControllerBase {
           $container->get('entity.repository'),
           $container->get('file_system'),
           $container->get('stream_wrapper_manager'),
-          $container->get('datetime.time'),
-          $container->get('config.factory')->get('onlyoffice.settings')
+          $container->get('datetime.time')
       );
   }
 
@@ -179,7 +166,7 @@ class OnlyofficeCallbackController extends ControllerBase {
       );
     }
 
-    if ($this->moduleSettings->get('doc_server_jwt')) {
+    if ($this->config('onlyoffice.settings')->get('doc_server_jwt')) {
       $token = $body->token;
       $inBody = TRUE;
 
@@ -199,7 +186,7 @@ class OnlyofficeCallbackController extends ControllerBase {
       }
 
       try {
-        $bodyFromToken = JWT::decode($token, $this->moduleSettings->get('doc_server_jwt'), ["HS256"]);
+        $bodyFromToken = JWT::decode($token, $this->config('onlyoffice.settings')->get('doc_server_jwt'), ["HS256"]);
 
         $body = $inBody ? $bodyFromToken : $bodyFromToken->payload;
       }

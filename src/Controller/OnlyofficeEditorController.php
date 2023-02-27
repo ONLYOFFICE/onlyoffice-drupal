@@ -21,7 +21,6 @@ namespace Drupal\onlyoffice\Controller;
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-use Drupal\Core\Config\Config;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
@@ -54,13 +53,6 @@ class OnlyofficeEditorController extends ControllerBase {
    * @var \Drupal\onlyoffice\OnlyofficeDocumentHelper
    */
   protected $documentHelper;
-
-  /**
-   * The onlyoffice settings.
-   *
-   * @var \Drupal\Core\Config\Config
-   */
-  protected $moduleSettings;
 
   /**
    * The date formatter service.
@@ -97,8 +89,6 @@ class OnlyofficeEditorController extends ControllerBase {
    *   The renderer service.
    * @param \Drupal\onlyoffice\OnlyofficeDocumentHelper $document_helper
    *   The onlyoffice document helper service.
-   * @param Drupal\Core\Config\Config $module_settings
-   *   The onlyoffice settings.
    * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
    *   The date formatter service.
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
@@ -109,14 +99,12 @@ class OnlyofficeEditorController extends ControllerBase {
   public function __construct(
     RendererInterface $renderer,
     OnlyofficeDocumentHelper $document_helper,
-    Config $module_settings,
     DateFormatterInterface $date_formatter,
     LanguageManagerInterface $language_manager,
     ModuleExtensionList $extension_list_module
   ) {
     $this->renderer = $renderer;
     $this->documentHelper = $document_helper;
-    $this->moduleSettings = $module_settings;
     $this->dateFormatter = $date_formatter;
     $this->languageManager = $language_manager;
     $this->extensionListModule = $extension_list_module;
@@ -130,7 +118,6 @@ class OnlyofficeEditorController extends ControllerBase {
     return new static(
           $container->get('renderer'),
           $container->get('onlyoffice.document_helper'),
-          $container->get('config.factory')->get('onlyoffice.settings'),
           $container->get('date.formatter'),
           $container->get('language_manager'),
           $container->get('extension.list.module')
@@ -211,7 +198,7 @@ class OnlyofficeEditorController extends ControllerBase {
       '#config' => json_encode($editorConfig),
       '#filename' => $file->getFilename(),
       '#favicon_path' => '/' . $this->extensionListModule->getPath('onlyoffice') . '/images/' . $documentType . '.ico',
-      '#doc_server_url' => $this->moduleSettings->get('doc_server_url') . OnlyofficeAppConfig::getDocServiceApiUrl(),
+      '#doc_server_url' => $this->config('onlyoffice.settings')->get('doc_server_url') . OnlyofficeAppConfig::getDocServiceApiUrl(),
     ];
   }
 
