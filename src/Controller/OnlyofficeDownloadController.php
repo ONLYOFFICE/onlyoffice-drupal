@@ -32,6 +32,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 
 /**
  * Returns responses for ONLYOFFICE Connector routes.
@@ -105,7 +106,7 @@ class OnlyofficeDownloadController extends ControllerBase {
       }
 
       try {
-        JWT::decode($token, $this->config('onlyoffice.settings')->get('doc_server_jwt'), ["HS256"]);
+        JWT::decode($token, new Key($this->config('onlyoffice.settings')->get('doc_server_jwt'), 'HS256'));
       }
       catch (\Exception $e) {
         $this->logger->error('Invalid request token.');
