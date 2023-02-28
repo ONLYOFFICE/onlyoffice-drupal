@@ -105,7 +105,7 @@ class OnlyofficeAppConfig {
     'full_access' => ['title' => 'Full access', 'priority' => 3],
     'read' => ['title' => 'Read', 'priority' => 1],
     'comment' => ['title' => 'Comment', 'priority' => 2],
-    'deny_access'=> ['title' => 'Deny access', 'priority' => 0],
+    'deny_access' => ['title' => 'Deny access', 'priority' => 0],
   ];
 
   /**
@@ -129,7 +129,11 @@ class OnlyofficeAppConfig {
     return Settings::get('onlyoffice_jwt_header') ? Settings::get('onlyoffice_jwt_header') : "Authorization";
   }
 
+  /**
+   * Return array ONLYOFFICE permissions.
+   */
   public static function getOnlyofficePermissions() {
     return self::ONLYOFFICE_PERMISSIONS;
   }
+
 }

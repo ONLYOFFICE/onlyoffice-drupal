@@ -45,6 +45,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class OnlyofficeEditorWidget extends WidgetBase {
 
+  /**
+   * The data about supported extensions for OnlyofficeEditorWidget.
+   *
+   * @var \Drupal\user\RoleStorageInterface
+   */
   private static $supportedExtensions = ['docx', 'xlsx', 'pptx'];
 
   /**
@@ -101,7 +106,6 @@ class OnlyofficeEditorWidget extends WidgetBase {
 
   /**
    * Form element validation handler for the 'media' element.
-   *
    */
   public static function validateMediaElement(&$element, FormStateInterface $form_state, $form) {
     $values = NestedArray::getValue($form_state->getValues(), $element['#parents']);
@@ -111,7 +115,16 @@ class OnlyofficeEditorWidget extends WidgetBase {
       if ($file = $media->get(OnlyofficeDocumentHelper::getSourceFieldName($media))->entity) {
         $extension = OnlyofficeDocumentHelper::getExtension($file->getFilename());
         if (!in_array($extension, self::$supportedExtensions)) {
-          $form_state->setError($element['target_id'], t('The selected media @filename cannot be edited with the ONLYOFFICE Editor. Only media with the following extensions are allowed: @extensions.', ['@filename' => $media->getName(), '@extensions' => implode(' ', self::$supportedExtensions)]));
+          $form_state->setError(
+            $element['target_id'],
+            t(
+              'The selected media @filename cannot be edited with the ONLYOFFICE Editor. Only media with the following extensions are allowed: @extensions.',
+              [
+                '@filename' => $media->getName(),
+                '@extensions' => implode(' ', self::$supportedExtensions),
+              ]
+            )
+          );
         }
       }
     }
