@@ -1,5 +1,9 @@
 # Change Log
 
+## 
+## Added
+- support docxf and oform formats
+- media types ONLYOFFICE Form and ONLYOFFICE MasterForm
 ## 1.0.3
 ## Changed
 - update composer file
