@@ -21,11 +21,13 @@ namespace Drupal\onlyoffice\Plugin\Field\FieldWidget;
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\media\Entity\Media;
+use Drupal\onlyoffice\OnlyofficeDocumentHelper;
 use Drupal\user\RoleStorageInterface;
 use Drupal\onlyoffice\OnlyofficeAppConfig;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -42,6 +44,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * )
  */
 class OnlyofficeEditorWidget extends WidgetBase {
+
+  private static $supportedExtensions = ['docx', 'xlsx', 'pptx'];
 
   /**
    * The role storage.
@@ -96,6 +100,24 @@ class OnlyofficeEditorWidget extends WidgetBase {
   }
 
   /**
+   * Form element validation handler for the 'media' element.
+   *
+   */
+  public static function validateMediaElement(&$element, FormStateInterface $form_state, $form) {
+    $values = NestedArray::getValue($form_state->getValues(), $element['#parents']);
+
+    if ($values['target_id'] !== NULL) {
+      $media = Media::load($values['target_id']);
+      if ($file = $media->get(OnlyofficeDocumentHelper::getSourceFieldName($media))->entity) {
+        $extension = OnlyofficeDocumentHelper::getExtension($file->getFilename());
+        if (!in_array($extension, self::$supportedExtensions)) {
+          $form_state->setError($element['target_id'], t('The selected media @filename cannot be edited with the ONLYOFFICE Editor. Only media with the following extensions are allowed: @extensions.', ['@filename' => $media->getName(), '@extensions' => implode(' ', self::$supportedExtensions)]));
+        }
+      }
+    }
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
@@ -112,6 +134,7 @@ class OnlyofficeEditorWidget extends WidgetBase {
       ],
       '#title' => $this->t('Media'),
       '#default_value' => isset($items[$delta]->target_id) ? Media::load($items[$delta]->target_id) : NULL,
+      '#description' => $this->t('Allowed types: @extensions.', ['@extensions' => implode(' ', self::$supportedExtensions)]),
     ];
 
     $element['onlyoffice_permissions'] = [
@@ -161,6 +184,8 @@ class OnlyofficeEditorWidget extends WidgetBase {
         }
       }
     }
+
+    $element['#element_validate'][] = [static::class, 'validateMediaElement'];
 
     return $element;
   }
