@@ -105,6 +105,7 @@ class OnlyofficeDocumentHelper {
         $document_info_owner,
         $document_info_uploaded,
         $document_permissions_edit,
+        $document_permissions_comment,
         $editorConfig_callbackUrl,
         $editorConfig_mode,
         $editorConfig_lang,
@@ -134,6 +135,7 @@ class OnlyofficeDocumentHelper {
         'permissions' => [
           'download' => TRUE,
           'edit' => $document_permissions_edit,
+          'comment' => $document_permissions_comment,
         ],
       ],
       'editorConfig' => [

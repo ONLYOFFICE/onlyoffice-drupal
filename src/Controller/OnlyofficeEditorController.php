@@ -184,6 +184,8 @@ class OnlyofficeEditorController extends ControllerBase {
           $media->getOwner()->getDisplayName(),
           $this->dateFormatter->format($media->getCreatedTime(), 'short'),
           $edit_permission,
+          TRUE,
+          TRUE,
           $edit_permission ? OnlyofficeUrlHelper::getCallbackUrl($media) : NULL,
           $edit_permission && $can_edit ? 'edit' : 'view',
           $this->languageManager->getCurrentLanguage()->getId(),

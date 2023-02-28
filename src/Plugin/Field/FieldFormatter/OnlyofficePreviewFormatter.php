@@ -200,6 +200,7 @@ class OnlyofficePreviewFormatter extends OnlyofficeBaseFormatter {
           $file->getOwner()->getDisplayName(),
           $this->dateFormatter->format($file->getCreatedTime(), 'short'),
           FALSE,
+          FALSE,
           NULL,
           "view",
           $this->languageManager->getCurrentLanguage()->getId(),
