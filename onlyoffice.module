@@ -72,8 +72,9 @@ function onlyoffice_entity_operation(EntityInterface $entity) {
   }
   /** @var \Drupal\media\Entity\Media $media */
   $media = $entity;
+  $pluginId = $media->getSource()->getPluginId();
 
-  if ($media->getSource()->getPluginId() != "file") {
+  if ($pluginId != "file" && $pluginId != "onlyoffice_m_form" && $pluginId != "onlyoffice_form") {
     return [];
   }
 

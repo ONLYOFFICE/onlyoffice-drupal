@@ -128,7 +128,9 @@ class OnlyofficeEditorController extends ControllerBase {
    * Method for processing opening editor.
    */
   public function editor(Media $media, Request $request) {
-    if ($media->getSource()->getPluginId() != "file") {
+    $pluginId = $media->getSource()->getPluginId();
+
+    if ($pluginId != "file" && $pluginId != "onlyoffice_m_form" && $pluginId != "onlyoffice_form") {
       throw new UnsupportedMediaTypeHttpException();
     }
 
