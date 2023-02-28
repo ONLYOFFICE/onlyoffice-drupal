@@ -97,6 +97,18 @@ class OnlyofficeAppConfig {
   ];
 
   /**
+   * Data about ONLYOFFICE permissions.
+   *
+   * @var array
+   */
+  private const ONLYOFFICE_PERMISSIONS = [
+    'full_access' => ['title' => 'Full access', 'priority' => 3],
+    'read' => ['title' => 'Read', 'priority' => 2],
+    'comment' => ['title' => 'Comment', 'priority' => 1],
+    'deny_access'=> ['title' => 'Deny access', 'priority' => 0],
+  ];
+
+  /**
    * Address to api document service.
    */
   public static function getDocServiceApiUrl() {
@@ -117,4 +129,7 @@ class OnlyofficeAppConfig {
     return Settings::get('onlyoffice_jwt_header') ? Settings::get('onlyoffice_jwt_header') : "Authorization";
   }
 
+  public static function getOnlyofficePermissions() {
+    return self::ONLYOFFICE_PERMISSIONS;
+  }
 }
