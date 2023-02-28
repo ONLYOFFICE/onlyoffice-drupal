@@ -70,9 +70,23 @@ class OnlyofficeUrlHelper {
   }
 
   /**
+   * Return URL to callback for fill form from client side.
+   */
+  public static function getCallbackFillFormUrl(Media $media) {
+    $linkParameters = [
+      $media->uuid(),
+      'fillForm',
+    ];
+
+    $key = static::signLinkParameters($linkParameters);
+
+    return Url::fromRoute('onlyoffice.callback', ['key' => $key])->setAbsolute()->toString();
+  }
+
+  /**
    * Return URL to download document.
    */
-  public static function getDownloadFileUrl (File $file) {
+  public static function getDownloadFileUrl(File $file) {
     $linkParameters = [
       $file->uuid(),
       \Drupal::currentUser()->getAccount()->id(),
