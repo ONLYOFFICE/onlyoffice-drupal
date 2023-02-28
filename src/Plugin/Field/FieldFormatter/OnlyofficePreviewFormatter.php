@@ -23,17 +23,18 @@ namespace Drupal\onlyoffice\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
-use Drupal\Core\Form\FormStateInterface;
-use Drupal\file\Plugin\Field\FieldFormatter\FileFormatterBase;
+use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
 use Drupal\file\Entity\File;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\onlyoffice\OnlyofficeDocumentHelper;
 use Drupal\onlyoffice\OnlyofficeUrlHelper;
 
 /**
- * Plugin implementation of the 'file_document' formatter.
+ * Plugin implementation of the 'onlyoffice_preview' formatter.
  *
  * @FieldFormatter(
  *   id = "onlyoffice_preview",
@@ -44,7 +45,7 @@ use Drupal\onlyoffice\OnlyofficeUrlHelper;
  *   }
  * )
  */
-class OnlyofficePreviewFormatter extends FileFormatterBase {
+class OnlyofficePreviewFormatter extends OnlyofficeBaseFormatter {
 
   /**
    * The date formatter service.
@@ -119,74 +120,6 @@ class OnlyofficePreviewFormatter extends FileFormatterBase {
   /**
    * {@inheritdoc}
    */
-  public static function defaultSettings() {
-    return [
-      'width_unit' => '%',
-      'width' => 100,
-      'height_unit' => 'px',
-      'height' => 640,
-    ] + parent::defaultSettings();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function settingsForm(array $form, FormStateInterface $form_state) {
-    return parent::settingsForm($form, $form_state) + [
-      'width_unit' => [
-        '#type' => 'radios',
-        '#title' => $this->t('Width units'),
-        '#default_value' => $this->getSetting('width_unit'),
-        '#options' => [
-          '%' => $this->t('Percents'),
-          'px' => $this->t('Pixels'),
-        ],
-      ],
-      'width' => [
-        '#type' => 'number',
-        '#title' => $this->t('Width'),
-        '#default_value' => $this->getSetting('width'),
-        '#size' => 5,
-        '#maxlength' => 5,
-        '#min' => 0,
-        '#required' => TRUE,
-      ],
-      'height_unit' => [
-        '#type' => 'radios',
-        '#title' => $this->t('Height units'),
-        '#default_value' => $this->getSetting('height_unit'),
-        '#options' => [
-          '%' => $this->t('Percents'),
-          'px' => $this->t('Pixels'),
-        ],
-      ],
-      'height' => [
-        '#type' => 'number',
-        '#title' => $this->t('Height'),
-        '#default_value' => $this->getSetting('height'),
-        '#size' => 5,
-        '#maxlength' => 5,
-        '#min' => 0,
-        '#required' => TRUE,
-      ],
-    ];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function settingsSummary() {
-    $summary = parent::settingsSummary();
-    $widthName = $this->t('Width');
-    $heightName = $this->t('Height');
-    $summary[] = $widthName . ': ' . $this->getSetting('width') . $this->getSetting('width_unit');
-    $summary[] = $heightName . ': ' . $this->getSetting('height') . $this->getSetting('height_unit');
-    return $summary;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public static function isApplicable(FieldDefinitionInterface $field_definition) {
     if (!parent::isApplicable($field_definition)) {
       return FALSE;
@@ -207,15 +140,7 @@ class OnlyofficePreviewFormatter extends FileFormatterBase {
    * {@inheritdoc}
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
-
-    $element = [
-      '#attached' => [
-        'library' => [
-          'onlyoffice/onlyoffice.api',
-          'onlyoffice/onlyoffice.preview',
-        ],
-      ],
-    ];
+    $element = parent::viewElements($items, $langcode);
 
     /** @var \Drupal\file\Entity\File $file */
     foreach ($this->getEntitiesToView($items, $langcode) as $delta => $file) {
@@ -264,6 +189,28 @@ class OnlyofficePreviewFormatter extends FileFormatterBase {
           $editor_width,
           $editor_height
       );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function needsEntityLoad(EntityReferenceItem $item) {
+    return parent::needsEntityLoad($item) && $item->isDisplayed();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function checkAccess(EntityInterface $entity) {
+    // Only check access if the current file access control handler explicitly
+    // opts in by implementing FileAccessFormatterControlHandlerInterface.
+    $access_handler_class = $entity->getEntityType()->getHandlerClass('access');
+    if (is_subclass_of($access_handler_class, '\Drupal\file\FileAccessFormatterControlHandlerInterface')) {
+      return $entity->access('view', NULL, TRUE);
+    }
+    else {
+      return AccessResult::allowed();
+    }
   }
 
 }
