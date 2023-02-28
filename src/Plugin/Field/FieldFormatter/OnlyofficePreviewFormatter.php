@@ -207,6 +207,9 @@ class OnlyofficePreviewFormatter extends OnlyofficeBaseFormatter {
           NULL,
           NULL,
           NULL,
+          TRUE,
+          TRUE,
+          TRUE,
           $editor_width,
           $editor_height
       );

@@ -185,13 +185,15 @@ class OnlyofficeEditorController extends ControllerBase {
           $this->dateFormatter->format($media->getCreatedTime(), 'short'),
           $edit_permission,
           TRUE,
-          TRUE,
           $edit_permission ? OnlyofficeUrlHelper::getCallbackUrl($media) : NULL,
           $edit_permission && $can_edit ? 'edit' : 'view',
           $this->languageManager->getCurrentLanguage()->getId(),
           $user->id(),
           $user->getDisplayName(),
           OnlyofficeUrlHelper::getGoBackUrl($media),
+          FALSE,
+          FALSE,
+          FALSE,
           "100%",
           "100%"
       );
