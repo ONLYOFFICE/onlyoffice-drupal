@@ -171,7 +171,7 @@ class OnlyofficeEditorController extends ControllerBase {
     }
 
     $user = $this->currentUser()->getAccount();
-    $can_edit = $this->documentHelper->isEditable($media);
+    $can_edit = $this->documentHelper->isEditable($media) || $this->documentHelper->isFillForms($media);
     $edit_permission = $media->access("update", $user);
 
     $editorConfig = $this->documentHelper->createEditorConfig(

@@ -46,7 +46,7 @@ class OnlyofficeUrlHelper {
   public static function getEditorLink(Media $media) {
     $title = t("View in ONLYOFFICE");
 
-    if (OnlyofficeDocumentHelper::isEditable($media)) {
+    if (OnlyofficeDocumentHelper::isEditable($media) || OnlyofficeDocumentHelper::isFillForms($media)) {
       $title = t("Edit in ONLYOFFICE");
     }
 
@@ -72,7 +72,7 @@ class OnlyofficeUrlHelper {
   /**
    * Return URL to download document.
    */
-  public static function getDownloadFileUrl(File $file) {
+  public static function getDownloadFileUrl (File $file) {
     $linkParameters = [
       $file->uuid(),
       \Drupal::currentUser()->getAccount()->id(),
