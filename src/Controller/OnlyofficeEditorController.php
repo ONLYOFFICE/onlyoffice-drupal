@@ -76,13 +76,6 @@ class OnlyofficeEditorController extends ControllerBase {
   protected $extensionListModule;
 
   /**
-   * A logger instance.
-   *
-   * @var \Psr\Log\LoggerInterface
-   */
-  protected $logger;
-
-  /**
    * Constructs an OnlyofficeEditorController object.
    *
    * @param \Drupal\Core\Render\RendererInterface $renderer
@@ -108,7 +101,6 @@ class OnlyofficeEditorController extends ControllerBase {
     $this->dateFormatter = $date_formatter;
     $this->languageManager = $language_manager;
     $this->extensionListModule = $extension_list_module;
-    $this->logger = $this->getLogger('onlyoffice');
   }
 
   /**
@@ -166,7 +158,7 @@ class OnlyofficeEditorController extends ControllerBase {
     $documentType = OnlyofficeDocumentHelper::getDocumentType($extension);
 
     if (!$documentType) {
-      $this->logger->warning('Media @type %label is not supported current module.', $context);
+      $this->getLogger('onlyoffice')->warning('Media @type %label is not supported current module.', $context);
       return ['#error' => $this->t("Sorry, this file format isn't supported (@extension)", ['@extension' => $extension])];
     }
 
@@ -192,7 +184,7 @@ class OnlyofficeEditorController extends ControllerBase {
           "100%"
       );
 
-    $this->logger->debug('Generated config for media @type %label: <br><pre><code>' . print_r($editorConfig, TRUE) . '</code></pre>', $context);
+    $this->getLogger('onlyoffice')->debug('Generated config for media @type %label: <br><pre><code>' . print_r($editorConfig, TRUE) . '</code></pre>', $context);
 
     return [
       '#config' => json_encode($editorConfig),
