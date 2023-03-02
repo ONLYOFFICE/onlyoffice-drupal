@@ -27,6 +27,7 @@ jobs:
           rm ./.editorconfig
           rm ./LICENSE
           rm ./composer.lock
+          rm ./3rd-Party.license
       - name: Remove Copyrights
         run: |
           for f in $(find . -name '*.js' -or -name '*.css'); 
@@ -36,7 +37,12 @@ jobs:
 
           for f in $(find . -name '*.php');
               do
-                  awk '/^\/\*/{c++} c!=1; /^ \*\//{c++}' $f > $f.tmp && mv $f.tmp $f;
+                  awk '/^\/\*/{c++} c!=1; /^ \*\//{c++}' $f | awk 'BEGIN{RS="";ORS="\n\n"}1' | awk 'NR > 1{print t} {t = $0}END{if (NF) print }' > $f.tmp && mv $f.tmp $f;
+              done
+
+          for f in $(find . -name 'onlyoffice.install' -or -name 'onlyoffice.module');
+              do
+                  awk '/^\/\*/{c++} c!=3; /^ \*\//{c++}' $f | awk 'BEGIN{RS="";ORS="\n\n"}1' | awk 'NR > 1{print t} {t = $0}END{if (NF) print }' > $f.tmp && mv $f.tmp $f;
               done
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
