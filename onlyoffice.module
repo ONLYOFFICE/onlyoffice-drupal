@@ -68,26 +68,26 @@ function onlyoffice_theme($existing, $type, $theme, $path) {
  */
 function onlyoffice_entity_operation(EntityInterface $entity) {
   if ($entity->getEntityTypeId() != "media") {
-    return NULL;
+    return [];
   }
   /** @var \Drupal\media\Entity\Media $media */
   $media = $entity;
 
   if ($media->getSource()->getPluginId() != "file") {
-    return NULL;
+    return [];
   }
 
   $account = \Drupal::currentUser()->getAccount();
 
   if (!$media->access("view", $account)) {
-    return NULL;
+    return [];
   }
 
   $file = $media->get(OnlyofficeDocumentHelper::getSourceFieldName($media))->entity;
   $extension = OnlyofficeDocumentHelper::getExtension($file->getFilename());
 
   if (OnlyofficeDocumentHelper::getDocumentType($extension) == NULL) {
-    return NULL;
+    return [];
   }
 
   $title = t("View in ONLYOFFICE");

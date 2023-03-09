@@ -21,9 +21,7 @@ namespace Drupal\onlyoffice\Controller;
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-use Drupal\Core\Config\Config;
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Extension\ModuleExtensionList;
@@ -57,20 +55,6 @@ class OnlyofficeEditorController extends ControllerBase {
   protected $documentHelper;
 
   /**
-   * The current user.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $currentUser;
-
-  /**
-   * The onlyoffice settings.
-   *
-   * @var \Drupal\Core\Config\Config
-   */
-  protected $moduleSettings;
-
-  /**
    * The date formatter service.
    *
    * @var \Drupal\Core\Datetime\DateFormatterInterface
@@ -92,23 +76,12 @@ class OnlyofficeEditorController extends ControllerBase {
   protected $extensionListModule;
 
   /**
-   * A logger instance.
-   *
-   * @var \Psr\Log\LoggerInterface
-   */
-  protected $logger;
-
-  /**
    * Constructs an OnlyofficeEditorController object.
    *
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer service.
    * @param \Drupal\onlyoffice\OnlyofficeDocumentHelper $document_helper
    *   The onlyoffice document helper service.
-   * @param Drupal\Core\Config\Config $module_settings
-   *   The onlyoffice settings.
-   * @param \Drupal\Core\Session\AccountInterface $current_user
-   *   The current user.
    * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
    *   The date formatter service.
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
@@ -119,20 +92,15 @@ class OnlyofficeEditorController extends ControllerBase {
   public function __construct(
     RendererInterface $renderer,
     OnlyofficeDocumentHelper $document_helper,
-    Config $module_settings,
-    AccountInterface $current_user,
     DateFormatterInterface $date_formatter,
     LanguageManagerInterface $language_manager,
     ModuleExtensionList $extension_list_module
   ) {
     $this->renderer = $renderer;
     $this->documentHelper = $document_helper;
-    $this->moduleSettings = $module_settings;
-    $this->currentUser = $current_user;
     $this->dateFormatter = $date_formatter;
     $this->languageManager = $language_manager;
     $this->extensionListModule = $extension_list_module;
-    $this->logger = $this->getLogger('onlyoffice');
   }
 
   /**
@@ -142,8 +110,6 @@ class OnlyofficeEditorController extends ControllerBase {
     return new static(
           $container->get('renderer'),
           $container->get('onlyoffice.document_helper'),
-          $container->get('config.factory')->get('onlyoffice.settings'),
-          $container->get('current_user'),
           $container->get('date.formatter'),
           $container->get('language_manager'),
           $container->get('extension.list.module')
@@ -192,11 +158,11 @@ class OnlyofficeEditorController extends ControllerBase {
     $documentType = OnlyofficeDocumentHelper::getDocumentType($extension);
 
     if (!$documentType) {
-      $this->logger->warning('Media @type %label is not supported current module.', $context);
+      $this->getLogger('onlyoffice')->warning('Media @type %label is not supported current module.', $context);
       return ['#error' => $this->t("Sorry, this file format isn't supported (@extension)", ['@extension' => $extension])];
     }
 
-    $user = $this->currentUser->getAccount();
+    $user = $this->currentUser()->getAccount();
     $can_edit = $this->documentHelper->isEditable($media);
     $edit_permission = $media->access("update", $user);
 
@@ -218,13 +184,13 @@ class OnlyofficeEditorController extends ControllerBase {
           "100%"
       );
 
-    $this->logger->debug('Generated config for media @type %label: <br><pre><code>' . print_r($editorConfig, TRUE) . '</code></pre>', $context);
+    $this->getLogger('onlyoffice')->debug('Generated config for media @type %label: <br><pre><code>' . print_r($editorConfig, TRUE) . '</code></pre>', $context);
 
     return [
       '#config' => json_encode($editorConfig),
       '#filename' => $file->getFilename(),
       '#favicon_path' => '/' . $this->extensionListModule->getPath('onlyoffice') . '/images/' . $documentType . '.ico',
-      '#doc_server_url' => $this->moduleSettings->get('doc_server_url') . OnlyofficeAppConfig::getDocServiceApiUrl(),
+      '#doc_server_url' => $this->config('onlyoffice.settings')->get('doc_server_url') . OnlyofficeAppConfig::getDocServiceApiUrl(),
     ];
   }
 

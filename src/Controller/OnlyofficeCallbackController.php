@@ -22,8 +22,6 @@ namespace Drupal\onlyoffice\Controller;
  */
 
 use Drupal\Component\Uuid\Uuid;
-use Drupal\Core\Config\Config;
-use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\File\Exception\InvalidStreamWrapperException;
 use Drupal\Core\File\FileSystemInterface;
@@ -97,27 +95,6 @@ class OnlyofficeCallbackController extends ControllerBase {
   protected $time;
 
   /**
-   * The current user.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $currentUser;
-
-  /**
-   * The onlyoffice settings.
-   *
-   * @var \Drupal\Core\Config\Config
-   */
-  protected $moduleSettings;
-
-  /**
-   * A logger instance.
-   *
-   * @var \Psr\Log\LoggerInterface
-   */
-  protected $logger;
-
-  /**
    * Constructs a OnlyofficeCallbackController object.
    *
    * @param \Drupal\user\Entity\UserStorageInterface $user_storage
@@ -130,28 +107,19 @@ class OnlyofficeCallbackController extends ControllerBase {
    *   The stream wrapper manager.
    * @param \Drupal\Component\Datetime\TimeInterface $time
    *   The time service.
-   * @param Drupal\Core\Config\Config $module_settings
-   *   The onlyoffice settings.
-   * @param \Drupal\Core\Session\AccountInterface $current_user
-   *   The current user.
    */
   public function __construct(
         UserStorageInterface $user_storage,
         EntityRepositoryInterface $entity_repository,
         FileSystemInterface $file_system,
         StreamWrapperManagerInterface $streamWrapperManager,
-        TimeInterface $time,
-        Config $module_settings,
-        AccountInterface $current_user
+        TimeInterface $time
     ) {
     $this->userStorage = $user_storage;
     $this->entityRepository = $entity_repository;
     $this->fileSystem = $file_system;
     $this->streamWrapperManager = $streamWrapperManager;
     $this->time = $time;
-    $this->moduleSettings = $module_settings;
-    $this->currentUser = $current_user;
-    $this->logger = $this->getLogger('onlyoffice');
   }
 
   /**
@@ -163,9 +131,7 @@ class OnlyofficeCallbackController extends ControllerBase {
           $container->get('entity.repository'),
           $container->get('file_system'),
           $container->get('stream_wrapper_manager'),
-          $container->get('datetime.time'),
-          $container->get('config.factory')->get('onlyoffice.settings'),
-          $container->get('current_user')
+          $container->get('datetime.time')
       );
   }
 
@@ -182,17 +148,17 @@ class OnlyofficeCallbackController extends ControllerBase {
   public function callback(string $key, Request $request) {
 
     $body = json_decode($request->getContent());
-    $this->logger->debug('Request from Document Editing Service: <br><pre><code>' . print_r($body, TRUE) . '</code></pre>');
+    $this->getLogger('onlyoffice')->debug('Request from Document Editing Service: <br><pre><code>' . print_r($body, TRUE) . '</code></pre>');
 
     if (!$body) {
-      $this->logger->error('The request body is missing.');
+      $this->getLogger('onlyoffice')->error('The request body is missing.');
       return new JsonResponse(
         ['error' => 1, 'message' => 'The request body is missing.'],
         400
       );
     }
 
-    if ($this->moduleSettings->get('doc_server_jwt')) {
+    if ($this->config('onlyoffice.settings')->get('doc_server_jwt')) {
       $token = $body->token;
       $inBody = TRUE;
 
@@ -204,7 +170,7 @@ class OnlyofficeCallbackController extends ControllerBase {
       }
 
       if (empty($token)) {
-        $this->logger->error('The request token is missing.');
+        $this->getLogger('onlyoffice')->error('The request token is missing.');
         return new JsonResponse(
           ['error' => 1, 'message' => 'The request token is missing.'],
           401
@@ -212,12 +178,12 @@ class OnlyofficeCallbackController extends ControllerBase {
       }
 
       try {
-        $bodyFromToken = JWT::decode($token, $this->moduleSettings->get('doc_server_jwt'), ["HS256"]);
+        $bodyFromToken = JWT::decode($token, $this->config('onlyoffice.settings')->get('doc_server_jwt'), ["HS256"]);
 
         $body = $inBody ? $bodyFromToken : $bodyFromToken->payload;
       }
       catch (\Exception $e) {
-        $this->logger->error('Invalid request token.');
+        $this->getLogger('onlyoffice')->error('Invalid request token.');
         return new JsonResponse(
           ['error' => 1, 'message' => 'Invalid request token.'],
           401
@@ -228,7 +194,7 @@ class OnlyofficeCallbackController extends ControllerBase {
     $linkParameters = OnlyofficeUrlHelper::verifyLinkKey($key);
 
     if (!$linkParameters) {
-      $this->logger->error('Invalid link key: @key.', ['@key' => $key]);
+      $this->getLogger('onlyoffice')->error('Invalid link key: @key.', ['@key' => $key]);
       return new JsonResponse(
         ['error' => 1, 'message' => 'Invalid link key: ' . $key . '.'],
         400
@@ -238,7 +204,7 @@ class OnlyofficeCallbackController extends ControllerBase {
     $uuid = $linkParameters[0];
 
     if (!$uuid || !Uuid::isValid($uuid)) {
-      $this->logger->error('Invalid parameter UUID: @uuid.', ['@uuid' => $uuid]);
+      $this->getLogger('onlyoffice')->error('Invalid parameter UUID: @uuid.', ['@uuid' => $uuid]);
       return new JsonResponse(
         ['error' => 1, 'message' => 'Invalid parameter UUID: ' . $uuid . '.'],
         400
@@ -248,7 +214,7 @@ class OnlyofficeCallbackController extends ControllerBase {
     $media = $this->entityRepository->loadEntityByUuid('media', $uuid);
 
     if (!$media) {
-      $this->logger->error('The targeted media resource with UUID @uuid does not exist.', ['@uuid' => $uuid]);
+      $this->getLogger('onlyoffice')->error('The targeted media resource with UUID @uuid does not exist.', ['@uuid' => $uuid]);
       return new JsonResponse(
         [
           'error' => 1,
@@ -269,10 +235,10 @@ class OnlyofficeCallbackController extends ControllerBase {
     $account = $this->userStorage->load($userId);
 
     if ($account) {
-      $this->currentUser->setAccount($account);
+      $this->currentUser()->setAccount($account);
     }
     else {
-      $this->currentUser->setAccount(User::getAnonymousUser());
+      $this->currentUser()->setAccount(User::getAnonymousUser());
     }
 
     $status = OnlyofficeCallbackController::CALLBACK_STATUS[$body->status];
@@ -281,11 +247,11 @@ class OnlyofficeCallbackController extends ControllerBase {
       case "Editing":
         switch ($body->actions[0]->type) {
           case 0:
-            $this->logger->notice('Disconnected from the media @type %label co-editing.', $context);
+            $this->getLogger('onlyoffice')->notice('Disconnected from the media @type %label co-editing.', $context);
             break;
 
           case 1:
-            $this->logger->notice('Connected to the media @type %label co-editing.', $context);
+            $this->getLogger('onlyoffice')->notice('Connected to the media @type %label co-editing.', $context);
             break;
         }
         break;
@@ -295,7 +261,7 @@ class OnlyofficeCallbackController extends ControllerBase {
         return $this->proccessSave($body, $media, $context);
 
       case "Closed":
-        $this->logger->notice('Media @type %label was closed with no changes.', $context);
+        $this->getLogger('onlyoffice')->notice('Media @type %label was closed with no changes.', $context);
         break;
 
       case "MustForceSave":
@@ -310,10 +276,10 @@ class OnlyofficeCallbackController extends ControllerBase {
    * Method for saving file.
    */
   private function proccessSave($body, Media $media, $context) {
-    $edit_permission = $media->access("update", $this->currentUser->getAccount());
+    $edit_permission = $media->access("update", $this->currentUser()->getAccount());
 
     if (!$edit_permission) {
-      $this->logger->error('Denied access to edit media @type %label.', $context);
+      $this->getLogger('onlyoffice')->error('Denied access to edit media @type %label.', $context);
       return new JsonResponse(
         [
           'error' => 1,
@@ -325,7 +291,7 @@ class OnlyofficeCallbackController extends ControllerBase {
 
     $download_url = $body->url;
     if ($download_url === NULL) {
-      $this->logger->error('URL parameter not found when saving media @type %label.', $context);
+      $this->getLogger('onlyoffice')->error('URL parameter not found when saving media @type %label.', $context);
       return new JsonResponse(
         ['error' => 1, 'message' => 'Url parameter not found'],
         400
@@ -343,12 +309,12 @@ class OnlyofficeCallbackController extends ControllerBase {
 
     $media->set(OnlyofficeDocumentHelper::getSourceFieldName($media), $newFile);
     $media->setNewRevision();
-    $media->setRevisionUser($this->currentUser->getAccount());
+    $media->setRevisionUser($this->currentUser()->getAccount());
     $media->setRevisionCreationTime($this->time->getRequestTime());
     $media->setRevisionLogMessage('');
     $media->save();
 
-    $this->logger->notice('Media @type %label was successfully saved.', $context);
+    $this->getLogger('onlyoffice')->notice('Media @type %label was successfully saved.', $context);
     return new JsonResponse(['error' => 0], 200);
   }
 
@@ -362,7 +328,7 @@ class OnlyofficeCallbackController extends ControllerBase {
     $uri = $this->fileSystem->saveData($data, $destination, $replace);
 
     $file = File::create(['uri' => $uri]);
-    $file->setOwnerId($this->currentUser->getAccount()->id());
+    $file->setOwnerId($this->currentUser()->getAccount()->id());
 
     if ($replace === FileSystemInterface::EXISTS_RENAME && is_file($destination)) {
       $file->setFilename($this->fileSystem->basename($destination));
