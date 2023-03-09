@@ -26,6 +26,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\Core\PageCache\ResponsePolicy\KillSwitch;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\media\Entity\Media;
 use Drupal\onlyoffice\OnlyofficeDocumentHelper;
@@ -75,6 +76,13 @@ class OnlyofficeEditorFormatter extends OnlyofficeBaseFormatter {
   protected $languageManager;
 
   /**
+   * The page cache disabling policy.
+   *
+   * @var \Drupal\Core\PageCache\ResponsePolicy\KillSwitch
+   */
+  protected $pageCacheKillSwitch;
+
+  /**
    * Constructs an EntityReferenceEntityFormatter instance.
    *
    * @param string $plugin_id
@@ -99,6 +107,8 @@ class OnlyofficeEditorFormatter extends OnlyofficeBaseFormatter {
    *   The date formatter service.
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager.
+   * @param \Drupal\Core\PageCache\ResponsePolicy\KillSwitch $page_cache_kill_switch
+   *   The page cache disabling policy.
    */
   public function __construct(
     $plugin_id,
@@ -111,13 +121,15 @@ class OnlyofficeEditorFormatter extends OnlyofficeBaseFormatter {
     RendererInterface $renderer,
     OnlyofficeDocumentHelper $document_helper,
     DateFormatterInterface $date_formatter,
-    LanguageManagerInterface $language_manager
+    LanguageManagerInterface $language_manager,
+    KillSwitch $page_cache_kill_switch
   ) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings);
     $this->renderer = $renderer;
     $this->documentHelper = $document_helper;
     $this->dateFormatter = $date_formatter;
     $this->languageManager = $language_manager;
+    $this->pageCacheKillSwitch = $page_cache_kill_switch;
   }
 
   /**
@@ -135,7 +147,8 @@ class OnlyofficeEditorFormatter extends OnlyofficeBaseFormatter {
       $container->get('renderer'),
       $container->get('onlyoffice.document_helper'),
       $container->get('date.formatter'),
-      $container->get('language_manager')
+      $container->get('language_manager'),
+      $container->get('page_cache_kill_switch')
     );
   }
 
@@ -158,6 +171,7 @@ class OnlyofficeEditorFormatter extends OnlyofficeBaseFormatter {
    * {@inheritdoc}
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
+    $this->pageCacheKillSwitch->trigger();
 
     $element = parent::viewElements($items, $langcode);
 
@@ -171,8 +185,12 @@ class OnlyofficeEditorFormatter extends OnlyofficeBaseFormatter {
           $media->id()
         );
 
-        $element[$delta] = ['#markup' => sprintf('<div id="%s" class="onlyoffice-editor"></div>', $editor_id)];
-        $this->renderer->addCacheableDependency($element[$delta], $media);
+        $element[$delta] = [
+          '#markup' => sprintf('<div id="%s" class="onlyoffice-editor"></div>', $editor_id),
+          '#cache' => [
+            'max-age' => 0,
+          ],
+        ];
 
         $element['#attached']['drupalSettings']['onlyofficeData'][$editor_id] = [
           'config' => $this->getEditorConfig($media, $onlyofficePermission),
