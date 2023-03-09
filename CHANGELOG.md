@@ -1,5 +1,13 @@
 # Change Log
 
+## 1.0.5
+## Changed
+- code refactoring after Drupal review
+
+## 1.0.4
+## Changed
+- code refactoring after Drupal review
+
 ## 1.0.3
 ## Changed
 - update composer file
