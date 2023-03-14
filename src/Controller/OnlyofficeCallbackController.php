@@ -38,6 +38,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 use Drupal\onlyoffice\OnlyofficeAppConfig;
 use Drupal\onlyoffice\OnlyofficeDocumentHelper;
 
@@ -178,7 +179,7 @@ class OnlyofficeCallbackController extends ControllerBase {
       }
 
       try {
-        $bodyFromToken = JWT::decode($token, $this->config('onlyoffice.settings')->get('doc_server_jwt'), ["HS256"]);
+        $bodyFromToken = JWT::decode($token, new Key($this->config('onlyoffice.settings')->get('doc_server_jwt'), 'HS256'));
 
         $body = $inBody ? $bodyFromToken : $bodyFromToken->payload;
       }
