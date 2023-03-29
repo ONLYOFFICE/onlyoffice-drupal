@@ -54,13 +54,6 @@ class OnlyofficeDownloadController extends ControllerBase {
   protected $userStorage;
 
   /**
-   * A logger instance.
-   *
-   * @var \Psr\Log\LoggerInterface
-   */
-  protected $logger;
-
-  /**
    * Constructs a OnlyofficeCallbackController object.
    *
    * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
@@ -74,7 +67,6 @@ class OnlyofficeDownloadController extends ControllerBase {
   ) {
     $this->entityRepository = $entity_repository;
     $this->userStorage = $user_storage;
-    $this->logger = $this->getLogger('onlyoffice');
   }
 
   /**
@@ -98,7 +90,7 @@ class OnlyofficeDownloadController extends ControllerBase {
       $token = $header !== NULL ? substr($header, strlen("Bearer ")) : $header;
 
       if (empty($token)) {
-        $this->logger->error('The request token is missing.');
+        $this->getLogger('onlyoffice')->error('The request token is missing.');
         return new JsonResponse(
           ['error' => 1, 'message' => 'The request token is missing.'],
           401
@@ -109,7 +101,7 @@ class OnlyofficeDownloadController extends ControllerBase {
         JWT::decode($token, new Key($this->config('onlyoffice.settings')->get('doc_server_jwt'), 'HS256'));
       }
       catch (\Exception $e) {
-        $this->logger->error('Invalid request token.');
+        $this->getLogger('onlyoffice')->error('Invalid request token.');
         return new JsonResponse(
           ['error' => 1, 'message' => 'Invalid request token.'],
           401
@@ -120,7 +112,7 @@ class OnlyofficeDownloadController extends ControllerBase {
     $linkParameters = OnlyofficeUrlHelper::verifyLinkKey($key);
 
     if (!$linkParameters) {
-      $this->logger->error('Invalid link key: @key.', ['@key' => $key]);
+      $this->getLogger('onlyoffice')->error('Invalid link key: @key.', ['@key' => $key]);
       return new JsonResponse(
         ['error' => 1, 'message' => 'Invalid link key: ' . $key . '.'],
         400
@@ -134,7 +126,7 @@ class OnlyofficeDownloadController extends ControllerBase {
     $this->currentUser()->setAccount($account);
 
     if (!$uuid || !Uuid::isValid($uuid)) {
-      $this->logger->error('Invalid parameter UUID: @uuid.', ['@uuid' => $uuid]);
+      $this->getLogger('onlyoffice')->error('Invalid parameter UUID: @uuid.', ['@uuid' => $uuid]);
       return new JsonResponse(
         ['error' => 1, 'message' => 'Invalid parameter UUID: ' . $uuid . '.'],
         400
@@ -144,7 +136,7 @@ class OnlyofficeDownloadController extends ControllerBase {
     $file = $this->entityRepository->loadEntityByUuid('file', $uuid);
 
     if (!$file) {
-      $this->logger->error('The targeted resource with UUID @uuid does not exist.', ['@uuid' => $uuid]);
+      $this->getLogger('onlyoffice')->error('The targeted resource with UUID @uuid does not exist.', ['@uuid' => $uuid]);
       return new JsonResponse(
         [
           'error' => 1,
@@ -155,7 +147,7 @@ class OnlyofficeDownloadController extends ControllerBase {
     }
 
     if (!$file->access('download')) {
-      $this->logger->error(
+      $this->getLogger('onlyoffice')->error(
         'Denied access to view @type %label.',
         ['@type' => $file->bundle(), '%label' => $file->label()]
       );

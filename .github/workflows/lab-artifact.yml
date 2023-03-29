@@ -1,0 +1,51 @@
+name: Lab Artifact
+
+on:
+  workflow_dispatch:
+
+jobs:
+  artifact:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Get Info
+        run: |
+          echo "version=$(grep -Eo '[0-9]+(\.[0-9]+)+' CHANGELOG.md | head -n 1)" >> $GITHUB_OUTPUT
+        id: info
+      - name: Build Artifact
+        run: |
+          cd ${{ github.workspace }}
+          mkdir -p ./deploy/onlyoffice-drupal
+          rsync -av --exclude='deploy' ./ ./deploy/onlyoffice-drupal
+          cd ./deploy/onlyoffice-drupal
+          rm -rf ./.github/
+          rm -rf ./.git/
+          rm -rf ./licenses/
+          rm ./.gitignore
+          rm ./.csscomb.json
+          rm ./.editorconfig
+          rm ./LICENSE
+          rm ./composer.lock
+          rm ./3rd-Party.license
+      - name: Remove Copyrights
+        run: |
+          for f in $(find . -name '*.js' -or -name '*.css'); 
+              do 
+                  awk '!f&&/\*\//{f=1;next}f' $f | awk 'NF {p=1} p' > $f.tmp && mv $f.tmp $f; 
+              done
+
+          for f in $(find . -name '*.php');
+              do
+                  awk '/^\/\*/{c++} c!=1; /^ \*\//{c++}' $f | awk 'BEGIN{RS="";ORS="\n\n"}1' | awk 'NR > 1{print t} {t = $0}END{if (NF) print }' > $f.tmp && mv $f.tmp $f;
+              done
+
+          for f in $(find . -name 'onlyoffice.install' -or -name 'onlyoffice.module');
+              do
+                  awk '/^\/\*/{c++} c!=3; /^ \*\//{c++}' $f | awk 'BEGIN{RS="";ORS="\n\n"}1' | awk 'NR > 1{print t} {t = $0}END{if (NF) print }' > $f.tmp && mv $f.tmp $f;
+              done
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: onlyoffice-drupal-${{ steps.info.outputs.version }}
+          path: deploy
