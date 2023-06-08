@@ -9,6 +9,7 @@ Contents of this file
  * Configuration
  * Usage
  * Installing ONLYOFFICE Docs
+ * Known issues
  
 ## Introduction
 
@@ -226,3 +227,16 @@ The table below will help you make the right choice.
 | | [Get it now](https://www.onlyoffice.com/download-docs.aspx?utm_source=github&utm_medium=cpc&utm_campaign=GitHubDrupal#docs-community)  | [Start Free Trial](https://www.onlyoffice.com/download-docs.aspx?utm_source=github&utm_medium=cpc&utm_campaign=GitHubDrupal#docs-enterprise)  |
 
 \* If supported by DMS.
+
+## Known issues
+
+**Setting HTTPS via proxy** ([callback URL 308 error](https://www.drupal.org/project/onlyoffice/issues/3361341))
+
+Drupal is designed in such a way that if you configure HTTPS via proxy, Drupal will still replace links with *http*. Therefore, links to `callback` and `fileUrl` are sent to the config in the http format. As a result, ONLYOFFICE Document Server receives the *308 Permanent Redirect* response to the callback request. 
+
+To fix it, adjust the Drupal settings in your `settings.php` file:
+
+```
+$settings['reverse_proxy'] = TRUE;
+$settings['reverse_proxy_addresses'] = array($_SERVER['REMOTE_ADDR']);
+```
