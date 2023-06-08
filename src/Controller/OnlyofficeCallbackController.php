@@ -308,19 +308,26 @@ class OnlyofficeCallbackController extends ControllerBase {
     $directory = $this->fileSystem->dirname($file->getFileUri());
     $separator = substr($directory, -1) == '/' ? '' : '/';
     $newDestination = $directory . $separator . $file->getFilename();
-    $new_data = file_get_contents($download_url);
 
-    $newFile = $this->writeData($new_data, $newDestination);
+    if ($new_data = file_get_contents($download_url)){
+      $newFile = $this->writeData($new_data, $newDestination);
 
-    $media->set(OnlyofficeDocumentHelper::getSourceFieldName($media), $newFile);
-    $media->setNewRevision();
-    $media->setRevisionUser($this->currentUser()->getAccount());
-    $media->setRevisionCreationTime($this->time->getRequestTime());
-    $media->setRevisionLogMessage('');
-    $media->save();
+      $media->set(OnlyofficeDocumentHelper::getSourceFieldName($media), $newFile);
+      $media->setNewRevision();
+      $media->setRevisionUser($this->currentUser()->getAccount());
+      $media->setRevisionCreationTime($this->time->getRequestTime());
+      $media->setRevisionLogMessage('');
+      $media->save();
 
-    $this->getLogger('onlyoffice')->notice('Media @type %label was successfully saved.', $context);
-    return new JsonResponse(['error' => 0], 200);
+      $this->getLogger('onlyoffice')->notice('Media @type %label was successfully saved.', $context);
+      return new JsonResponse(['error' => 0], 200);
+    } else {
+      $this->getLogger('onlyoffice')->error('Error download file from @url.', ['@url' => $download_url]);
+      return new JsonResponse(
+        ['error' => 1, 'message' => 'Error download file from ' . $download_url],
+        400
+      );
+    }
   }
 
   /**

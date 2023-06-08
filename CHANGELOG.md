@@ -5,6 +5,9 @@
 - support docxf and oform formats
 - media types ONLYOFFICE Form and ONLYOFFICE MasterForm
 
+## Chaged
+- fixed the problem when the file was saved empty if there was an error getting the file from the document server (https://www.drupal.org/project/onlyoffice/issues/3362004)
+
 ## 1.0.5
 ## Changed
 - code refactoring after Drupal review
