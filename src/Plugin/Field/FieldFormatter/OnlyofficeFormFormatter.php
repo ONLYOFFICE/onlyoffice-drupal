@@ -21,32 +21,32 @@ namespace Drupal\onlyoffice\Plugin\Field\FieldFormatter;
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+use Drupal\Component\Uuid\UuidInterface;
 use Drupal\Core\Datetime\DateFormatterInterface;
-use Drupal\Core\Language\LanguageManagerInterface;
-use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
-use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
+use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\PageCache\ResponsePolicy\KillSwitch;
-use Drupal\file\Entity\File;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Render\RendererInterface;
+use Drupal\media\Entity\Media;
 use Drupal\onlyoffice\OnlyofficeDocumentHelper;
 use Drupal\onlyoffice\OnlyofficeUrlHelper;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Plugin implementation of the 'onlyoffice_preview' formatter.
+ * Plugin implementation of the 'onlyoffice_form' formatter.
  *
  * @FieldFormatter(
- *   id = "onlyoffice_preview",
- *   label = @Translation("ONLYOFFICE Preview"),
- *   description = @Translation("Displaying files using the ONLYOFFICE editor."),
+ *   id = "onlyoffice_form",
+ *   label = @Translation("ONLYOFFICE Form"),
+ *   description = @Translation("Display the file using ONLYOFFICE Editor."),
  *   field_types = {
- *     "file"
+ *     "entity_reference"
  *   }
  * )
  */
-class OnlyofficePreviewFormatter extends OnlyofficeBaseFormatter {
+class OnlyofficeFormFormatter extends OnlyofficeBaseFormatter {
 
   /**
    * The date formatter service.
@@ -63,6 +63,13 @@ class OnlyofficePreviewFormatter extends OnlyofficeBaseFormatter {
   protected $languageManager;
 
   /**
+   * The renderer.
+   *
+   * @var \Drupal\Core\Render\RendererInterface
+   */
+  protected $renderer;
+
+  /**
    * The page cache disabling policy.
    *
    * @var \Drupal\Core\PageCache\ResponsePolicy\KillSwitch
@@ -70,7 +77,14 @@ class OnlyofficePreviewFormatter extends OnlyofficeBaseFormatter {
   protected $pageCacheKillSwitch;
 
   /**
-   * Construct the OnlyofficePreviewFormatter.
+   * The UUID service.
+   *
+   * @var \Drupal\Component\Uuid\UuidInterface
+   */
+  protected $uuidService;
+
+  /**
+   * Constructs an OnlyofficeFormFormatter instance.
    *
    * @param string $plugin_id
    *   The plugin_id for the formatter.
@@ -90,8 +104,12 @@ class OnlyofficePreviewFormatter extends OnlyofficeBaseFormatter {
    *   The date formatter service.
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager.
+   * @param \Drupal\Core\Render\RendererInterface $renderer
+   *   The renderer service.
    * @param \Drupal\Core\PageCache\ResponsePolicy\KillSwitch $page_cache_kill_switch
    *   The page cache disabling policy.
+   * @param \Drupal\Component\Uuid\UuidInterface $uuid_service
+   *   The UUID service.
    */
   public function __construct(
     $plugin_id,
@@ -103,13 +121,17 @@ class OnlyofficePreviewFormatter extends OnlyofficeBaseFormatter {
     array $third_party_settings,
     DateFormatterInterface $date_formatter,
     LanguageManagerInterface $language_manager,
+    RendererInterface $renderer,
     KillSwitch $page_cache_kill_switch,
+    UuidInterface $uuid_service
   ) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings);
 
     $this->dateFormatter = $date_formatter;
     $this->languageManager = $language_manager;
+    $this->renderer = $renderer;
     $this->pageCacheKillSwitch = $page_cache_kill_switch;
+    $this->uuidService = $uuid_service;
   }
 
   /**
@@ -126,7 +148,9 @@ class OnlyofficePreviewFormatter extends OnlyofficeBaseFormatter {
       $configuration['third_party_settings'],
       $container->get('date.formatter'),
       $container->get('language_manager'),
-      $container->get('page_cache_kill_switch')
+      $container->get('renderer'),
+      $container->get('page_cache_kill_switch'),
+      $container->get('uuid')
     );
   }
 
@@ -138,11 +162,13 @@ class OnlyofficePreviewFormatter extends OnlyofficeBaseFormatter {
       return FALSE;
     }
 
-    $extension_list = array_filter(preg_split('/\s+/', $field_definition->getSetting('file_extensions')));
+    if ($field_definition->getFieldStorageDefinition()->getSetting('target_type') == 'media') {
+      $handler_settings = $field_definition->getSetting('handler_settings');
 
-    foreach ($extension_list as $extension) {
-      if (OnlyofficeDocumentHelper::getDocumentType($extension)) {
-        return TRUE;
+      if (!empty($handler_settings['target_bundles']) && count($handler_settings['target_bundles']) == 1) {
+        /** @var \Drupal\media\MediaTypeInterface $media_type */
+        $media_type = \Drupal::entityTypeManager()->getStorage('media_type')->load(array_key_first($handler_settings['target_bundles']));
+        return $media_type->getSource()->getPluginId() == 'onlyoffice_form';
       }
     }
 
@@ -157,80 +183,66 @@ class OnlyofficePreviewFormatter extends OnlyofficeBaseFormatter {
 
     $element = parent::viewElements($items, $langcode);
 
-    /** @var \Drupal\file\Entity\File $file */
-    foreach ($this->getEntitiesToView($items, $langcode) as $delta => $file) {
-      $extension = OnlyofficeDocumentHelper::getExtension($file->getFilename());
+    /** @var \Drupal\media\Entity\Media $media */
+    foreach ($this->getEntitiesToView($items, $langcode) as $delta => $media) {
+      $editor_id = sprintf(
+            '%s-%s-iframeOnlyofficeEditor',
+            $media->getEntityTypeId(),
+            $media->id()
+      );
 
-      if (OnlyofficeDocumentHelper::getDocumentType($extension)) {
-        $editor_id = sprintf(
-              '%s-%s-iframeOnlyofficeEditor',
-              $file->getEntityTypeId(),
-              $file->id()
-          );
+      $element[$delta] = [
+        '#markup' => sprintf('<div id="%s" class="onlyoffice-editor"></div>', $editor_id),
+        '#cache' => [
+          'max-age' => 0,
+        ],
+      ];
 
-        $element[$delta] = [
-          '#markup' => sprintf('<div id="%s" class="onlyoffice-editor"></div>', $editor_id),
-          '#cache' => [
-            'max-age' => 0,
-          ],
-        ];
-
-        $element['#attached']['drupalSettings']['onlyofficeData'][$editor_id] = [
-          'config' => $this->getEditorConfig($file),
-        ];
-      }
+      $element['#attached']['drupalSettings']['onlyofficeData'][$editor_id] = [
+        'config' => $this->getEditorConfig($media),
+      ];
     }
 
     return $element;
   }
 
   /**
+   * {@inheritdoc}
+   */
+  protected function checkAccess(EntityInterface $entity) {
+    $account = \Drupal::currentUser()->getAccount();
+    return $entity->access('view', $account, TRUE);
+  }
+
+  /**
    * Method getting configuration for document editor service.
    */
-  private function getEditorConfig(File $file) {
+  private function getEditorConfig(Media $media) {
+
+    $file = $media->get(OnlyofficeDocumentHelper::getSourceFieldName($media))->entity;
+
+    $account = \Drupal::currentUser()->getAccount();
 
     $editor_width = $this->getSetting('width') . $this->getSetting('width_unit');
     $editor_height = $this->getSetting('height') . $this->getSetting('height_unit');
 
     return OnlyofficeDocumentHelper::createEditorConfig(
-          'embedded',
-          OnlyofficeDocumentHelper::getEditingKey($file, TRUE),
-          $file->getFilename(),
-          OnlyofficeUrlHelper::getDownloadFileUrl($file),
-          $file->getOwner()->getDisplayName(),
-          $this->dateFormatter->format($file->getCreatedTime(), 'short'),
-          FALSE,
-          NULL,
-          "view",
-          $this->languageManager->getCurrentLanguage()->getId(),
-          NULL,
-          NULL,
-          NULL,
-          $editor_width,
-          $editor_height
-      );
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function needsEntityLoad(EntityReferenceItem $item) {
-    return parent::needsEntityLoad($item) && $item->isDisplayed();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function checkAccess(EntityInterface $entity) {
-    // Only check access if the current file access control handler explicitly
-    // opts in by implementing FileAccessFormatterControlHandlerInterface.
-    $access_handler_class = $entity->getEntityType()->getHandlerClass('access');
-    if (is_subclass_of($access_handler_class, '\Drupal\file\FileAccessFormatterControlHandlerInterface')) {
-      return $entity->access('view', NULL, TRUE);
-    }
-    else {
-      return AccessResult::allowed();
-    }
+      'desktop',
+      $this->uuidService->generate(),
+      $file->getFilename(),
+      OnlyofficeUrlHelper::getDownloadFileUrl($file),
+      $media->getOwner()->getDisplayName(),
+      $this->dateFormatter->format($media->getCreatedTime(), 'short'),
+      TRUE,
+      OnlyofficeUrlHelper::getCallbackFillFormUrl($media),
+      'edit',
+      $this->languageManager->getCurrentLanguage()->getId(),
+      $account->id(),
+      $account->getDisplayName(),
+      NULL,
+      $editor_width,
+      $editor_height
+    );
   }
 
 }

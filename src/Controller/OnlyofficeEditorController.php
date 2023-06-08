@@ -120,7 +120,9 @@ class OnlyofficeEditorController extends ControllerBase {
    * Method for processing opening editor.
    */
   public function editor(Media $media, Request $request) {
-    if ($media->getSource()->getPluginId() != "file") {
+    $pluginId = $media->getSource()->getPluginId();
+
+    if ($pluginId != "file" && $pluginId != "onlyoffice_m_form" && $pluginId != "onlyoffice_form") {
       throw new UnsupportedMediaTypeHttpException();
     }
 
@@ -163,7 +165,7 @@ class OnlyofficeEditorController extends ControllerBase {
     }
 
     $user = $this->currentUser()->getAccount();
-    $can_edit = $this->documentHelper->isEditable($media);
+    $can_edit = $this->documentHelper->isEditable($media) || $this->documentHelper->isFillForms($media);
     $edit_permission = $media->access("update", $user);
 
     $editorConfig = $this->documentHelper->createEditorConfig(

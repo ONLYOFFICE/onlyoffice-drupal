@@ -46,7 +46,7 @@ class OnlyofficeUrlHelper {
   public static function getEditorLink(Media $media) {
     $title = t("View in ONLYOFFICE");
 
-    if (OnlyofficeDocumentHelper::isEditable($media)) {
+    if (OnlyofficeDocumentHelper::isEditable($media) || OnlyofficeDocumentHelper::isFillForms($media)) {
       $title = t("Edit in ONLYOFFICE");
     }
 
@@ -62,6 +62,20 @@ class OnlyofficeUrlHelper {
   public static function getCallbackUrl(Media $media) {
     $linkParameters = [
       $media->uuid(),
+    ];
+
+    $key = static::signLinkParameters($linkParameters);
+
+    return Url::fromRoute('onlyoffice.callback', ['key' => $key])->setAbsolute()->toString();
+  }
+
+  /**
+   * Return URL to callback for fill form from client side.
+   */
+  public static function getCallbackFillFormUrl(Media $media) {
+    $linkParameters = [
+      $media->uuid(),
+      'fillForm',
     ];
 
     $key = static::signLinkParameters($linkParameters);
