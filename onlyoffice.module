@@ -25,9 +25,9 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\onlyoffice\OnlyofficeDocumentHelper;
-use Drupal\onlyoffice\OnlyofficeAppConfig;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\onlyoffice\OnlyofficeAppConfig;
+use Drupal\onlyoffice\OnlyofficeDocumentHelper;
 use Drupal\onlyoffice\OnlyofficeUrlHelper;
 
 /**

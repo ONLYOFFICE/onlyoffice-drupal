@@ -21,26 +21,26 @@ namespace Drupal\onlyoffice\Controller;
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Component\Uuid\Uuid;
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\File\Exception\InvalidStreamWrapperException;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
 use Drupal\file\Entity\File;
 use Drupal\file\FileInterface;
+use Drupal\media\Entity\Media;
+use Drupal\onlyoffice\OnlyofficeAppConfig;
+use Drupal\onlyoffice\OnlyofficeDocumentHelper;
 use Drupal\onlyoffice\OnlyofficeUrlHelper;
 use Drupal\user\Entity\User;
 use Drupal\user\UserStorageInterface;
-use Drupal\media\Entity\Media;
-use Drupal\Core\Entity\EntityRepositoryInterface;
-use Drupal\Component\Datetime\TimeInterface;
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Firebase\JWT\JWT;
-use Firebase\JWT\Key;
-use Drupal\onlyoffice\OnlyofficeAppConfig;
-use Drupal\onlyoffice\OnlyofficeDocumentHelper;
 
 /**
  * Returns responses for ONLYOFFICE Connector routes.

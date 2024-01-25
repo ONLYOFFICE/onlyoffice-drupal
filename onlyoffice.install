@@ -25,8 +25,8 @@
  */
 
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\File\Exception\FileException;
+use Drupal\Core\File\FileSystemInterface;
 
 /**
  * Implements hook_install().
