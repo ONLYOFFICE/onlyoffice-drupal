@@ -29,5 +29,8 @@
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": true
         }
+    },
+    "scripts": {
+        "phpcs": "phpcs --standard=Drupal,DrupalPractice --extensions=php,module,inc,install,test,profile,theme,css,info,txt,md,yml --ignore=*/node_modules/*,*/bower_components/*,*/vendor/*,CHANGELOG.md ./"
     }
 }
