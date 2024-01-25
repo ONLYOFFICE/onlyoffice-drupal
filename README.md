@@ -238,7 +238,11 @@ The table below will help you make the right choice.
 
 **Setting HTTPS via proxy** ([callback URL 308 error](https://www.drupal.org/project/onlyoffice/issues/3361341))
 
-Drupal is designed in such a way that if you configure HTTPS via proxy, Drupal will still replace links with *http*. Therefore, links to `callback` and `fileUrl` are sent to the config in the http format. As a result, ONLYOFFICE Document Server receives the *308 Permanent Redirect* response to the callback request. 
+Drupal is designed in such a way that if you configure HTTPS via proxy, Drupal
+will still replace links with *http*. Therefore, links to `callback` and
+`fileUrl` are sent to the config in the http format. As a result, ONLYOFFICE
+Document Server receives the *308 Permanent Redirect* response to the
+callback request. 
 
 To fix it, adjust the Drupal settings in your `settings.php` file:
 
