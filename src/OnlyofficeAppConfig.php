@@ -40,7 +40,7 @@ class OnlyofficeAppConfig {
    *
    * @var string
    */
-  private const DOC_SERVICE_API_URL = "web-apps/apps/api/documents/api.js";
+  private const DOC_SERVICE_API_URL = "/web-apps/apps/api/documents/api.js";
 
   /**
    * Data about supported formats.
