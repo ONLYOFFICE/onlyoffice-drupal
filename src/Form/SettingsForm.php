@@ -87,8 +87,10 @@ class SettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
+    $docsUrl = rtrim($form_state->getValue('doc_server_url'), "/");
+
     $this->config('onlyoffice.settings')
-      ->set('doc_server_url', $form_state->getValue('doc_server_url'))
+      ->set('doc_server_url', $docsUrl)
       ->set('doc_server_jwt', $form_state->getValue('doc_server_jwt'))
       ->save();
     parent::submitForm($form, $form_state);
