@@ -19,7 +19,7 @@
         "forum": "https://forum.onlyoffice.com/"
     },
     "require": {
-        "drupal/core": ">=9 <=11 || ^11",
+        "drupal/core": "~10.2.11 || ^10.3.9 || ^11.0.8",
         "firebase/php-jwt": "^6.0"
     },
     "require-dev": {
