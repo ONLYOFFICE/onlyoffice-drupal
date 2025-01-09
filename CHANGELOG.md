@@ -1,4 +1,7 @@
 # Change Log
+- add support for drupal 11
+- remove support for drupal 9
+- exclude drupal insecure versions
 
 ## 
 ## Added
