@@ -123,7 +123,7 @@ class OnlyofficeFormFormatter extends OnlyofficeBaseFormatter {
     LanguageManagerInterface $language_manager,
     RendererInterface $renderer,
     KillSwitch $page_cache_kill_switch,
-    UuidInterface $uuid_service
+    UuidInterface $uuid_service,
   ) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings);
 

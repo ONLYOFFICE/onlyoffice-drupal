@@ -110,12 +110,12 @@ class OnlyofficeCallbackController extends ControllerBase {
    *   The time service.
    */
   public function __construct(
-        UserStorageInterface $user_storage,
-        EntityRepositoryInterface $entity_repository,
-        FileSystemInterface $file_system,
-        StreamWrapperManagerInterface $streamWrapperManager,
-        TimeInterface $time
-    ) {
+    UserStorageInterface $user_storage,
+    EntityRepositoryInterface $entity_repository,
+    FileSystemInterface $file_system,
+    StreamWrapperManagerInterface $streamWrapperManager,
+    TimeInterface $time,
+  ) {
     $this->userStorage = $user_storage;
     $this->entityRepository = $entity_repository;
     $this->fileSystem = $file_system;

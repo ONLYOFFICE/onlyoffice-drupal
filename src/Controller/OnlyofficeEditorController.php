@@ -94,7 +94,7 @@ class OnlyofficeEditorController extends ControllerBase {
     OnlyofficeDocumentHelper $document_helper,
     DateFormatterInterface $date_formatter,
     LanguageManagerInterface $language_manager,
-    ModuleExtensionList $extension_list_module
+    ModuleExtensionList $extension_list_module,
   ) {
     $this->renderer = $renderer;
     $this->documentHelper = $document_helper;
