@@ -63,7 +63,7 @@ class OnlyofficeDownloadController extends ControllerBase {
    */
   public function __construct(
     EntityRepositoryInterface $entity_repository,
-    UserStorageInterface $user_storage
+    UserStorageInterface $user_storage,
   ) {
     $this->entityRepository = $entity_repository;
     $this->userStorage = $user_storage;

@@ -98,22 +98,22 @@ class OnlyofficeDocumentHelper {
    * Returns the document configuration for the document editing service.
    */
   public static function createEditorConfig(
-        $editor_type,
-        $document_key,
-        $document_title,
-        $document_url,
-        $document_info_owner,
-        $document_info_uploaded,
-        $document_permissions_edit,
-        $editorConfig_callbackUrl,
-        $editorConfig_mode,
-        $editorConfig_lang,
-        $editorConfig_user_id,
-        $editorConfig_user_name,
-        $editorConfig_customization_goback_url,
-        $editor_width,
-        $editor_height
-    ) {
+    $editor_type,
+    $document_key,
+    $document_title,
+    $document_url,
+    $document_info_owner,
+    $document_info_uploaded,
+    $document_permissions_edit,
+    $editorConfig_callbackUrl,
+    $editorConfig_mode,
+    $editorConfig_lang,
+    $editorConfig_user_id,
+    $editorConfig_user_name,
+    $editorConfig_customization_goback_url,
+    $editor_width,
+    $editor_height,
+  ) {
 
     $document_fileType = static::getExtension($document_title);
 
