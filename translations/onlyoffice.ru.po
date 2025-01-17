@@ -24,7 +24,7 @@ msgstr "Коннектор ONLYOFFICE позволяет пользовател�
 msgid "Installation and configuration"
 msgstr "Установка и настройка"
 
-msgid "Explore how to install and configure the ONLYOFFICE connector for Drupal on the <a href=\":onlyoffice-drupal\">official project page</a>."
+msgid "Explore how to install and configure the ONLYOFFICE module for Drupal on the <a href=\":onlyoffice-drupal\">official project page</a>."
 msgstr "Узнайте, как установить и настроить коннектор ONLYOFFICE для Drupal, на <a href=\":onlyoffice-drupal\">официальной странице проекта</a>."
 
 msgid "Manage ONLYOFFICE Connector settings."

@@ -1,4 +1,4 @@
-# ONLYOFFICE Connector module for Drupal
+# ONLYOFFICE module for Drupal
 
 Contents of this file
 ---------------------

@@ -24,7 +24,7 @@ msgstr "ONLYOFFICE连接器允许用户使用ONLYOFFICE文档编辑器（并入�
 msgid "Installation and configuration"
 msgstr "安装与配置"
 
-msgid "Explore how to install and configure the ONLYOFFICE connector for Drupal on the <a href=\":onlyoffice-drupal\">official project page</a>."
+msgid "Explore how to install and configure the ONLYOFFICE module for Drupal on the <a href=\":onlyoffice-drupal\">official project page</a>."
 msgstr "访问 <a href=\":onlyoffice-drupal\">官方项目网页</a>，了解如何安装并配置ONLYOFFICE的Drupal连接器。"
 
 msgid "Manage ONLYOFFICE Connector settings."

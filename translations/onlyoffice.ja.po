@@ -24,7 +24,7 @@ msgstr "ONLYOFFICEコネクタを使用すると、ユーザーは、ドキュ�
 msgid "Installation and configuration"
 msgstr "インストールと構成"
 
-msgid "Explore how to install and configure the ONLYOFFICE connector for Drupal on the <a href=\":onlyoffice-drupal\">official project page</a>."
+msgid "Explore how to install and configure the ONLYOFFICE module for Drupal on the <a href=\":onlyoffice-drupal\">official project page</a>."
 msgstr "Drupal用のONLYOFFICEコネクターをインストールして構成する方法を<a href=\":onlyoffice-drupal\">official project page</a>にご覧ください"
 
 msgid "Manage ONLYOFFICE Connector settings."

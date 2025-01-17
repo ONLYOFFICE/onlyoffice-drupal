@@ -24,7 +24,7 @@ msgstr "Der ONLYOFFICE-Konnektor ermöglicht die Bearbeitung von Office-Dokument
 msgid "Installation and configuration"
 msgstr "Installation und Konfiguration"
 
-msgid "Explore how to install and configure the ONLYOFFICE connector for Drupal on the <a href=\":onlyoffice-drupal\">official project page</a>."
+msgid "Explore how to install and configure the ONLYOFFICE module for Drupal on the <a href=\":onlyoffice-drupal\">official project page</a>."
 msgstr "Erfahren Sie auf der <a href=\":onlyoffice-drupal\">offiziellen Seite des Projekts</a>, wie Sie den ONLYOFFICE-Konnektor für Drupal installieren und konfigurieren können."
 
 msgid "Manage ONLYOFFICE Connector settings."
