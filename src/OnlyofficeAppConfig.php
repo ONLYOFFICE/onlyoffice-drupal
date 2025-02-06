@@ -64,7 +64,7 @@ class OnlyofficeAppConfig {
     "odt" => ["type" => "word"],
     "ott" => ["type" => "word"],
     "oxps" => ["type" => "word"],
-    "pdf" => ["type" => "word"],
+    "pdf" => ["type" => "word", "edit" => TRUE],
     "rtf" => ["type" => "word"],
     "txt" => ["type" => "word"],
     "xps" => ["type" => "word"],
