@@ -1,0 +1,253 @@
+/**
+ * @file
+ * Styles for ONLYOFFICE form dialogs.
+ */
+
+ /**
+ *
+ * (c) Copyright Ascensio System SIA 2025
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
+ */
+
+.onlyoffice-form-ui-dialog {
+  max-width: 800px;
+  border-radius: 3px;
+  overflow: hidden;
+  padding: 0;
+}
+
+.onlyoffice-form-ui-dialog .ui-dialog-titlebar {
+  background: #333;
+  color: #fff;
+  border: none;
+  border-radius: 0;
+  padding: 15px 20px;
+}
+
+.onlyoffice-form-ui-dialog .ui-dialog-titlebar-close {
+  background: none;
+  border: none;
+  color: #fff;
+  right: 20px;
+}
+
+.onlyoffice-form-ui-dialog .ui-dialog-titlebar-close:before {
+  content: "×";
+  font-size: 24px;
+  line-height: 1;
+}
+
+.onlyoffice-form-ui-dialog .ui-dialog-content {
+  padding: 20px;
+}
+
+.onlyoffice-form-ui-dialog .ui-dialog-buttonpane {
+  background: #f5f5f5;
+  border-top: 1px solid #ddd;
+  margin: 0;
+  padding: 15px 20px;
+}
+
+.onlyoffice-form-ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset {
+  float: right;
+}
+
+.onlyoffice-form-ui-dialog .ui-button {
+  padding-right: 41px;
+  padding-left: 41px;
+  font-size: 16px;
+}
+
+/* Form styling */
+#onlyoffice-form-create-form-wrapper .form-item {
+  margin-bottom: 20px;
+}
+
+#onlyoffice-form-create-form-wrapper label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+#onlyoffice-form-create-form-wrapper input[type="text"],
+#onlyoffice-form-create-form-wrapper select {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+}
+
+/* File upload styling */
+.onlyoffice-form-file-upload-wrapper {
+  margin-bottom: 20px;
+}
+
+.onlyoffice-form-upload-field-wrapper {
+  padding-left: 40px;
+}
+
+.onlyoffice-form-upload-container {
+  box-shadow: 0 2px 0.25rem rgba(0,0,0,0.1);
+  border: 1px solid #dedfe4;
+  padding: 40px 20px;
+  background: #fff;
+}
+
+.onlyoffice-form-upload-button {
+  background: #D3D4D9;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  padding: 15px 40px;
+  font-size: 16px;
+  cursor: pointer;
+  color: #232429;
+  font-weight: 600;
+}
+
+.onlyoffice-form-upload-button:hover {
+  background: #e8e8e8;
+}
+
+.onlyoffice-form-uploaded-file {
+  box-shadow: 0 2px 0.25rem rgba(0,0,0,0.1);
+  border: 1px solid #dedfe4;
+  padding: 40px 20px;
+  background: #fff;
+}
+
+.onlyoffice-form-file-preview {
+  display: flex;
+  align-items: center;
+}
+
+.onlyoffice-form-file-preview img {
+  margin-right: 15px;
+  margin-left: 15px;
+}
+
+.onlyoffice-form-file-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.onlyoffice-form-file-type {
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.onlyoffice-form-file-title {
+  color: #666;
+  font-size: 14px;
+}
+
+.onlyoffice-form-remove-button {
+  background: #D3D4D9;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  padding: 15px 40px;
+  font-size: 16px;
+  cursor: pointer;
+  color: #232429;
+  font-weight: 600;
+}
+
+.onlyoffice-form-remove-button:hover {
+  background: #e8e8e8;
+}
+
+/* Loading state styling */
+.onlyoffice-form-uploading-file {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100px;
+}
+
+.onlyoffice-form-file-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.onlyoffice-form-loading-spinner {
+  width: 30px;
+  height: 30px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #2e5aac;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 10px;
+}
+
+.onlyoffice-form-loading-text {
+  color: #666;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Hide the default file upload elements */
+.onlyoffice-form-file-upload-wrapper .form-managed-file {
+  display: none;
+}
+
+/* Hide the custom file input element */
+.onlyoffice-form-file-upload-wrapper input[type="file"] {
+  display: none;
+}
+
+/* Keep the hidden elements visible for form submission */
+.onlyoffice-form-file-upload-wrapper input[type="hidden"] {
+  display: block !important;
+  height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none !important;
+  position: absolute !important;
+  overflow: hidden !important;
+  clip: rect(1px, 1px, 1px, 1px) !important;
+}
+
+/* Make sure our buttons are visible and have proper cursor */
+.onlyoffice-form-upload-button,
+.onlyoffice-form-remove-button {
+  display: inline-block !important;
+  visibility: visible !important;
+  cursor: pointer !important;
+}
+
+/* Button hover effects */
+.onlyoffice-form-upload-button:hover,
+.onlyoffice-form-remove-button:hover {
+  background-color: #d0d0d0 !important;
+}
+
+/* Button focus effects */
+.onlyoffice-form-upload-button:focus,
+.onlyoffice-form-remove-button:focus {
+  outline: 2px solid #0074bd !important;
+  outline-offset: 2px !important;
+}
+
+/* Style the description text */
+.onlyoffice-form-ui-dialog .description {
+  font-size: 0.85em;
+  color: #666;
+  margin-top: 0.3em;
+}
