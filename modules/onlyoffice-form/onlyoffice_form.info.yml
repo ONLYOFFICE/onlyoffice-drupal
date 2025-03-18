@@ -1,0 +1,8 @@
+name: ONLYOFFICE Form
+type: module
+description: 'Allows users to create and manage ONLYOFFICE forms.'
+package: ONLYOFFICE
+core_version_requirement: ^10.3 || ^11
+configure: entity.onlyoffice_form.collection
+dependencies:
+  - 'onlyoffice:onlyoffice'
