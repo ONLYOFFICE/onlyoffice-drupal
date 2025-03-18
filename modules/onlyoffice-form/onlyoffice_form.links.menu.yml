@@ -1,0 +1,5 @@
+entity.onlyoffice_form.collection:
+  title: 'ONLYOFFICE form'
+  parent: system.admin_structure
+  description: 'Create and manage ONLYOFFICE forms.'
+  route_name: entity.onlyoffice_form.collection
