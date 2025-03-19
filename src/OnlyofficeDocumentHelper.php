@@ -113,6 +113,8 @@ class OnlyofficeDocumentHelper {
     $editorConfig_customization_goback_url,
     $editor_width,
     $editor_height,
+    $document_permissions_fillForms = FALSE,
+    $show_submit = FALSE
   ) {
 
     $document_fileType = static::getExtension($document_title);
@@ -134,6 +136,7 @@ class OnlyofficeDocumentHelper {
         'permissions' => [
           'download' => TRUE,
           'edit' => $document_permissions_edit,
+          'fillForms' => $document_permissions_fillForms,
         ],
       ],
       'editorConfig' => [
@@ -148,6 +151,10 @@ class OnlyofficeDocumentHelper {
           'goback' => [
             'url' => $editorConfig_customization_goback_url,
           ],
+          'submitForm' => [
+            'visible' => $show_submit,
+            'resultMessage' => t("Document saved"),
+          ]
         ],
       ],
     ];
