@@ -1,0 +1,142 @@
+# Main page with tabs
+onlyoffice_form.admin:
+  path: '/admin/structure/onlyoffice-form'
+  defaults:
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'ONLYOFFICE form'
+  requirements:
+    _permission: 'administer onlyoffice forms'
+
+# Forms tab (default tab)
+entity.onlyoffice_form.collection:
+  path: '/admin/structure/onlyoffice-form/forms'
+  defaults:
+    _controller: '\Drupal\onlyoffice_form\OnlyofficeFormListBuilder::render'
+    _title: 'ONLYOFFICE form'
+  requirements:
+    _permission: 'administer onlyoffice forms'
+  options:
+    _admin_route: TRUE
+
+# Submissions tab
+entity.onlyoffice_form_submission.collection:
+  path: '/admin/structure/onlyoffice-form/submissions/{media}'
+  defaults:
+    _controller: '\Drupal\onlyoffice_form\OnlyofficeFormSubmissionListBuilder::render'
+    _title: 'ONLYOFFICE form'
+    media: null
+  requirements:
+    _permission: 'administer onlyoffice forms'
+  options:
+    _admin_route: TRUE
+    parameters:
+      media:
+        type: entity:media
+
+# Download a submission file
+entity.onlyoffice_form_submission.download:
+  path: '/admin/structure/onlyoffice-form/submission/{onlyoffice_form_submission}/download'
+  defaults:
+    _controller: '\Drupal\onlyoffice_form\Controller\OnlyofficeFormSubmissionController::downloadFile'
+    _title: 'Download Submission'
+  requirements:
+    _permission: 'administer onlyoffice forms'
+  options:
+    _admin_route: TRUE
+    parameters:
+      onlyoffice_form_submission:
+        type: entity:onlyoffice_form_submission
+
+# View a submission file in the ONLYOFFICE editor
+entity.onlyoffice_form_submission.view:
+  path: '/admin/structure/onlyoffice-form/submission/{onlyoffice_form_submission}/view'
+  defaults:
+    _controller: '\Drupal\onlyoffice_form\Controller\OnlyofficeFormSubmissionController::view'
+    _title: 'View Submission'
+  requirements:
+    _permission: 'administer onlyoffice forms'
+  options:
+    _admin_route: TRUE
+    parameters:
+      onlyoffice_form_submission:
+        type: entity:onlyoffice_form_submission
+
+# Delete all submissions for a specific form
+entity.onlyoffice_form_submission.delete_by_form:
+  path: '/admin/structure/onlyoffice-form/submissions/{media}/delete'
+  defaults:
+    _form: '\Drupal\onlyoffice_form\Form\OnlyofficeFormSubmissionDeleteForm'
+    _title: 'Delete all submissions'
+  requirements:
+    _permission: 'administer onlyoffice forms'
+  options:
+    _admin_route: TRUE
+    parameters:
+      media:
+        type: entity:media
+        
+# Delete a single submission
+entity.onlyoffice_form_submission.delete_form:
+  path: '/admin/structure/onlyoffice-form/submission/{onlyoffice_form_submission}/delete'
+  defaults:
+    _form: '\Drupal\onlyoffice_form\Form\OnlyofficeFormSubmissionDeleteSingleForm'
+    _title: 'Delete submission'
+  requirements:
+    _permission: 'administer onlyoffice forms'
+  options:
+    _admin_route: TRUE
+    parameters:
+      onlyoffice_form_submission:
+        type: entity:onlyoffice_form_submission
+
+entity.onlyoffice_form.create_form:
+  path: '/admin/structure/onlyoffice-form/create'
+  defaults:
+    _form: '\Drupal\onlyoffice_form\Form\OnlyofficeFormCreateForm'
+    _title: 'Create ONLYOFFICE form'
+  requirements:
+    _permission: 'administer onlyoffice forms'
+  options:
+    _admin_route: TRUE
+
+# Custom file upload endpoint
+onlyoffice_form.file_upload:
+  path: '/onlyoffice-form/file-upload'
+  defaults:
+    _controller: '\Drupal\onlyoffice_form\Controller\OnlyofficeFormFileController::uploadFile'
+    _title: 'Upload File'
+  requirements:
+    _permission: 'administer onlyoffice forms'
+  options:
+    _admin_route: TRUE
+
+# Create a new ONLYOFFICE form in a modal dialog
+onlyoffice_form.create_form:
+  path: '/onlyoffice-form/create'
+  defaults:
+    _controller: '\Drupal\onlyoffice_form\Controller\OnlyofficeFormController::createForm'
+    _title: 'Create new ONLYOFFICE form'
+  requirements:
+    _permission: 'create onlyoffice forms'
+  options:
+    _admin_route: TRUE
+
+onlyoffice_form.callback:
+  path: '/onlyoffice-form-callback/{key}'
+  defaults:
+    _controller: '\Drupal\onlyoffice_form\Controller\OnlyofficeFormCallbackController::callback'
+  methods: [POST]
+  requirements:
+    # Don't use standard access restriction because document editor service use jwt authorization.
+    _access: 'TRUE'
+
+# Bulk delete confirmation form
+onlyoffice_form.bulk_delete_confirm:
+  path: '/admin/structure/onlyoffice-form/forms/delete/{ids}'
+  defaults:
+    _form: '\Drupal\onlyoffice_form\Form\OnlyofficeFormBulkDeleteConfirmForm'
+    _title: 'Delete forms'
+  requirements:
+    _permission: 'administer onlyoffice forms'
+  options:
+    _admin_route: TRUE
