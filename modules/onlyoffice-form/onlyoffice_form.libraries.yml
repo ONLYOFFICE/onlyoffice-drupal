@@ -1,0 +1,45 @@
+onlyoffice_form.admin:
+  version: 1.x
+  css:
+    theme:
+      css/onlyoffice_form.admin.css: {}
+
+onlyoffice_form.dialog:
+  version: 1.x
+  css:
+    theme:
+      css/onlyoffice_form.dialog.css: {}
+  js:
+    js/onlyoffice_form.dialog.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupal.dialog.ajax
+    - core/once
+
+form_config_widget:
+  version: 1.x
+  css:
+    theme:
+      css/form-config-widget.css: {}
+  js:
+    js/form-config-widget.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/once
+
+ajax_commands:
+  version: 1.x
+  js:
+    js/onlyoffice_form.commands.js: {}
+  dependencies:
+    - core/drupal.ajax
+
+onlyoffice_form.onlyoffice_form-icon:
+  version: 1.x
+  css:
+    theme:
+      css/onlyoffice_form.icon.theme.css: {}
+  dependencies:
+    - field_ui/drupal.field_ui.manage_fields
