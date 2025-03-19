@@ -131,9 +131,11 @@ class OnlyofficeEditorController extends ControllerBase {
     if (preg_match(OnlyofficeAppConfig::USER_AGENT_MOBILE, $request->headers->get('User-Agent'))) {
       $editorType = 'mobile';
     }
+    
+    $mode = $request->query->get('mode', 'edit');
 
     $build = [
-      'page' => $this->getDocumentConfig($editorType, $media),
+      'page' => $this->getDocumentConfig($editorType, $media, $mode),
     ];
 
     $build['page']['#theme'] = 'onlyoffice_editor';
@@ -148,7 +150,7 @@ class OnlyofficeEditorController extends ControllerBase {
   /**
    * Method for generating configuration for document editor service.
    */
-  private function getDocumentConfig($editorType, Media $media) {
+  private function getDocumentConfig($editorType, Media $media, $mode) {
     $context = [
       '@type' => $media->bundle(),
       '%label' => $media->label(),
@@ -177,7 +179,7 @@ class OnlyofficeEditorController extends ControllerBase {
           $this->dateFormatter->format($media->getCreatedTime(), 'short'),
           $edit_permission,
           $edit_permission ? OnlyofficeUrlHelper::getCallbackUrl($media) : NULL,
-          $edit_permission && $can_edit ? 'edit' : 'view',
+          $edit_permission && $can_edit && $mode == 'edit' ? 'edit' : 'view',
           $this->languageManager->getCurrentLanguage()->getId(),
           $user->id(),
           $user->getDisplayName(),
