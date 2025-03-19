@@ -89,6 +89,22 @@ class OnlyofficeDocumentHelper {
    * Get the source field name a media type.
    */
   public static function getSourceFieldName(Media $media) {
+    // Make sure the bundle entity is loaded
+    if (!$media->bundle->entity) {
+      // Try to load the media type entity
+      $media_type = \Drupal::entityTypeManager()
+        ->getStorage('media_type')
+        ->load($media->bundle());
+      
+      if (!$media_type) {
+        throw new \Exception('Media type not found for bundle: ' . $media->bundle());
+      }
+      
+      return $media->getSource()
+        ->getSourceFieldDefinition($media_type)
+        ->getName();
+    }
+    
     return $media->getSource()
       ->getSourceFieldDefinition($media->bundle->entity)
       ->getName();
