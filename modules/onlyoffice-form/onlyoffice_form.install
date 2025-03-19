@@ -1,0 +1,255 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the ONLYOFFICE Form module.
+ */
+
+ /**
+ * Copyright (c) Ascensio System SIA 2025.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+
+use Drupal\media\Entity\MediaType;
+
+/**
+ * Implements hook_schema().
+ */
+function onlyoffice_form_schema() {
+  $schema = [];
+
+  $schema['onlyoffice_form_submission'] = [
+    'description' => 'Stores ONLYOFFICE form submission entities.',
+    'fields' => [
+      'id' => [
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'Primary Key: Unique ONLYOFFICE form submission ID.',
+      ],
+      'uuid' => [
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'description' => 'Unique UUID for this entity.',
+      ],
+      'uid' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'default' => 0,
+        'description' => 'The {users}.uid of the user who submitted the form, or 0 for anonymous.',
+      ],
+      'media_id' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'The {media}.mid of the PDF form.',
+      ],
+      'file_id' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'description' => 'The {file_managed}.fid of the submitted form file.',
+      ],
+      'created' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The Unix timestamp when the submission was created.',
+      ],
+      'changed' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The Unix timestamp when the submission was most recently updated.',
+      ],
+    ],
+    'primary key' => ['id'],
+    'unique keys' => [
+      'uuid' => ['uuid'],
+    ],
+    'indexes' => [
+      'uid' => ['uid'],
+      'media_id' => ['media_id'],
+      'file_id' => ['file_id'],
+    ],
+    'foreign keys' => [
+      'submission_author' => [
+        'table' => 'users',
+        'columns' => ['uid' => 'uid'],
+      ],
+      'submission_media' => [
+        'table' => 'media',
+        'columns' => ['media_id' => 'mid'],
+      ],
+      'submission_file' => [
+        'table' => 'file_managed',
+        'columns' => ['file_id' => 'fid'],
+      ],
+    ],
+  ];
+
+  return $schema;
+}
+
+/**
+ * Implements hook_install().
+ */
+function onlyoffice_form_install() {
+  // Create the directory for storing form files.
+  $directory = 'public://onlyoffice_forms';
+  \Drupal::service('file_system')->prepareDirectory($directory, \Drupal\Core\File\FileSystemInterface::CREATE_DIRECTORY);
+  
+  // Create the ONLYOFFICE PDF Form media type.
+  _onlyoffice_form_create_media_type();
+}
+
+/**
+ * Creates the ONLYOFFICE PDF Form media type.
+ */
+function _onlyoffice_form_create_media_type() {
+  $media_type_id = 'onlyoffice_pdf_form';
+  $source_field_name = 'field_media_pdf_file';
+  
+  // Check if the media type already exists.
+  $media_type_storage = \Drupal::entityTypeManager()->getStorage('media_type');
+  $media_type = $media_type_storage->load($media_type_id);
+  
+  // Only create if it doesn't exist.
+  if (!$media_type) {
+    // First, check if we need to create the field storage
+    $field_storage_exists = \Drupal::entityTypeManager()
+      ->getStorage('field_storage_config')
+      ->load('media.' . $source_field_name);
+    
+    if (!$field_storage_exists) {
+      // Create the field storage
+      $field_storage = \Drupal::entityTypeManager()
+        ->getStorage('field_storage_config')
+        ->create([
+          'field_name' => $source_field_name,
+          'entity_type' => 'media',
+          'type' => 'file',
+          'settings' => [
+            'target_type' => 'file',
+            'uri_scheme' => 'public',
+          ],
+          'cardinality' => 1,
+        ]);
+      $field_storage->save();
+    }
+    
+    // Create the media type with the source field configuration
+    $media_type = MediaType::create([
+      'id' => $media_type_id,
+      'label' => 'ONLYOFFICE PDF Form',
+      'description' => 'PDF forms for use with ONLYOFFICE Form Editor.',
+      'source' => 'onlyoffice_pdf_form',
+      'source_configuration' => [
+        'source_field' => $source_field_name,
+      ],
+    ]);
+    
+    // Save the media type
+    $media_type->save();
+    
+    // Create the field instance if it doesn't exist for this bundle
+    $field_exists = \Drupal::entityTypeManager()
+      ->getStorage('field_config')
+      ->load('media.' . $media_type_id . '.' . $source_field_name);
+    
+    if (!$field_exists) {
+      $field = \Drupal::entityTypeManager()
+        ->getStorage('field_config')
+        ->create([
+          'field_name' => $source_field_name,
+          'entity_type' => 'media',
+          'bundle' => $media_type_id,
+          'label' => 'PDF File',
+          'required' => TRUE,
+          'settings' => [
+            'file_extensions' => 'pdf',
+            'file_directory' => 'onlyoffice_forms',
+            'description_field' => FALSE,
+          ],
+        ]);
+      $field->save();
+    }
+    
+    // Configure the form display
+    $form_display = \Drupal::service('entity_display.repository')
+      ->getFormDisplay('media', $media_type_id, 'default');
+    $form_display->setComponent($source_field_name, [
+      'type' => 'file_generic',
+      'weight' => 0,
+      'settings' => [
+        'progress_indicator' => 'throbber',
+      ],
+    ])->save();
+    
+    // Configure the view display
+    $view_display = \Drupal::service('entity_display.repository')
+      ->getViewDisplay('media', $media_type_id, 'default');
+    $view_display->setComponent($source_field_name, [
+      'type' => 'file_default',
+      'weight' => 0,
+      'label' => 'hidden',
+      'settings' => [],
+    ])->save();
+    
+    \Drupal::messenger()->addStatus(t('Created the ONLYOFFICE PDF Form media type.'));
+  }
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function onlyoffice_form_uninstall() {
+  // Clean up any files created by this module.
+  $file_storage = \Drupal::entityTypeManager()->getStorage('file');
+  $fids = \Drupal::database()->select('file_managed', 'fm')
+    ->fields('fm', ['fid'])
+    ->condition('uri', 'public://onlyoffice_forms/%', 'LIKE')
+    ->execute()
+    ->fetchCol();
+  
+  if (!empty($fids)) {
+    $files = $file_storage->loadMultiple($fids);
+    $file_storage->delete($files);
+  }
+  
+  // Delete all instances of the onlyoffice_pdf_form media type.
+  $media_storage = \Drupal::entityTypeManager()->getStorage('media');
+  $media_ids = $media_storage->getQuery()
+    ->condition('bundle', 'onlyoffice_pdf_form')
+    ->accessCheck(FALSE)
+    ->execute();
+  
+  if (!empty($media_ids)) {
+    $media_entities = $media_storage->loadMultiple($media_ids);
+    $media_storage->delete($media_entities);
+    \Drupal::messenger()->addStatus(t('Deleted @count ONLYOFFICE PDF Form media entities.', ['@count' => count($media_ids)]));
+  }
+  
+  // Delete the ONLYOFFICE PDF Form media type.
+  $media_type_storage = \Drupal::entityTypeManager()->getStorage('media_type');
+  $media_type = $media_type_storage->load('onlyoffice_pdf_form');
+  if ($media_type) {
+    $media_type->delete();
+  }
+}
