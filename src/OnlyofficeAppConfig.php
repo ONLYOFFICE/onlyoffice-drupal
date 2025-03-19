@@ -64,7 +64,6 @@ class OnlyofficeAppConfig {
     "odt" => ["type" => "word"],
     "ott" => ["type" => "word"],
     "oxps" => ["type" => "word"],
-    "pdf" => ["type" => "word"],
     "rtf" => ["type" => "word"],
     "txt" => ["type" => "word"],
     "xps" => ["type" => "word"],
@@ -94,6 +93,8 @@ class OnlyofficeAppConfig {
     "ppt" => ["type" => "slide"],
     "pptm" => ["type" => "slide"],
     "pptx" => ["type" => "slide", "edit" => TRUE],
+
+    "pdf" => ["type" => "pdf", "edit" => TRUE],
   ];
 
   /**
