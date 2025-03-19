@@ -1,0 +1,3 @@
+services:
+  onlyoffice_form.document_helper:
+    class: Drupal\onlyoffice_form\OnlyofficeFormDocumentHelper
