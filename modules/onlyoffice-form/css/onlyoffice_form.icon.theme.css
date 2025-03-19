@@ -1,0 +1,26 @@
+ /**
+ *
+ * (c) Copyright Ascensio System SIA 2025
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
+ */
+
+/**
+ * ONLYOFFICE Form field icon styling.
+ */
+.field-icon-onlyoffice-form {
+  background-image: url("data:image/svg+xml,%3Csvg width='36' height='36' viewBox='0 0 36 36' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath opacity='0.5' fill-rule='evenodd' clip-rule='evenodd' d='M16.2888 30.6813L4.73797 25.3285C3.75401 24.8612 3.75401 24.139 4.73797 23.7142L8.75936 21.845L16.246 25.3285C17.2299 25.7958 18.8128 25.7958 19.754 25.3285L27.2406 21.845L31.262 23.7142C32.246 24.1815 32.246 24.9037 31.262 25.3285L19.7112 30.6813C18.8128 31.1061 17.2299 31.1061 16.2888 30.6813Z' fill='%2355565B'/%3E%3Cpath opacity='0.75' fill-rule='evenodd' clip-rule='evenodd' d='M16.2513 24.0575L4.73572 18.6985C3.75476 18.2306 3.75476 17.5076 4.73572 17.0823L8.65956 15.2534L16.2513 18.7835C17.2323 19.2514 18.8104 19.2514 19.7487 18.7835L27.3404 15.2534L31.2643 17.0823C32.2452 17.5501 32.2452 18.2732 31.2643 18.6985L19.7487 24.0575C18.7677 24.5253 17.1896 24.5253 16.2513 24.0575Z' fill='%2355565B'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M16.2513 17.5025L4.73572 12.2206C3.75476 11.7595 3.75476 11.0469 4.73572 10.6277L16.2513 5.34584C17.2323 4.88472 18.8104 4.88472 19.7487 5.34584L31.2643 10.6277C32.2452 11.0888 32.2452 11.8014 31.2643 12.2206L19.7487 17.5025C18.7677 17.9217 17.1896 17.9217 16.2513 17.5025Z' fill='%2355565B'/%3E%3C/svg%3E%0A");
+}
