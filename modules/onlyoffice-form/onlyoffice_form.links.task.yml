@@ -1,0 +1,11 @@
+entity.onlyoffice_form.collection:
+  title: 'PDF Forms'
+  route_name: entity.onlyoffice_form.collection
+  base_route: entity.onlyoffice_form.collection
+  weight: 0
+
+entity.onlyoffice_form_submission.collection:
+  title: 'Submitted forms'
+  route_name: entity.onlyoffice_form_submission.collection
+  base_route: entity.onlyoffice_form.collection
+  weight: 10
