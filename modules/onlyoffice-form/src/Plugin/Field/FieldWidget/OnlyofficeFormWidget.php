@@ -73,7 +73,7 @@ class OnlyofficeFormWidget extends WidgetBase {
       '#title' => $this->t('Create new ONLYOFFICE form'),
       '#url' => Url::fromRoute('entity.onlyoffice_form.collection'),
       '#attributes' => [
-        'class' => ['button']
+        'class' => ['button'],
       ],
       '#weight' => 1,
     ];

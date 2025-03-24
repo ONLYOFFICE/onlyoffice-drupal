@@ -110,6 +110,16 @@ class OnlyofficeFormSubmissionController extends ControllerBase {
    *   The logger factory.
    * @param \Drupal\Core\File\FileSystemInterface $file_system
    *   The file system service.
+   * @param \Drupal\onlyoffice\OnlyofficeDocumentHelper $document_helper
+   *   The onlyoffice document helper service.
+   * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
+   *   The date formatter service.
+   * @param \Drupal\Core\Extension\ModuleExtensionList $extension_list_module
+   *   The list of available modules.
+   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   *   The language manager.
+   * @param \Drupal\Core\Render\RendererInterface $renderer
+   *   The renderer service.
    */
   public function __construct(
     EntityTypeManagerInterface $entity_type_manager,
@@ -119,7 +129,7 @@ class OnlyofficeFormSubmissionController extends ControllerBase {
     DateFormatterInterface $date_formatter,
     ModuleExtensionList $extension_list_module,
     LanguageManagerInterface $language_manager,
-    RendererInterface $renderer
+    RendererInterface $renderer,
   ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->loggerFactory = $logger_factory;
@@ -157,33 +167,33 @@ class OnlyofficeFormSubmissionController extends ControllerBase {
    *   The file download response.
    */
   public function downloadFile(OnlyofficeFormSubmission $onlyoffice_form_submission) {
-    // Get the file from the submission
+    // Get the file from the submission.
     $file = $onlyoffice_form_submission->getFile();
-    
+
     if (!$file) {
       throw new NotFoundHttpException('File not found');
     }
-    
-    // Get the file URI
+
+    // Get the file URI.
     $uri = $file->getFileUri();
-    
-    // Check if the file exists
+
+    // Check if the file exists.
     if (!file_exists($uri)) {
       throw new NotFoundHttpException('File not found');
     }
-    
-    // Get the file name for download
+
+    // Get the file name for download.
     $filename = $file->getFilename();
-    
-    // Create a binary file response
+
+    // Create a binary file response.
     $response = new BinaryFileResponse($uri);
-    
-    // Set the content disposition to force download
+
+    // Set the content disposition to force download.
     $response->setContentDisposition(
       ResponseHeaderBag::DISPOSITION_ATTACHMENT,
       $filename
     );
-    
+
     return $response;
   }
 
@@ -192,6 +202,8 @@ class OnlyofficeFormSubmissionController extends ControllerBase {
    *
    * @param \Drupal\onlyoffice_form\Entity\OnlyofficeFormSubmission $onlyoffice_form_submission
    *   The submission entity.
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request.
    *
    * @return array
    *   The file download response.
@@ -204,7 +216,7 @@ class OnlyofficeFormSubmissionController extends ControllerBase {
     }
 
     $file = $onlyoffice_form_submission->getFile();
-    
+
     if (!$file) {
       $this->messenger()->addError($this->t('File not found.'));
       return [
@@ -213,8 +225,8 @@ class OnlyofficeFormSubmissionController extends ControllerBase {
         '#suffix' => '</div>',
       ];
     }
-    
-    // Check if the file exists on disk
+
+    // Check if the file exists on disk.
     $uri = $file->getFileUri();
     if (!file_exists($uri)) {
       $this->messenger()->addError($this->t('File not found on disk.'));
@@ -224,7 +236,7 @@ class OnlyofficeFormSubmissionController extends ControllerBase {
         '#suffix' => '</div>',
       ];
     }
-    
+
     $extension = OnlyofficeDocumentHelper::getExtension($file->getFilename());
     $documentType = OnlyofficeDocumentHelper::getDocumentType($extension);
 
@@ -286,4 +298,5 @@ class OnlyofficeFormSubmissionController extends ControllerBase {
 
     return $response;
   }
+
 }

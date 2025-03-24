@@ -81,7 +81,7 @@ class OnlyofficeFormSubmissionListBuilder extends ControllerBase {
    * @var \Drupal\Core\Datetime\DateFormatterInterface
    */
   protected $dateFormatter;
-  
+
   /**
    * The file URL generator.
    *
@@ -102,6 +102,8 @@ class OnlyofficeFormSubmissionListBuilder extends ControllerBase {
    *   The entity type manager.
    * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
    *   The date formatter service.
+   * @param \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator
+   *   The file URL generator.
    */
   public function __construct(
     RequestStack $request_stack,
@@ -109,7 +111,7 @@ class OnlyofficeFormSubmissionListBuilder extends ControllerBase {
     AccountInterface $current_user,
     EntityTypeManagerInterface $entity_type_manager,
     DateFormatterInterface $date_formatter,
-    FileUrlGeneratorInterface $file_url_generator
+    FileUrlGeneratorInterface $file_url_generator,
   ) {
     $this->request = $request_stack->getCurrentRequest();
     $this->configFactory = $config_factory;
@@ -153,9 +155,9 @@ class OnlyofficeFormSubmissionListBuilder extends ControllerBase {
    */
   public function buildHeader($by_form = FALSE) {
     $header = [];
-    
+
     if ($by_form) {
-      // Headers for individual form submissions view
+      // Headers for individual form submissions view.
       $header['title'] = [
         'data' => $this->t('Title'),
         'class' => ['priority-medium'],
@@ -185,14 +187,16 @@ class OnlyofficeFormSubmissionListBuilder extends ControllerBase {
       ];
     }
     else {
-      // Headers for grouped submissions view
+      // Headers for grouped submissions view.
       $header['form'] = [
         'data' => $this->t('Form'),
         'specifier' => 'form',
         'field' => 'form',
         'sort' => 'asc',
-        'class' => ['form'], // Add a class for CSS targeting
-        'style' => 'width: 50%;', // Make the form column take up half the table width
+      // Add a class for CSS targeting.
+        'class' => ['form'],
+      // Make the form column take up half the table width.
+        'style' => 'width: 50%;',
       ];
       $header['submissions'] = [
         'data' => $this->t('Submissions'),
@@ -202,7 +206,7 @@ class OnlyofficeFormSubmissionListBuilder extends ControllerBase {
         'data' => $this->t('Operations'),
       ];
     }
-    
+
     return $header;
   }
 
@@ -215,10 +219,10 @@ class OnlyofficeFormSubmissionListBuilder extends ControllerBase {
    * @return array
    *   A render array for the list page.
    */
-  public function render(MediaInterface $media = NULL) {
+  public function render(?MediaInterface $media = NULL) {
     $build = [];
 
-    // Add the tabs for navigation
+    // Add the tabs for navigation.
     $build['tabs'] = [
       '#type' => 'container',
       '#attributes' => [
@@ -227,15 +231,14 @@ class OnlyofficeFormSubmissionListBuilder extends ControllerBase {
     ];
 
     if ($media) {
-      // We're viewing submissions for a specific form
-      
-      // Filter form for individual form submissions
+      // We're viewing submissions for a specific form.
+      // Filter form for individual form submissions.
       $build['filter_form'] = $this->buildFilterForm();
-      
-      // Display info for this specific form
+
+      // Display info for this specific form.
       $build['info'] = $this->buildInfoByForm($media);
-      
-      // Table for this specific form
+
+      // Table for this specific form.
       $build['table'] = [
         '#type' => 'table',
         '#header' => $this->buildHeader(TRUE),
@@ -246,20 +249,19 @@ class OnlyofficeFormSubmissionListBuilder extends ControllerBase {
           'class' => ['onlyoffice-form-submissions'],
         ],
       ];
-      
-      // Add form submissions for this specific form
+
+      // Add form submissions for this specific form.
       $this->addSubmissionsByFormToTable($build, $media);
     }
     else {
-      // We're viewing all submissions grouped by form
-      
-      // Filter form
+      // We're viewing all submissions grouped by form.
+      // Filter form.
       $build['filter_form'] = $this->buildFilterForm();
-      
-      // Display info for all forms
+
+      // Display info for all forms.
       $build['info'] = $this->buildInfo();
-      
-      // Table for all forms
+
+      // Table for all forms.
       $build['table'] = [
         '#type' => 'table',
         '#header' => $this->buildHeader(),
@@ -270,17 +272,17 @@ class OnlyofficeFormSubmissionListBuilder extends ControllerBase {
           'class' => ['onlyoffice-form-submissions'],
         ],
       ];
-      
-      // Add form submissions grouped by PDF form
+
+      // Add form submissions grouped by PDF form.
       $this->addGroupedSubmissionsToTable($build);
     }
 
-    // Attach libraries for styling
+    // Attach libraries for styling.
     $build['#attached']['library'][] = 'onlyoffice_form/onlyoffice_form.admin';
 
     return $build;
   }
-  
+
   /**
    * Render submissions for a specific form.
    *
@@ -293,7 +295,7 @@ class OnlyofficeFormSubmissionListBuilder extends ControllerBase {
   public function renderByForm(MediaInterface $media) {
     return $this->render($media);
   }
-  
+
   /**
    * Add grouped form submissions to the table.
    *
@@ -302,16 +304,16 @@ class OnlyofficeFormSubmissionListBuilder extends ControllerBase {
    */
   protected function addGroupedSubmissionsToTable(array &$build) {
     try {
-      // Get form submissions grouped by media_id
+      // Get form submissions grouped by media_id.
       $submission_storage = $this->entityTypeManager->getStorage('onlyoffice_form_submission');
       $query = $submission_storage->getQuery();
       $query->accessCheck(FALSE);
-      
+
       $submission_ids = $query->execute();
-      
+
       if (!empty($submission_ids)) {
         $submissions = $submission_storage->loadMultiple($submission_ids);
-        
+
         // Group submissions by form (media_id)
         $grouped_submissions = [];
         foreach ($submissions as $submission) {
@@ -323,67 +325,67 @@ class OnlyofficeFormSubmissionListBuilder extends ControllerBase {
             $grouped_submissions[$media_id][] = $submission;
           }
         }
-        
-        // Only show forms that have submissions
+
+        // Only show forms that have submissions.
         if (!empty($grouped_submissions)) {
           foreach ($grouped_submissions as $media_id => $form_submissions) {
             $media = Media::load($media_id);
             if (!$media) {
               continue;
             }
-            
+
             $media_name = $media->label();
             $submission_count = count($form_submissions);
-            
-            // Skip if we're filtering and this form doesn't match
+
+            // Skip if we're filtering and this form doesn't match.
             if (!empty($this->keys) && stripos($media_name, $this->keys) === FALSE) {
               continue;
             }
-            
+
             $row = [];
-            
-            // Form name
+
+            // Form name.
             $row['form']['data']['form'] = [
               '#markup' => '<a href="/admin/content/media/' . $media->id() . '">' . $media_name . '</a>',
               '#prefix' => '<div style="width: 100%; overflow: hidden; text-overflow: ellipsis;">',
               '#suffix' => '</div>',
             ];
-            
-            // Submission count
+
+            // Submission count.
             $row['submissions'] = $submission_count;
-            
-            // Operations
+
+            // Operations.
             $operations = [];
-            
-            // View submissions for this form
+
+            // View submissions for this form.
             $operations['open'] = [
               'title' => $this->t('Open'),
               'url' => Url::fromRoute('entity.onlyoffice_form_submission.collection', ['media' => $media->id()]),
             ];
-            
-            // Delete all submissions for this form
+
+            // Delete all submissions for this form.
             $operations['delete'] = [
               'title' => $this->t('Delete'),
               'url' => Url::fromRoute('entity.onlyoffice_form_submission.delete_by_form', ['media' => $media->id()]),
             ];
-            
+
             $row['operations']['data'] = [
               '#type' => 'operations',
               '#links' => $operations,
               '#prefix' => '<div class="onlyoffice-form-dropbutton">',
               '#suffix' => '</div>',
             ];
-            
+
             $build['table']['#rows'][] = $row;
           }
         }
       }
     }
     catch (\Exception $e) {
-      // If there's an error loading the submissions, just continue without them
+      // If there's an error loading the submissions, just continue without them.
     }
   }
-  
+
   /**
    * Add form submissions for a specific form to the table.
    *
@@ -394,41 +396,42 @@ class OnlyofficeFormSubmissionListBuilder extends ControllerBase {
    */
   protected function addSubmissionsByFormToTable(array &$build, MediaInterface $media) {
     try {
-      // Get form submissions for this specific form
+      // Get form submissions for this specific form.
       $submission_storage = $this->entityTypeManager->getStorage('onlyoffice_form_submission');
       $query = $submission_storage->getQuery();
       $query->condition('media_id', $media->id());
       $query->accessCheck(FALSE);
-      $query->sort('created', 'DESC'); // Show newest submissions first
-      
+      // Show newest submissions first.
+      $query->sort('created', 'DESC');
+
       $submission_ids = $query->execute();
-      
+
       if (!empty($submission_ids)) {
         $submissions = $submission_storage->loadMultiple($submission_ids);
-        
+
         foreach ($submissions as $submission) {
           $row = [];
-          
-          // Get file information first since we need it for multiple fields
+
+          // Get file information first since we need it for multiple fields.
           $file_id = $submission->file_id->target_id ?? NULL;
           $file = NULL;
           $title = $this->t('Submission @id', ['@id' => $submission->id()]);
           $file_size = 0;
-          
+
           if ($file_id) {
             $file = File::load($file_id);
             if ($file) {
-              // Get the filename of the file for title
+              // Get the filename of the file for title.
               $file_uri = $file->getFileUri();
               $filename = pathinfo($file_uri, PATHINFO_FILENAME);
               $title = $filename;
-              
-              // Get file size
+
+              // Get file size.
               $file_size = $file->getSize();
             }
           }
-          
-          // Skip if we're filtering and this submission doesn't match
+
+          // Skip if we're filtering and this submission doesn't match.
           if (!empty($this->keys)) {
             $uid = $submission->uid->target_id ?? NULL;
             $user = NULL;
@@ -436,27 +439,27 @@ class OnlyofficeFormSubmissionListBuilder extends ControllerBase {
               $user = User::load($uid);
             }
             $submitter = $user ? $user->getAccountName() : $this->t('Anonymous');
-            
-            // Check if the title or submitter matches the search term
-            if (stripos($title, $this->keys) === FALSE && 
+
+            // Check if the title or submitter matches the search term.
+            if (stripos($title, $this->keys) === FALSE &&
                 stripos($submitter, $this->keys) === FALSE) {
               continue;
             }
           }
-          
-          // Title
+
+          // Title.
           $row['title'] = $title;
-          
-          // Form - Link to the form
+
+          // Form - Link to the form.
           $form_media = $media;
           $row['form']['data']['form'] = [
             '#markup' => '<a href="/admin/content/media/' . $form_media->id() . '">' . $form_media->label() . '</a>',
           ];
-          
-          // Type - Always PDF for now
+
+          // Type - Always PDF for now.
           $row['type'] = 'PDF';
-          
-          // Size - Format file size
+
+          // Size - Format file size.
           if ($file_size < 1024) {
             $row['size'] = $file_size . ' B';
           }
@@ -466,8 +469,8 @@ class OnlyofficeFormSubmissionListBuilder extends ControllerBase {
           else {
             $row['size'] = number_format($file_size / 1048576, 2) . ' MB';
           }
-          
-          // Submitter
+
+          // Submitter.
           $uid = $submission->uid->target_id ?? NULL;
           $user = NULL;
           if ($uid) {
@@ -475,15 +478,15 @@ class OnlyofficeFormSubmissionListBuilder extends ControllerBase {
           }
           $submitter = $user ? $user->getAccountName() : $this->t('Anonymous');
           $row['submitter'] = $submitter;
-          
-          // Submitted date
+
+          // Submitted date.
           $created_time = $submission->created->value ?? time();
           $row['submitted'] = $this->dateFormatter->format($created_time, 'short');
-          
-          // Operations
+
+          // Operations.
           $operations = [];
-          
-          // View the submitted file
+
+          // View the submitted file.
           if ($file) {
             $operations['view'] = [
               'title' => $this->t('View'),
@@ -492,8 +495,8 @@ class OnlyofficeFormSubmissionListBuilder extends ControllerBase {
                 'target' => '_blank',
               ],
             ];
-            
-            // Download the submitted file
+
+            // Download the submitted file.
             $operations['download'] = [
               'title' => $this->t('Download'),
               'url' => Url::fromRoute('entity.onlyoffice_form_submission.download', [
@@ -501,26 +504,26 @@ class OnlyofficeFormSubmissionListBuilder extends ControllerBase {
               ]),
             ];
           }
-          
-          // Delete individual submission
+
+          // Delete individual submission.
           $operations['delete'] = [
             'title' => $this->t('Delete'),
             'url' => Url::fromRoute('entity.onlyoffice_form_submission.delete_form', ['onlyoffice_form_submission' => $submission->id()]),
           ];
-          
+
           $row['operations']['data'] = [
             '#type' => 'operations',
             '#links' => $operations,
             '#prefix' => '<div class="onlyoffice-form-dropbutton">',
             '#suffix' => '</div>',
           ];
-          
+
           $build['table']['#rows'][] = $row;
         }
       }
     }
     catch (\Exception $e) {
-      // If there's an error loading the submissions, just continue without them
+      // If there's an error loading the submissions, just continue without them.
     }
   }
 
@@ -543,7 +546,7 @@ class OnlyofficeFormSubmissionListBuilder extends ControllerBase {
   protected function buildInfo() {
     // Display info.
     if ($this->currentUser->hasPermission('administer onlyoffice forms')) {
-      // Count form submissions
+      // Count form submissions.
       $submission_count = 0;
       try {
         $database = \Drupal::database();
@@ -553,10 +556,10 @@ class OnlyofficeFormSubmissionListBuilder extends ControllerBase {
         $submission_count = (int) $result;
       }
       catch (\Exception $e) {
-        // If there's an error, just use 0 as the count
+        // If there's an error, just use 0 as the count.
         \Drupal::logger('onlyoffice_form')->error('Error counting submissions: @message', ['@message' => $e->getMessage()]);
       }
-      
+
       return [
         '#markup' => $this->formatPlural($submission_count, '@count submission', '@count submissions'),
         '#prefix' => '<div>',
@@ -567,7 +570,7 @@ class OnlyofficeFormSubmissionListBuilder extends ControllerBase {
       return [];
     }
   }
-  
+
   /**
    * Build information summary for a specific form.
    *
@@ -580,7 +583,7 @@ class OnlyofficeFormSubmissionListBuilder extends ControllerBase {
   protected function buildInfoByForm(MediaInterface $media) {
     // Display info.
     if ($this->currentUser->hasPermission('administer onlyoffice forms')) {
-      // Count form submissions for this specific form
+      // Count form submissions for this specific form.
       $submission_count = 0;
       try {
         $database = \Drupal::database();
@@ -589,12 +592,12 @@ class OnlyofficeFormSubmissionListBuilder extends ControllerBase {
         $query->addExpression('COUNT(s.id)', 'count');
         $result = $query->execute()->fetchField();
         $submission_count = (int) $result;
-        
-        // If we're filtering, show a different message
+
+        // If we're filtering, show a different message.
         if (!empty($this->keys)) {
           // We can't get an exact filtered count from the database query
-          // since filtering happens in PHP, so we'll just indicate that 
-          // results are filtered
+          // since filtering happens in PHP, so we'll just indicate that
+          // results are filtered.
           return [
             '#markup' => $this->t('Showing filtered results for %form. <a href="@reset_url">Clear filter</a>', [
               '%form' => $media->label(),
@@ -606,10 +609,10 @@ class OnlyofficeFormSubmissionListBuilder extends ControllerBase {
         }
       }
       catch (\Exception $e) {
-        // If there's an error, just use 0 as the count
+        // If there's an error, just use 0 as the count.
         \Drupal::logger('onlyoffice_form')->error('Error counting submissions for form: @message', ['@message' => $e->getMessage()]);
       }
-      
+
       return [
         '#markup' => $this->formatPlural($submission_count, '@count submission for %form', '@count submissions for %form', ['%form' => $media->label()]),
         '#prefix' => '<div>',
@@ -620,4 +623,5 @@ class OnlyofficeFormSubmissionListBuilder extends ControllerBase {
       return [];
     }
   }
+
 }

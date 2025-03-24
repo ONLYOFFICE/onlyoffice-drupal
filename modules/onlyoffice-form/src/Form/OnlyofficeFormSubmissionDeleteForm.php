@@ -65,7 +65,7 @@ class OnlyofficeFormSubmissionDeleteForm extends ConfirmFormBase {
    */
   public function __construct(
     EntityTypeManagerInterface $entity_type_manager,
-    MessengerInterface $messenger
+    MessengerInterface $messenger,
   ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->messenger = $messenger;
@@ -91,7 +91,7 @@ class OnlyofficeFormSubmissionDeleteForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, MediaInterface $media = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, ?MediaInterface $media = NULL) {
     $this->media = $media;
     return parent::buildForm($form, $form_state);
   }
@@ -132,17 +132,17 @@ class OnlyofficeFormSubmissionDeleteForm extends ConfirmFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     if ($this->media) {
       try {
-        // Get all submissions for this form
+        // Get all submissions for this form.
         $submission_storage = $this->entityTypeManager->getStorage('onlyoffice_form_submission');
         $query = $submission_storage->getQuery()
           ->condition('media_id', $this->media->id())
           ->accessCheck(FALSE);
         $submission_ids = $query->execute();
-        
+
         if (!empty($submission_ids)) {
           $submissions = $submission_storage->loadMultiple($submission_ids);
           $submission_storage->delete($submissions);
-          
+
           $this->messenger->addStatus($this->t('Deleted @count submissions for %form.', [
             '@count' => count($submissions),
             '%form' => $this->media->label(),
@@ -160,7 +160,7 @@ class OnlyofficeFormSubmissionDeleteForm extends ConfirmFormBase {
         ]));
       }
     }
-    
+
     $form_state->setRedirect('entity.onlyoffice_form_submission.collection');
   }
 

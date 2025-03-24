@@ -80,7 +80,7 @@ class OnlyofficeFormFileController extends ControllerBase {
     EntityTypeManagerInterface $entity_type_manager,
     LoggerChannelFactoryInterface $logger_factory,
     FileSystemInterface $file_system,
-    OnlyofficeFormDocumentHelper $document_helper
+    OnlyofficeFormDocumentHelper $document_helper,
   ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->loggerFactory = $logger_factory;
@@ -110,27 +110,27 @@ class OnlyofficeFormFileController extends ControllerBase {
    *   The JSON response.
    */
   public function uploadFile(Request $request) {
-    // Get the uploaded file
+    // Get the uploaded file.
     $files = $request->files->get('files');
-    
+
     if (empty($files) || empty($files['upload_file'])) {
       return new JsonResponse([
         'status' => 'error',
         'message' => $this->t('No file uploaded.'),
       ], 400);
     }
-    
+
     $uploadedFile = $files['upload_file'];
-    
-    // Validate the file
+
+    // Validate the file.
     if (!$uploadedFile->isValid()) {
       return new JsonResponse([
         'status' => 'error',
         'message' => $this->t('Invalid file upload.'),
       ], 400);
     }
-    
-    // Check file extension
+
+    // Check file extension.
     $extension = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_EXTENSION);
     if (strtolower($extension) !== 'pdf') {
       return new JsonResponse([
@@ -138,12 +138,12 @@ class OnlyofficeFormFileController extends ControllerBase {
         'message' => $this->t('Only PDF files are allowed.'),
       ], 400);
     }
-    
-    // Prepare the destination directory
+
+    // Prepare the destination directory.
     $directory = 'public://onlyoffice_forms/';
     $this->fileSystem->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY);
-    
-    // Save the file
+
+    // Save the file.
     try {
       $file = File::create([
         'uri' => $uploadedFile->getRealPath(),
@@ -151,13 +151,13 @@ class OnlyofficeFormFileController extends ControllerBase {
         'filemime' => $uploadedFile->getMimeType(),
         'status' => File::STATUS_PERMANENT,
       ]);
-      
-      // Move the uploaded file to the destination
+
+      // Move the uploaded file to the destination.
       $destination = $directory . $uploadedFile->getClientOriginalName();
       $this->fileSystem->move($uploadedFile->getRealPath(), $destination);
       $file->setFileUri($destination);
-      
-      // Check if the file is a valid ONLYOFFICE form
+
+      // Check if the file is a valid ONLYOFFICE form.
       $file_content = file_get_contents($destination);
       if (!$this->documentHelper->isOnlyofficeForm($file_content)) {
         $this->loggerFactory->get('onlyoffice_form')->notice('Uploaded file is not a valid ONLYOFFICE form');
@@ -166,14 +166,14 @@ class OnlyofficeFormFileController extends ControllerBase {
           'message' => $this->t('The uploaded file is not a valid ONLYOFFICE form.'),
         ], 400);
       }
-      
-      // Save the file entity
+
+      // Save the file entity.
       $file->save();
-      
-      // Set file usage to prevent it from being deleted during cron
+
+      // Set file usage to prevent it from being deleted during cron.
       \Drupal::service('file.usage')->add($file, 'onlyoffice_form', 'onlyoffice_form_pdf', $file->id());
-      
-      // Return success response with file ID
+
+      // Return success response with file ID.
       return new JsonResponse([
         'status' => 'success',
         'fid' => $file->id(),
@@ -182,11 +182,12 @@ class OnlyofficeFormFileController extends ControllerBase {
     }
     catch (\Exception $e) {
       $this->loggerFactory->get('onlyoffice_form')->error('Error uploading file: @error', ['@error' => $e->getMessage()]);
-      
+
       return new JsonResponse([
         'status' => 'error',
         'message' => $this->t('Failed to save the file. Please try again.'),
       ], 500);
     }
   }
+
 }

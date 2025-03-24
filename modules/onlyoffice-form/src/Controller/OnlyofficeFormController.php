@@ -81,12 +81,12 @@ class OnlyofficeFormController extends ControllerBase {
   public function createForm(Request $request) {
     // Create a form to upload or create a new PDF form.
     $form = $this->formBuilder()->getForm('Drupal\onlyoffice_form\Form\OnlyofficeFormCreateForm');
-    
+
     // If this is an AJAX request, we're in a modal dialog.
     if ($request->isXmlHttpRequest()) {
       $form['#attached']['library'][] = 'core/drupal.dialog.ajax';
     }
-    
+
     return $form;
   }
 

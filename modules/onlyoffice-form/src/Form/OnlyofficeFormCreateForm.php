@@ -21,6 +21,7 @@ namespace Drupal\onlyoffice_form\Form;
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Ajax\AjaxResponse;
@@ -87,7 +88,7 @@ class OnlyofficeFormCreateForm extends FormBase {
     EntityTypeManagerInterface $entity_type_manager,
     AccountProxyInterface $current_user,
     LoggerChannelFactoryInterface $logger_factory,
-    OnlyofficeFormDocumentHelper $document_helper
+    OnlyofficeFormDocumentHelper $document_helper,
   ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->currentUser = $current_user;
@@ -120,12 +121,12 @@ class OnlyofficeFormCreateForm extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form['#prefix'] = '<div id="onlyoffice-form-create-form-wrapper">';
     $form['#suffix'] = '</div>';
-    
-    // Attach the dialog library
+
+    // Attach the dialog library.
     $form['#attached']['library'][] = 'onlyoffice_form/onlyoffice_form.dialog';
     $form['#attached']['library'][] = 'onlyoffice_form/ajax_commands';
-    
-    // Get the current source value from form state or default to 'blank'
+
+    // Get the current source value from form state or default to 'blank'.
     $source = $form_state->getValue('source', 'blank');
 
     $form['source'] = [
@@ -146,7 +147,7 @@ class OnlyofficeFormCreateForm extends FormBase {
       ],
     ];
 
-    // Name field - only visible for 'blank' option
+    // Name field - only visible for 'blank' option.
     $form['name'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Name'),
@@ -154,23 +155,23 @@ class OnlyofficeFormCreateForm extends FormBase {
       '#maxlength' => 255,
       '#access' => $source == 'blank',
     ];
-    
-    // File upload field - only visible for 'upload' option
+
+    // File upload field - only visible for 'upload' option.
     $form['upload_file'] = [
       '#type' => 'managed_file',
       '#upload_location' => 'public://onlyoffice_forms/',
       '#upload_validators' => [
         'file_validate_extensions' => ['pdf'],
       ],
-      '#required' => FALSE, 
+      '#required' => FALSE,
       '#access' => $source == 'upload',
       '#attributes' => [
         'class' => ['onlyoffice-form-file-upload'],
       ],
       '#theme' => 'onlyoffice_form_file_upload',
     ];
-    
-    // Text file content - only visible for 'text_file' option
+
+    // Text file content - only visible for 'text_file' option.
     $form['text_content'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Text content'),
@@ -179,8 +180,8 @@ class OnlyofficeFormCreateForm extends FormBase {
       '#access' => $source == 'text_file',
       '#rows' => 5,
     ];
-    
-    // Form gallery selector - only visible for 'form_gallery' option
+
+    // Form gallery selector - only visible for 'form_gallery' option.
     $form['gallery_template'] = [
       '#type' => 'select',
       '#title' => $this->t('Select template'),
@@ -198,17 +199,19 @@ class OnlyofficeFormCreateForm extends FormBase {
     $form['actions'] = [
       '#type' => 'actions',
     ];
-    
-    // Change button text based on source
+
+    // Change button text based on source.
     $button_text = $this->t('Create');
     if ($source == 'upload') {
       $button_text = $this->t('Upload');
-    } elseif ($source == 'text_file') {
+    }
+    elseif ($source == 'text_file') {
       $button_text = $this->t('Convert');
-    } elseif ($source == 'form_gallery') {
+    }
+    elseif ($source == 'form_gallery') {
       $button_text = $this->t('Use Template');
     }
-    
+
     $form['actions']['submit'] = [
       '#type' => 'submit',
       '#value' => $button_text,
@@ -228,7 +231,7 @@ class OnlyofficeFormCreateForm extends FormBase {
 
     return $form;
   }
-  
+
   /**
    * Ajax callback to update form elements based on source selection.
    */
@@ -241,40 +244,40 @@ class OnlyofficeFormCreateForm extends FormBase {
    */
   public function submitAjaxForm(array &$form, FormStateInterface $form_state) {
     $response = new AjaxResponse();
-    
-    // Get the source value
+
+    // Get the source value.
     $source = $form_state->getValue('source');
-    
-    // Handle the blank option
+
+    // Handle the blank option.
     if ($source === 'blank') {
       $name = $form_state->getValue('name');
-      
+
       if (empty($name)) {
         $response->addCommand(new MessageCommand($this->t('Please provide a name for the form.'), NULL, ['type' => 'error']));
         return $response;
       }
-      
+
       try {
-        // Get the module path
+        // Get the module path.
         $module_path = \Drupal::service('extension.list.module')->getPath('onlyoffice_form');
         $template_path = $module_path . '/assets/new.pdf';
-        
-        // Create the destination directory if it doesn't exist
+
+        // Create the destination directory if it doesn't exist.
         $directory = 'public://onlyoffice_forms/';
-        \Drupal::service('file_system')->prepareDirectory($directory, \Drupal\Core\File\FileSystemInterface::CREATE_DIRECTORY);
-        
-        // Generate a safe filename
+        \Drupal::service('file_system')->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY);
+
+        // Generate a safe filename.
         $filename = $name;
         if (!str_ends_with(strtolower($filename), '.pdf')) {
           $filename .= '.pdf';
         }
         $destination = $directory . \Drupal::service('file_system')->basename($filename);
-        
-        // Copy the template file
-        $uri = \Drupal::service('file_system')->copy($template_path, $destination, \Drupal\Core\File\FileSystemInterface::EXISTS_RENAME);
-        
+
+        // Copy the template file.
+        $uri = \Drupal::service('file_system')->copy($template_path, $destination, FileSystemInterface::EXISTS_RENAME);
+
         if ($uri) {
-          // Create a file entity
+          // Create a file entity.
           $file = File::create([
             'uri' => $uri,
             'filename' => \Drupal::service('file_system')->basename($uri),
@@ -283,24 +286,24 @@ class OnlyofficeFormCreateForm extends FormBase {
             'uid' => $this->currentUser->id(),
           ]);
           $file->save();
-          
-          // Get the media type that uses our source plugin
+
+          // Get the media type that uses our source plugin.
           $media_types = $this->entityTypeManager->getStorage('media_type')
             ->loadByProperties(['source' => 'onlyoffice_pdf_form']);
           $media_type = reset($media_types);
-          
+
           if (!$media_type) {
             throw new \Exception('Media type with onlyoffice_pdf_form source not found. Please install the module properly or run the update hooks.');
           }
-          
-          // Get the source field name from the configuration
+
+          // Get the source field name from the configuration.
           $source_configuration = $media_type->get('source_configuration');
           if (empty($source_configuration) || empty($source_configuration['source_field'])) {
             throw new \Exception('Source field not properly configured in media type');
           }
           $field_name = $source_configuration['source_field'];
-          
-          // Create a new Media entity
+
+          // Create a new Media entity.
           $media = Media::create([
             'bundle' => $media_type->id(),
             'uid' => $this->currentUser->id(),
@@ -312,24 +315,24 @@ class OnlyofficeFormCreateForm extends FormBase {
             ],
           ]);
           $media->save();
-          
-          // Set file usage to prevent it from being deleted during cron
+
+          // Set file usage to prevent it from being deleted during cron.
           \Drupal::service('file.usage')->add($file, 'onlyoffice_form', 'media', $media->id());
-          
-          // Add a success message
+
+          // Add a success message.
           $response->addCommand(new MessageCommand($this->t('Blank PDF form has been created successfully.'), NULL, ['type' => 'status']));
-          
-          // Close the modal dialog
+
+          // Close the modal dialog.
           $response->addCommand(new CloseModalDialogCommand());
-          
-          // Get the editor URL and open it in a new tab
+
+          // Get the editor URL and open it in a new tab.
           $editorUrl = OnlyofficeUrlHelper::getEditorUrl($media)->toString();
           $response->addCommand(new OpenInNewTabCommand($editorUrl));
-          
-          // Redirect to the PDF form collection page
+
+          // Redirect to the PDF form collection page.
           $url = Url::fromRoute('entity.onlyoffice_form.collection');
           $response->addCommand(new RedirectCommand($url->toString()));
-          
+
           return $response;
         }
         else {
@@ -342,69 +345,71 @@ class OnlyofficeFormCreateForm extends FormBase {
         $response->addCommand(new MessageCommand($this->t('An error occurred while creating the blank PDF form: @error', ['@error' => $e->getMessage()]), NULL, ['type' => 'error']));
       }
     }
-    // Handle the upload scenario
+    // Handle the upload scenario.
     elseif ($source === 'upload') {
-      // Check if a file has been uploaded
+      // Check if a file has been uploaded.
       $fid = $form_state->getValue('upload_file');
-      
+
       $this->loggerFactory->get('onlyoffice_form')->notice('File upload submission with fid: @fid', ['@fid' => print_r($fid, TRUE)]);
-      
-      // Extract the file ID from the array if needed
+
+      // Extract the file ID from the array if needed.
       if (is_array($fid)) {
         if (isset($fid['fids']) && is_array($fid['fids']) && !empty($fid['fids'])) {
           $fid = reset($fid['fids']);
-        } elseif (!empty($fid)) {
+        }
+        elseif (!empty($fid)) {
           $fid = reset($fid);
-        } else {
+        }
+        else {
           $fid = NULL;
         }
       }
-      
+
       // If no file has been uploaded yet, just return the form without an error message
-      // This allows the user to select a file using our custom file input
+      // This allows the user to select a file using our custom file input.
       if (empty($fid)) {
         $response->addCommand(new MessageCommand($this->t('Please upload a PDF file.'), NULL, ['type' => 'error']));
         return $response;
       }
-      
+
       $this->loggerFactory->get('onlyoffice_form')->notice('Extracted file ID: @fid', ['@fid' => $fid]);
-      
+
       try {
-        // Load the file entity
+        // Load the file entity.
         $file = File::load($fid);
-        
+
         if ($file) {
-          // Check if the file is a valid ONLYOFFICE form
+          // Check if the file is a valid ONLYOFFICE form.
           $file_uri = $file->getFileUri();
           $file_content = file_get_contents($file_uri);
-          
+
           if (!$this->documentHelper->isOnlyofficeForm($file_content)) {
             $this->loggerFactory->get('onlyoffice_form')->notice('Uploaded file is not a valid ONLYOFFICE form');
             $response->addCommand(new MessageCommand($this->t('The uploaded file is not a valid ONLYOFFICE form.'), NULL, ['type' => 'error']));
             return $response;
           }
-          
-          // Make the file permanent
+
+          // Make the file permanent.
           $file->setPermanent();
           $file->save();
-          
-          // Get the media type that uses our source plugin
+
+          // Get the media type that uses our source plugin.
           $media_types = $this->entityTypeManager->getStorage('media_type')
             ->loadByProperties(['source' => 'onlyoffice_pdf_form']);
           $media_type = reset($media_types);
-          
+
           if (!$media_type) {
             throw new \Exception('Media type with onlyoffice_pdf_form source not found. Please install the module properly or run the update hooks.');
           }
-          
-          // Get the source field name from the configuration
+
+          // Get the source field name from the configuration.
           $source_configuration = $media_type->get('source_configuration');
           if (empty($source_configuration) || empty($source_configuration['source_field'])) {
             throw new \Exception('Source field not properly configured in media type');
           }
           $field_name = $source_configuration['source_field'];
-          
-          // Create a new Media entity
+
+          // Create a new Media entity.
           $media = Media::create([
             'bundle' => $media_type->id(),
             'uid' => $this->currentUser->id(),
@@ -415,27 +420,27 @@ class OnlyofficeFormCreateForm extends FormBase {
               'description' => '',
             ],
           ]);
-          
-          // Save the entity
+
+          // Save the entity.
           $media->save();
-          
-          // Set file usage to prevent it from being deleted during cron
+
+          // Set file usage to prevent it from being deleted during cron.
           \Drupal::service('file.usage')->add($file, 'onlyoffice_form', 'media', $media->id());
-          
-          // Add a success message
+
+          // Add a success message.
           $response->addCommand(new MessageCommand($this->t('PDF form has been uploaded successfully.'), NULL, ['type' => 'status']));
-          
-          // Close the modal dialog
+
+          // Close the modal dialog.
           $response->addCommand(new CloseModalDialogCommand());
-          
-          // Get the editor URL and open it in a new tab
+
+          // Get the editor URL and open it in a new tab.
           $editorUrl = OnlyofficeUrlHelper::getEditorUrl($media)->toString();
           $response->addCommand(new OpenInNewTabCommand($editorUrl));
-          
-          // Redirect to the PDF form collection page
+
+          // Redirect to the PDF form collection page.
           $url = Url::fromRoute('entity.onlyoffice_form.collection');
           $response->addCommand(new RedirectCommand($url->toString()));
-          
+
           return $response;
         }
         else {
@@ -449,10 +454,10 @@ class OnlyofficeFormCreateForm extends FormBase {
       }
     }
     else {
-      // For other sources, just close the dialog for now
+      // For other sources, just close the dialog for now.
       $response->addCommand(new CloseModalDialogCommand());
     }
-    
+
     return $response;
   }
 

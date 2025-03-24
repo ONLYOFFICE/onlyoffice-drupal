@@ -96,7 +96,7 @@ class OnlyofficeFormSubmission extends ContentEntityBase implements EntityOwnerI
         'weight' => 0,
       ])
       ->setDisplayConfigurable('view', TRUE);
-      
+
     $fields['file_id'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(\Drupal::translation()->translate('Submitted File'))
       ->setDescription(\Drupal::translation()->translate('The submitted form file.'))
@@ -119,8 +119,6 @@ class OnlyofficeFormSubmission extends ContentEntityBase implements EntityOwnerI
 
     return $fields;
   }
-
-
 
   /**
    * {@inheritdoc}
@@ -149,7 +147,7 @@ class OnlyofficeFormSubmission extends ContentEntityBase implements EntityOwnerI
     }
     return \Drupal::entityTypeManager()->getStorage('media')->load($media_id);
   }
-  
+
   /**
    * Gets the file entity for this submission.
    *
@@ -163,7 +161,7 @@ class OnlyofficeFormSubmission extends ContentEntityBase implements EntityOwnerI
     }
     return \Drupal::entityTypeManager()->getStorage('file')->load($file_id);
   }
-  
+
   /**
    * Sets the file entity for this submission.
    *

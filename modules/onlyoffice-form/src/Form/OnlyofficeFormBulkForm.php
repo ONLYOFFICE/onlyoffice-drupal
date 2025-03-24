@@ -59,7 +59,7 @@ class OnlyofficeFormBulkForm extends FormBase {
    */
   public function __construct(
     AccountInterface $current_user,
-    EntityTypeManagerInterface $entity_type_manager
+    EntityTypeManagerInterface $entity_type_manager,
   ) {
     $this->currentUser = $current_user;
     $this->entityTypeManager = $entity_type_manager;
@@ -94,7 +94,7 @@ class OnlyofficeFormBulkForm extends FormBase {
       '#suffix' => '</div>',
       '#weight' => -100,
     ];
-    
+
     $form['header']['operations']['action'] = [
       '#type' => 'select',
       '#title' => $this->t('Action'),
@@ -102,7 +102,7 @@ class OnlyofficeFormBulkForm extends FormBase {
       '#options' => $this->getBulkOptions(),
       '#empty_option' => $this->t('- Select operation -'),
     ];
-    
+
     $form['header']['operations']['apply'] = [
       '#type' => 'submit',
       '#value' => $this->t('Apply to selected items'),
@@ -116,32 +116,32 @@ class OnlyofficeFormBulkForm extends FormBase {
       '#empty' => $table['#empty'],
       '#attributes' => ['class' => ['onlyoffice-forms-tableselect']],
     ];
-    
-    // Convert the rows to options for the tableselect
+
+    // Convert the rows to options for the tableselect.
     if (!empty($table['#rows'])) {
       foreach ($table['#rows'] as $id => $row) {
-        // Create a new row with the same structure
+        // Create a new row with the same structure.
         $options[$id] = [];
-        
-        // Copy each column's data
+
+        // Copy each column's data.
         foreach ($row as $key => $column) {
           if ($key === 'operations') {
-            // For operations, we need to render the dropbutton
+            // For operations, we need to render the dropbutton.
             $options[$id][$key] = [
               'data' => $column,
             ];
           }
           elseif (is_array($column) && isset($column['data'])) {
-            // For columns with render arrays
+            // For columns with render arrays.
             $options[$id][$key] = $column;
           }
           else {
-            // For simple columns
+            // For simple columns.
             $options[$id][$key] = ['data' => ['#markup' => $column]];
           }
         }
       }
-      
+
       $form['items']['#options'] = $options;
     }
 
@@ -156,7 +156,7 @@ class OnlyofficeFormBulkForm extends FormBase {
     if (empty($action)) {
       $form_state->setErrorByName('action', $this->t('No operation selected.'));
     }
-    
+
     $entity_ids = array_filter($form_state->getValue('items'));
     if (empty($entity_ids)) {
       $form_state->setErrorByName('items', $this->t('No items selected.'));
@@ -169,35 +169,35 @@ class OnlyofficeFormBulkForm extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $action = $form_state->getValue('action');
     $selected = array_filter($form_state->getValue('items'));
-    
+
     if (empty($selected)) {
       $this->messenger()->addError($this->t('No items selected.'));
       return;
     }
-    
+
     if ($action === 'delete') {
-      // Load and delete the selected media entities
+      // Load and delete the selected media entities.
       $media_ids = array_keys($selected);
       $media_storage = $this->entityTypeManager->getStorage('media');
       $media_entities = $media_storage->loadMultiple($media_ids);
-      
+
       if (!empty($media_entities)) {
         $count = count($media_entities);
         $media_storage->delete($media_entities);
-        
+
         $this->messenger()->addStatus($this->formatPlural(
           $count,
           '1 form has been deleted.',
           '@count forms have been deleted.'
         ));
       }
-      
-      // Redirect back to the forms page
+
+      // Redirect back to the forms page.
       $form_state->setRedirect('entity.onlyoffice_form.collection');
       return;
     }
-    
-    // Add more actions here as needed
+
+    // Add more actions here as needed.
   }
 
   /**

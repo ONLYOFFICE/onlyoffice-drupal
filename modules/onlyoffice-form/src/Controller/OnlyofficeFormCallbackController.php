@@ -241,12 +241,12 @@ class OnlyofficeFormCallbackController extends ControllerBase {
     $account = $this->userStorage->load($userId);
 
     // We can't directly set the account on the current user service
-    // Instead, we'll use the account for operations but keep track of it
+    // Instead, we'll use the account for operations but keep track of it.
     if (!$account) {
       $account = User::getAnonymousUser();
     }
-    
-    // Store the account for later use
+
+    // Store the account for later use.
     $this->account = $account;
 
     $status = self::CALLBACK_STATUS[$body->status];
@@ -263,10 +263,10 @@ class OnlyofficeFormCallbackController extends ControllerBase {
             break;
         }
         return new JsonResponse(['error' => 0], 200);
+
       case "MustForceSave":
       case "CorruptedForceSave":
         return $this->proccessForceSave($body, $media, $context);
-        break;
     }
 
     return new JsonResponse(['error' => 1, 'message' => 'Unknown status: ' . $body->status], 400);
@@ -287,52 +287,53 @@ class OnlyofficeFormCallbackController extends ControllerBase {
       );
     }
 
-    // Get the original file from the media entity
+    // Get the original file from the media entity.
     $file = $media->get(OnlyofficeDocumentHelper::getSourceFieldName($media))->entity;
     $file_extension = pathinfo($file->getFilename(), PATHINFO_EXTENSION);
     $media_name = $media->label();
-    
+
     if ($new_data = file_get_contents($download_url)) {
       if ($isSubmitForm) {
-        // Create a dedicated directory for this media's submissions
+        // Create a dedicated directory for this media's submissions.
         $media_uuid = $media->uuid();
         $submission_directory = 'public://onlyoffice_forms/submissions/' . $media_uuid;
         $this->fileSystem->prepareDirectory($submission_directory, FileSystemInterface::CREATE_DIRECTORY);
-        
-        // Generate a unique filename that includes the form name
+
+        // Generate a unique filename that includes the form name.
         $timestamp = $this->time->getRequestTime();
         $unique_id = substr(hash('sha256', $timestamp . rand()), 0, 8);
         $sanitized_name = preg_replace('/[^a-zA-Z0-9_-]/', '_', $media_name);
         $new_filename = $sanitized_name . '_submission_' . $unique_id . '.' . $file_extension;
-        
-        // Set the destination for the new file
+
+        // Set the destination for the new file.
         $newDestination = $submission_directory . '/' . $new_filename;
-        
-        // Save the submitted form as a new file
+
+        // Save the submitted form as a new file.
         $newFile = $this->writeData($new_data, $newDestination);
-        
-        // Create a form submission entity
+
+        // Create a form submission entity.
         $submission = $this->entityTypeManager()->getStorage('onlyoffice_form_submission')->create([
           'media_id' => $media->id(),
           'file_id' => $newFile->id(),
-          'uid' => $this->account->id(), // This will be 0 for anonymous users, which is correct
+        // This will be 0 for anonymous users, which is correct.
+          'uid' => $this->account->id(),
         ]);
         $submission->save();
-        
-        // For anonymous users, also store the submission in the session
+
+        // For anonymous users, also store the submission in the session.
         if ($this->account->isAnonymous()) {
-          // Use Drupal's shared tempstore for cross-session persistence
+          // Use Drupal's shared tempstore for cross-session persistence.
           $tempstore = \Drupal::service('tempstore.shared')->get('onlyoffice_form');
-          
-          // Store with a unique key that includes the media ID
+
+          // Store with a unique key that includes the media ID.
           $key = 'submission_' . $media->id();
-          
+
           // Set with a longer expiration (default is 1 week)
           $tempstore->set($key, TRUE);
-          
+
           $this->getLogger('onlyoffice_form')->debug('Stored submission in shared tempstore with key: @key', ['@key' => $key]);
         }
-        
+
         $this->getLogger('onlyoffice_form')->notice('Form submission for media @type %label was successfully saved.', $context);
         return new JsonResponse(['error' => 0], 200);
       }

@@ -76,7 +76,7 @@ class OnlyofficeFormSubmissionDeleteSingleForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, OnlyofficeFormSubmission $onlyoffice_form_submission = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, ?OnlyofficeFormSubmission $onlyoffice_form_submission = NULL) {
     $this->entity = $onlyoffice_form_submission;
     return parent::buildForm($form, $form_state);
   }
@@ -96,11 +96,11 @@ class OnlyofficeFormSubmissionDeleteSingleForm extends ConfirmFormBase {
    */
   public function getCancelUrl() {
     $media_id = $this->entity->media_id->target_id;
-    
+
     if ($media_id) {
       return new Url('entity.onlyoffice_form_submission.collection', ['media' => $media_id]);
     }
-    
+
     return new Url('entity.onlyoffice_form_submission.collection');
   }
 
@@ -122,15 +122,15 @@ class OnlyofficeFormSubmissionDeleteSingleForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    // Get the media entity from the submission before deletion
+    // Get the media entity from the submission before deletion.
     $media_id = $this->entity->media_id->target_id;
-    
-    // Delete the entity
+
+    // Delete the entity.
     $this->entity->delete();
-    
+
     $this->messenger()->addStatus($this->t('The submission has been deleted.'));
-    
-    // Redirect back to the form's submissions page if we have a media ID
+
+    // Redirect back to the form's submissions page if we have a media ID.
     if ($media_id) {
       $form_state->setRedirect('entity.onlyoffice_form_submission.collection', ['media' => $media_id]);
     }
@@ -138,4 +138,5 @@ class OnlyofficeFormSubmissionDeleteSingleForm extends ConfirmFormBase {
       $form_state->setRedirect('entity.onlyoffice_form_submission.collection');
     }
   }
+
 }

@@ -82,7 +82,7 @@ class OnlyofficeFormListBuilder extends ControllerBase {
     RequestStack $request_stack,
     ConfigFactoryInterface $config_factory,
     AccountInterface $current_user,
-    EntityTypeManagerInterface $entity_type_manager
+    EntityTypeManagerInterface $entity_type_manager,
   ) {
     $this->request = $request_stack->getCurrentRequest();
     $this->configFactory = $config_factory;
@@ -159,7 +159,7 @@ class OnlyofficeFormListBuilder extends ControllerBase {
   public function render() {
     $build = [];
 
-    // Add button to create new form with modal dialog
+    // Add button to create new form with modal dialog.
     $build['add_form'] = [
       '#type' => 'link',
       '#title' => $this->t('Create & Upload'),
@@ -192,22 +192,22 @@ class OnlyofficeFormListBuilder extends ControllerBase {
       ],
     ];
 
-    // Add PDF forms from the database
+    // Add PDF forms from the database.
     $this->addPdfFormsToTable($build);
 
-    // Attach libraries for dialog functionality
+    // Attach libraries for dialog functionality.
     $build['#attached']['library'][] = 'core/drupal.dialog.ajax';
     $build['#attached']['library'][] = 'onlyoffice_form/onlyoffice_form.dialog';
     $build['#attached']['library'][] = 'onlyoffice_form/onlyoffice_form.admin';
 
-    // Add bulk operations form
+    // Add bulk operations form.
     if ($this->currentUser->hasPermission('administer onlyoffice forms')) {
       $build['table'] = \Drupal::formBuilder()->getForm('\Drupal\onlyoffice_form\Form\OnlyofficeFormBulkForm', $build['table']);
     }
 
     return $build;
   }
-  
+
   /**
    * Add PDF forms from the database to the table.
    *
@@ -216,53 +216,53 @@ class OnlyofficeFormListBuilder extends ControllerBase {
    */
   protected function addPdfFormsToTable(array &$build) {
     try {
-      // Get PDF forms as media entities
+      // Get PDF forms as media entities.
       $media_storage = $this->entityTypeManager->getStorage('media');
       $query = $media_storage->getQuery();
       $query->accessCheck(FALSE);
       $query->condition('bundle', 'onlyoffice_pdf_form');
-      
-      // Apply search filter if provided
+
+      // Apply search filter if provided.
       if (!empty($this->keys)) {
         $group = $query->orConditionGroup()
           ->condition('name', '%' . $this->keys . '%', 'LIKE');
         $query->condition($group);
       }
-      
+
       $media_ids = $query->execute();
-      
+
       if (!empty($media_ids)) {
         $media_entities = $media_storage->loadMultiple($media_ids);
-        
+
         foreach ($media_entities as $media_id => $media) {
           $row = [];
-          
-          // Title
+
+          // Title.
           $row['title']['data']['title'] = [
             '#type' => 'link',
             '#title' => $media->label(),
             '#url' => $media->toUrl('edit-form'),
           ];
-          
-          // Author
+
+          // Author.
           $uid = 0;
           if (method_exists($media, 'getOwnerId')) {
             $uid = $media->getOwnerId();
           }
-          
+
           $user = $uid ? $this->entityTypeManager->getStorage('user')->load($uid) : NULL;
           $author = $user ? $user->getDisplayName() : $this->t('Anonymous');
           $row['author'] = $author;
-          
+
           // Type (always PDF)
           $row['type'] = 'PDF';
-          
-          // Get the source field from media configuration
+
+          // Get the source field from media configuration.
           if (method_exists($media, 'getSource')) {
             $source_config = $media->getSource()->getConfiguration();
             if (isset($source_config['source_field'])) {
               $source_field = $source_config['source_field'];
-              
+
               if ($media->hasField($source_field) && !$media->get($source_field)->isEmpty()) {
                 $fid = $media->get($source_field)->target_id;
                 if ($fid) {
@@ -274,8 +274,8 @@ class OnlyofficeFormListBuilder extends ControllerBase {
               }
             }
           }
-          
-          // Format file size manually
+
+          // Format file size manually.
           if (isset($file_size)) {
             if ($file_size < 1024) {
               $row['size'] = $file_size . ' B';
@@ -290,11 +290,11 @@ class OnlyofficeFormListBuilder extends ControllerBase {
           else {
             $row['size'] = '';
           }
-          
+
           // Results (placeholder for now)
           $row['results'] = '0';
-          
-          // Operations
+
+          // Operations.
           $operations = [];
 
           $operations['edit'] = [
@@ -308,20 +308,20 @@ class OnlyofficeFormListBuilder extends ControllerBase {
             'title' => $this->t('Delete'),
             'url' => Url::fromRoute('entity.media.delete_form', ['media' => $media_id]),
           ];
-          
+
           $row['operations']['data'] = [
             '#type' => 'operations',
             '#links' => $operations,
             '#prefix' => '<div class="onlyoffice-form-dropbutton">',
             '#suffix' => '</div>',
           ];
-          
+
           $build['table']['#rows'][$media_id] = $row;
         }
       }
     }
     catch (\Exception $e) {
-      // If there's an error loading the media entities, just continue without them
+      // If there's an error loading the media entities, just continue without them.
     }
   }
 
@@ -350,10 +350,10 @@ class OnlyofficeFormListBuilder extends ControllerBase {
   protected function buildInfo() {
     // Display info.
     if ($this->currentUser->hasPermission('administer onlyoffice forms')) {
-      // Count PDF forms as media entities
+      // Count PDF forms as media entities.
       $pdf_form_count = 0;
       try {
-        // Use a direct database query as a fallback approach
+        // Use a direct database query as a fallback approach.
         $database = \Drupal::database();
         $query = $database->select('media', 'm')
           ->condition('m.bundle', 'onlyoffice_pdf_form');
@@ -362,10 +362,10 @@ class OnlyofficeFormListBuilder extends ControllerBase {
         $pdf_form_count = (int) $result;
       }
       catch (\Exception $e) {
-        // If there's an error, just use 0 as the count
+        // If there's an error, just use 0 as the count.
         \Drupal::logger('onlyoffice_form')->error('Error counting PDF forms: @message', ['@message' => $e->getMessage()]);
       }
-      
+
       return [
         '#markup' => $this->formatPlural($pdf_form_count, '@count form', '@count forms'),
         '#prefix' => '<div>',
@@ -376,4 +376,5 @@ class OnlyofficeFormListBuilder extends ControllerBase {
       return [];
     }
   }
+
 }

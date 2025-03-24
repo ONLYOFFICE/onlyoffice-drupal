@@ -117,24 +117,24 @@ class OnlyofficeFormBulkDeleteConfirmForm extends ConfirmFormBase {
       $this->mediaIds = explode(',', $ids);
     }
     else {
-      // If no IDs are provided, redirect back to the forms page
+      // If no IDs are provided, redirect back to the forms page.
       return $this->redirect('entity.onlyoffice_form.collection');
     }
-    
-    // Show a list of forms that will be deleted
+
+    // Show a list of forms that will be deleted.
     $form['forms'] = [
       '#theme' => 'item_list',
       '#title' => $this->t('The following forms will be deleted:'),
       '#items' => [],
     ];
-    
+
     foreach ($this->mediaIds as $media_id) {
       $media = Media::load($media_id);
       if ($media) {
         $form['forms']['#items'][] = $media->label();
       }
     }
-    
+
     return parent::buildForm($form, $form_state);
   }
 
@@ -145,20 +145,20 @@ class OnlyofficeFormBulkDeleteConfirmForm extends ConfirmFormBase {
     if (!empty($this->mediaIds)) {
       $media_storage = $this->entityTypeManager->getStorage('media');
       $media_entities = $media_storage->loadMultiple($this->mediaIds);
-      
+
       $count = count($media_entities);
-      
-      // Delete the media entities
+
+      // Delete the media entities.
       $media_storage->delete($media_entities);
-      
-      // Set success message
+
+      // Set success message.
       $this->messenger()->addStatus($this->formatPlural(
         $count,
         '1 form has been deleted.',
         '@count forms have been deleted.'
       ));
     }
-    
+
     $form_state->setRedirect('entity.onlyoffice_form.collection');
   }
 

@@ -25,49 +25,54 @@ namespace Drupal\onlyoffice_form;
  * Set of tools for working with forms.
  */
 class OnlyofficeFormDocumentHelper {
-    /**
-     * Checking pdf onlyoffice form by file content
-     *
-     * @param string $fileContent file content
-     * @return bool
-     */
-    public function isOnlyofficeForm($fileContent) {
-        $onlyofficeFormMetaTag = "ONLYOFFICEFORM";
 
-        $indexFirst = strpos($fileContent, "%\xCD\xCA\xD2\xA9\x0D");
-        if ($indexFirst === false) {
-            return false;
-        }
+  /**
+   * Checking pdf onlyoffice form by file content.
+   *
+   * @param string $fileContent
+   *   File content.
+   *
+   * @return bool
+   *   TRUE if the file is a PDF form, FALSE otherwise.
+   */
+  public function isOnlyofficeForm($fileContent) {
+    $onlyofficeFormMetaTag = "ONLYOFFICEFORM";
 
-        $pFirst = substr($fileContent, $indexFirst + 6);
-        if (!str_starts_with($pFirst, "1 0 obj\n<<\n")) {
-            return false;
-        }
-
-        $pFirst = substr($pFirst, 11);
-
-        $indexStream = strpos($pFirst, "stream\x0D\x0A");
-        $indexMeta = strpos($pFirst, $onlyofficeFormMetaTag);
-
-        if ($indexStream === false || $indexMeta === false || $indexStream < $indexMeta) {
-            return false;
-        }
-
-        $pMeta = substr($pFirst, $indexMeta);
-        $pMeta = substr($pMeta, strlen($onlyofficeFormMetaTag) + 3);
-
-        $indexMetaLast = strpos($pMeta, " ");
-        if ($indexMetaLast === false) {
-            return false;
-        }
-
-        $pMeta = substr($pMeta, $indexMetaLast + 1);
-
-        $indexMetaLast = strpos($pMeta, " ");
-        if ($indexMetaLast === false) {
-            return false;
-        }
-
-        return true;
+    $indexFirst = strpos($fileContent, "%\xCD\xCA\xD2\xA9\x0D");
+    if ($indexFirst === FALSE) {
+      return FALSE;
     }
+
+    $pFirst = substr($fileContent, $indexFirst + 6);
+    if (!str_starts_with($pFirst, "1 0 obj\n<<\n")) {
+      return FALSE;
+    }
+
+    $pFirst = substr($pFirst, 11);
+
+    $indexStream = strpos($pFirst, "stream\x0D\x0A");
+    $indexMeta = strpos($pFirst, $onlyofficeFormMetaTag);
+
+    if ($indexStream === FALSE || $indexMeta === FALSE || $indexStream < $indexMeta) {
+      return FALSE;
+    }
+
+    $pMeta = substr($pFirst, $indexMeta);
+    $pMeta = substr($pMeta, strlen($onlyofficeFormMetaTag) + 3);
+
+    $indexMetaLast = strpos($pMeta, " ");
+    if ($indexMetaLast === FALSE) {
+      return FALSE;
+    }
+
+    $pMeta = substr($pMeta, $indexMetaLast + 1);
+
+    $indexMetaLast = strpos($pMeta, " ");
+    if ($indexMetaLast === FALSE) {
+      return FALSE;
+    }
+
+    return TRUE;
+  }
+
 }

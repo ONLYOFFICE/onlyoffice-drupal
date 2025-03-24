@@ -47,7 +47,7 @@ class OnlyofficeFormSubmissionFilterForm extends FormBase {
       '#open' => TRUE,
       '#attributes' => ['class' => ['container-inline']],
     ];
-    
+
     $form['filter']['search'] = [
       '#type' => 'search',
       '#title' => $this->t('Keyword'),
@@ -56,13 +56,13 @@ class OnlyofficeFormSubmissionFilterForm extends FormBase {
       '#size' => 45,
       '#default_value' => $keys,
     ];
-    
+
     $form['filter']['submit'] = [
       '#type' => 'submit',
       '#button_type' => 'primary',
       '#value' => $this->t('Filter'),
     ];
-    
+
     if (!empty($keys)) {
       $form['filter']['reset'] = [
         '#type' => 'submit',

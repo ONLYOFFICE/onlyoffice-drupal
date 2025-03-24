@@ -115,7 +115,7 @@ class OnlyofficeFormFormatter extends FormatterBase {
     DateFormatterInterface $date_formatter,
     LanguageManagerInterface $language_manager,
     KillSwitch $page_cache_kill_switch,
-    EntityTypeManagerInterface $entity_type_manager
+    EntityTypeManagerInterface $entity_type_manager,
   ) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings);
 
@@ -231,21 +231,21 @@ class OnlyofficeFormFormatter extends FormatterBase {
     $summary = parent::settingsSummary();
     $summary[] = $this->t('Width')->render() . ': ' . $this->getSetting('width') . $this->getSetting('width_unit');
     $summary[] = $this->t('Height')->render() . ': ' . $this->getSetting('height') . $this->getSetting('height_unit');
-    
+
     if ($this->getSetting('save_submissions')) {
       $summary[] = $this->t('Save submissions: Yes');
     }
     else {
       $summary[] = $this->t('Save submissions: No');
     }
-    
+
     if ($this->getSetting('hide_after_submission')) {
       $summary[] = $this->t('Hide after submission: Yes');
     }
     else {
       $summary[] = $this->t('Hide after submission: No');
     }
-    
+
     return $summary;
   }
 
@@ -270,28 +270,28 @@ class OnlyofficeFormFormatter extends FormatterBase {
         if (!$file) {
           continue;
         }
-        
-        // Get the media entity directly from the current item
+
+        // Get the media entity directly from the current item.
         $media = $this->entityTypeManager->getStorage('media')->load($items[$delta]->target_id);
-        
+
         if (!$media) {
           continue;
         }
-        
-        // Check if we should hide this form after submission
+
+        // Check if we should hide this form after submission.
         if ($this->getSetting('hide_after_submission')) {
-          // Check if the current user has already submitted this form
+          // Check if the current user has already submitted this form.
           $current_user = \Drupal::currentUser();
           $query = $this->entityTypeManager->getStorage('onlyoffice_form_submission')->getQuery()
             ->condition('media_id', $media->id())
             ->accessCheck(TRUE);
-          
-          // For authenticated users, check by user ID
+
+          // For authenticated users, check by user ID.
           if ($current_user->id()) {
             $query->condition('uid', $current_user->id());
             $submission_ids = $query->execute();
-            
-            // If there are submissions by this user, don't show the form
+
+            // If there are submissions by this user, don't show the form.
             if (!empty($submission_ids)) {
               $element[$delta] = [
                 '#markup' => $this->t('You have already submitted this form.'),
@@ -302,17 +302,17 @@ class OnlyofficeFormFormatter extends FormatterBase {
               continue;
             }
           }
-          // For anonymous users, we need to use session-based tracking
+          // For anonymous users, we need to use session-based tracking.
           else {
-            // Use Drupal's shared tempstore for cross-session persistence
+            // Use Drupal's shared tempstore for cross-session persistence.
             $tempstore = \Drupal::service('tempstore.shared')->get('onlyoffice_form');
-            
-            // Use the same key format as in the controller
+
+            // Use the same key format as in the controller.
             $key = 'submission_' . $media->id();
-            
+
             $has_submitted = $tempstore->get($key);
-            
-            // Check if this form has been submitted by the current session
+
+            // Check if this form has been submitted by the current session.
             if ($has_submitted) {
               $element[$delta] = [
                 '#markup' => $this->t('You have already submitted this form.'),
@@ -324,7 +324,7 @@ class OnlyofficeFormFormatter extends FormatterBase {
             }
           }
         }
-        
+
         $extension = OnlyofficeDocumentHelper::getExtension($file->getFilename());
 
         if (OnlyofficeDocumentHelper::getDocumentType($extension)) {
@@ -344,7 +344,7 @@ class OnlyofficeFormFormatter extends FormatterBase {
           if (!isset($element['#attached']['drupalSettings'])) {
             $element['#attached']['drupalSettings'] = [];
           }
-          
+
           if (!isset($element['#attached']['drupalSettings']['onlyofficeData'])) {
             $element['#attached']['drupalSettings']['onlyofficeData'] = [];
           }
@@ -356,7 +356,7 @@ class OnlyofficeFormFormatter extends FormatterBase {
           }
           catch (\Exception $e) {
             \Drupal::logger('onlyoffice_form')->error('Error generating editor config: @message', ['@message' => $e->getMessage()]);
-            // Provide a fallback display
+            // Provide a fallback display.
             $element[$delta] = [
               '#markup' => $this->t('ONLYOFFICE Form preview unavailable'),
               '#cache' => [
@@ -369,7 +369,7 @@ class OnlyofficeFormFormatter extends FormatterBase {
     }
     catch (\Exception $e) {
       \Drupal::logger('onlyoffice_form')->error('Error rendering ONLYOFFICE Form: @message', ['@message' => $e->getMessage()]);
-      // Provide a fallback display
+      // Provide a fallback display.
       $element[0] = [
         '#markup' => $this->t('ONLYOFFICE Form preview unavailable'),
         '#cache' => [
@@ -388,26 +388,26 @@ class OnlyofficeFormFormatter extends FormatterBase {
     $editor_width = $this->getSetting('width') . $this->getSetting('width_unit');
     $editor_height = $this->getSetting('height') . $this->getSetting('height_unit');
 
-    // For ONLYOFFICE forms, we use "fillForms" mode
+    // For ONLYOFFICE forms, we use "fillForms" mode.
     $mode = "fillForms";
-    
-    // Check if the current user has permission to edit forms
+
+    // Check if the current user has permission to edit forms.
     if (\Drupal::currentUser()->hasPermission('edit onlyoffice forms')) {
       $mode = "edit";
     }
-    
-    // Get the owner's display name, or use the current user if owner is null
+
+    // Get the owner's display name, or use the current user if owner is null.
     $owner = $file->getOwner();
     $owner_name = 'Anonymous';
-    $user_id = null;
+    $user_id = NULL;
     $user_name = "Anonymous";
     $documentKey = $file->uuid() . "_" . base64_encode($file->getChangedTime());
-    
+
     if ($owner) {
       $owner_name = $owner->getDisplayName();
     }
 
-    // Try to get current user's name
+    // Try to get current user's name.
     $current_user = \Drupal::currentUser();
     if ($current_user->id()) {
       $user_id = $current_user->id();
@@ -416,8 +416,9 @@ class OnlyofficeFormFormatter extends FormatterBase {
       if ($user_entity) {
         $owner_name = $user_name = $user_entity->getDisplayName();
       }
-    } else {
-      // For anonymous users, use a unique identifier stored in the session
+    }
+    else {
+      // For anonymous users, use a unique identifier stored in the session.
       $session = \Drupal::request()->getSession();
       if (!$session->has('onlyoffice.guest.id')) {
         $uuid_generator = new UuidGenerator();
@@ -461,7 +462,7 @@ class OnlyofficeFormFormatter extends FormatterBase {
    */
   protected function needsEntityLoad($item) {
     // Our custom field type is not an EntityReferenceItem
-    // so we need to handle it differently
+    // so we need to handle it differently.
     return !empty($item->target_id);
   }
 
@@ -471,27 +472,27 @@ class OnlyofficeFormFormatter extends FormatterBase {
   protected function getEntitiesToView(FieldItemListInterface $items, $langcode) {
     $entities = [];
 
-    // Load media entities manually since our field type is not an EntityReferenceItem
+    // Load media entities manually since our field type is not an EntityReferenceItem.
     foreach ($items as $delta => $item) {
       if (!empty($item->target_id)) {
         try {
-          // Load the media entity
+          // Load the media entity.
           $media = $this->entityTypeManager->getStorage('media')->load($item->target_id);
           if ($media) {
-            // Get the source field from the media
+            // Get the source field from the media.
             $source_config = $media->getSource()->getConfiguration();
             if (isset($source_config['source_field'])) {
               $source_field = $source_config['source_field'];
-              
-              // Make sure the source field exists on the media entity
+
+              // Make sure the source field exists on the media entity.
               if ($media->hasField($source_field)) {
                 $file_field = $media->get($source_field);
-                
-                // Make sure the field has a target_id
+
+                // Make sure the field has a target_id.
                 if ($file_field && $file_field->target_id) {
                   $file_id = $file_field->target_id;
                   $file = $this->entityTypeManager->getStorage('file')->load($file_id);
-                  
+
                   if ($file) {
                     $entities[$delta] = $file;
                   }
@@ -501,7 +502,7 @@ class OnlyofficeFormFormatter extends FormatterBase {
           }
         }
         catch (\Exception $e) {
-          // Log the error but continue processing other items
+          // Log the error but continue processing other items.
           \Drupal::logger('onlyoffice_form')->error('Error loading file for ONLYOFFICE Form: @message', ['@message' => $e->getMessage()]);
         }
       }
@@ -509,4 +510,5 @@ class OnlyofficeFormFormatter extends FormatterBase {
 
     return $entities;
   }
+
 }
