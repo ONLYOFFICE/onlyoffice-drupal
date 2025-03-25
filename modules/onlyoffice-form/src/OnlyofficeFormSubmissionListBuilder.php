@@ -383,7 +383,7 @@ class OnlyofficeFormSubmissionListBuilder extends ControllerBase {
 
             // Form name.
             $row['form']['data']['form'] = [
-              '#markup' => '<a href="' . OnlyofficeUrlHelper::getEditorUrl($media)->toString() . '">' . $media_name . '</a>',
+              '#markup' => '<a target="_blank" href="' . OnlyofficeUrlHelper::getEditorUrl($media)->toString() . '">' . $media_name . '</a>',
               '#prefix' => '<div style="width: 100%; overflow: hidden; text-overflow: ellipsis;">',
               '#suffix' => '</div>',
             ];
@@ -485,12 +485,14 @@ class OnlyofficeFormSubmissionListBuilder extends ControllerBase {
           }
 
           // Title.
-          $row['title'] = $title;
+          $row['title']['data'] = [
+            '#markup' => '<a target="_blank" href="' . Url::fromRoute('entity.onlyoffice_form_submission.view', ['onlyoffice_form_submission' => $submission->id()])->toString() . '">' . $title . '</a>',
+          ];
 
           // Form - Link to the form.
           $form_media = $media;
           $row['form']['data']['form'] = [
-            '#markup' => '<a href="' . OnlyofficeUrlHelper::getEditorUrl($form_media)->toString() . '">' . $form_media->label() . '</a>',
+            '#markup' => '<a target="_blank" href="' . OnlyofficeUrlHelper::getEditorUrl($form_media)->toString() . '">' . $form_media->label() . '</a>',
           ];
 
           // Type - Always PDF for now.
