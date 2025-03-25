@@ -330,6 +330,24 @@ class OnlyofficeFormFormatter extends FormatterBase {
           continue;
         }
 
+        // Generate document key here.
+        $documentKey = $file->uuid() . "_" . base64_encode($file->getChangedTime());
+        $current_user = $this->currentUser;
+
+        if ($current_user->id()) {
+          $documentKey .= "_" . $current_user->id();
+        }
+        else {
+          // For anonymous users, use a unique identifier stored in the session.
+          $session = $this->requestStack->getCurrentRequest()->getSession();
+          if (!$session->has('onlyoffice.guest.id')) {
+            $uuid_generator = new UuidGenerator();
+            $session->set('onlyoffice.guest.id', $uuid_generator->generate());
+          }
+          $guest_id = $session->get('onlyoffice.guest.id');
+          $documentKey .= "_guest_" . $guest_id;
+        }
+
         // Check if we should hide this form after submission.
         if ($this->getSetting('hide_after_submission')) {
           // Check if the current user has already submitted this form.
@@ -353,13 +371,13 @@ class OnlyofficeFormFormatter extends FormatterBase {
               continue;
             }
           }
-          // For anonymous users, we need to use session-based tracking.
+          // For anonymous users, check using the document key.
           else {
             // Use Drupal's shared tempstore for cross-session persistence.
             $tempstore = $this->tempstoreFactory->get('onlyoffice_form');
 
-            // Use the same key format as in the controller.
-            $key = 'submission_' . $media->id();
+            // Use the document key for the storage key.
+            $key = 'submission_' . $media->id() . '_' . $documentKey;
 
             $has_submitted = $tempstore->get($key);
 
@@ -402,7 +420,7 @@ class OnlyofficeFormFormatter extends FormatterBase {
 
           try {
             $element['#attached']['drupalSettings']['onlyofficeData'][$editor_id] = [
-              'config' => $this->getEditorConfig($file, $media),
+              'config' => $this->getEditorConfig($file, $media, $documentKey),
             ];
           }
           catch (\Exception $e) {
@@ -435,7 +453,7 @@ class OnlyofficeFormFormatter extends FormatterBase {
   /**
    * Method getting configuration for document editor service.
    */
-  private function getEditorConfig(File $file, Media $media) {
+  private function getEditorConfig(File $file, Media $media, $documentKey) {
     $editor_width = $this->getSetting('width') . $this->getSetting('width_unit');
     $editor_height = $this->getSetting('height') . $this->getSetting('height_unit');
 
@@ -452,7 +470,6 @@ class OnlyofficeFormFormatter extends FormatterBase {
     $owner_name = 'Anonymous';
     $user_id = NULL;
     $user_name = "Anonymous";
-    $documentKey = $file->uuid() . "_" . base64_encode($file->getChangedTime());
 
     if ($owner) {
       $owner_name = $owner->getDisplayName();
@@ -463,20 +480,9 @@ class OnlyofficeFormFormatter extends FormatterBase {
     if ($current_user->id()) {
       $user_id = $current_user->id();
       $user_entity = $this->entityTypeManager->getStorage('user')->load($current_user->id());
-      $documentKey .= "_" . $user_id;
       if ($user_entity) {
         $owner_name = $user_name = $user_entity->getDisplayName();
       }
-    }
-    else {
-      // For anonymous users, use a unique identifier stored in the session.
-      $session = $this->requestStack->getCurrentRequest()->getSession();
-      if (!$session->has('onlyoffice.guest.id')) {
-        $uuid_generator = new UuidGenerator();
-        $session->set('onlyoffice.guest.id', $uuid_generator->generate());
-      }
-      $guest_id = $session->get('onlyoffice.guest.id');
-      $documentKey .= "_guest_" . $guest_id;
     }
 
     $linkParameters = [

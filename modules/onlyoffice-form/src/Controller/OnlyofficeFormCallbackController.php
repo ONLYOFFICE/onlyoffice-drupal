@@ -339,7 +339,7 @@ class OnlyofficeFormCallbackController extends ControllerBase {
           $tempstore = $this->tempstoreFactory->get('onlyoffice_form');
 
           // Store with a unique key that includes the media ID.
-          $key = 'submission_' . $media->id();
+          $key = 'submission_' . $media->id() . '_' . $body->key;
 
           // Set with a longer expiration (default is 1 week)
           $tempstore->set($key, TRUE);
