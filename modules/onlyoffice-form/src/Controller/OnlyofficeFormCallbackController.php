@@ -28,6 +28,7 @@ use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\File\Exception\InvalidStreamWrapperException;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
+use Drupal\Core\TempStore\SharedTempStoreFactory;
 use Drupal\file\Entity\File;
 use Drupal\file\FileInterface;
 use Drupal\media\Entity\Media;
@@ -100,6 +101,13 @@ class OnlyofficeFormCallbackController extends ControllerBase {
   protected $time;
 
   /**
+   * The tempstore factory.
+   *
+   * @var \Drupal\Core\TempStore\SharedTempStoreFactory
+   */
+  protected $tempstoreFactory;
+
+  /**
    * Constructs a OnlyofficeCallbackController object.
    *
    * @param \Drupal\user\Entity\UserStorageInterface $user_storage
@@ -112,6 +120,8 @@ class OnlyofficeFormCallbackController extends ControllerBase {
    *   The stream wrapper manager.
    * @param \Drupal\Component\Datetime\TimeInterface $time
    *   The time service.
+   * @param \Drupal\Core\TempStore\SharedTempStoreFactory $tempstore_factory
+   *   The tempstore factory.
    */
   public function __construct(
     UserStorageInterface $user_storage,
@@ -119,12 +129,14 @@ class OnlyofficeFormCallbackController extends ControllerBase {
     FileSystemInterface $file_system,
     StreamWrapperManagerInterface $streamWrapperManager,
     TimeInterface $time,
+    SharedTempStoreFactory $tempstore_factory,
   ) {
     $this->userStorage = $user_storage;
     $this->entityRepository = $entity_repository;
     $this->fileSystem = $file_system;
     $this->streamWrapperManager = $streamWrapperManager;
     $this->time = $time;
+    $this->tempstoreFactory = $tempstore_factory;
     $this->account = $this->currentUser();
   }
 
@@ -137,7 +149,8 @@ class OnlyofficeFormCallbackController extends ControllerBase {
           $container->get('entity.repository'),
           $container->get('file_system'),
           $container->get('stream_wrapper_manager'),
-          $container->get('datetime.time')
+          $container->get('datetime.time'),
+          $container->get('tempstore.shared')
       );
   }
 
@@ -323,7 +336,7 @@ class OnlyofficeFormCallbackController extends ControllerBase {
         // For anonymous users, also store the submission in the session.
         if ($this->account->isAnonymous()) {
           // Use Drupal's shared tempstore for cross-session persistence.
-          $tempstore = \Drupal::service('tempstore.shared')->get('onlyoffice_form');
+          $tempstore = $this->tempstoreFactory->get('onlyoffice_form');
 
           // Store with a unique key that includes the media ID.
           $key = 'submission_' . $media->id();

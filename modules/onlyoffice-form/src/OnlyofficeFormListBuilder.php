@@ -9,8 +9,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\onlyoffice\OnlyofficeUrlHelper;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Database\Connection;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Form\FormBuilderInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * Provides a listing of ONLYOFFICE form entities.
@@ -67,6 +70,27 @@ class OnlyofficeFormListBuilder extends ControllerBase {
   protected $userStorage;
 
   /**
+   * The form builder.
+   *
+   * @var \Drupal\Core\Form\FormBuilderInterface
+   */
+  protected $formBuilder;
+
+  /**
+   * The logger.
+   *
+   * @var \Psr\Log\LoggerInterface
+   */
+  protected $logger;
+
+  /**
+   * The database connection.
+   *
+   * @var \Drupal\Core\Database\Connection
+   */
+  protected $database;
+
+  /**
    * Constructs a new OnlyofficeFormListBuilder.
    *
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
@@ -77,17 +101,29 @@ class OnlyofficeFormListBuilder extends ControllerBase {
    *   The current user.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
+   * @param \Drupal\Core\Form\FormBuilderInterface $form_builder
+   *   The form builder.
+   * @param \Psr\Log\LoggerInterface $logger
+   *   The logger.
+   * @param \Drupal\Core\Database\Connection $database
+   *   The database connection.
    */
   public function __construct(
     RequestStack $request_stack,
     ConfigFactoryInterface $config_factory,
     AccountInterface $current_user,
     EntityTypeManagerInterface $entity_type_manager,
+    FormBuilderInterface $form_builder,
+    LoggerInterface $logger,
+    Connection $database,
   ) {
     $this->request = $request_stack->getCurrentRequest();
     $this->configFactory = $config_factory;
     $this->currentUser = $current_user;
     $this->entityTypeManager = $entity_type_manager;
+    $this->formBuilder = $form_builder;
+    $this->logger = $logger;
+    $this->database = $database;
     $this->initialize();
   }
 
@@ -99,7 +135,10 @@ class OnlyofficeFormListBuilder extends ControllerBase {
       $container->get('request_stack'),
       $container->get('config.factory'),
       $container->get('current_user'),
-      $container->get('entity_type.manager')
+      $container->get('entity_type.manager'),
+      $container->get('form_builder'),
+      $container->get('logger.factory')->get('onlyoffice_form'),
+      $container->get('database'),
     );
   }
 
@@ -202,7 +241,7 @@ class OnlyofficeFormListBuilder extends ControllerBase {
 
     // Add bulk operations form.
     if ($this->currentUser->hasPermission('administer onlyoffice forms')) {
-      $build['table'] = \Drupal::formBuilder()->getForm('\Drupal\onlyoffice_form\Form\OnlyofficeFormBulkForm', $build['table']);
+      $build['table'] = $this->formBuilder->getForm('\Drupal\onlyoffice_form\Form\OnlyofficeFormBulkForm', $build['table']);
     }
 
     return $build;
@@ -338,7 +377,7 @@ class OnlyofficeFormListBuilder extends ControllerBase {
       'inactive' => $this->t('Inactive forms'),
     ];
 
-    return \Drupal::formBuilder()->getForm('\Drupal\onlyoffice_form\Form\OnlyofficeFormFilterForm', $this->keys, $this->state, $state_options);
+    return $this->formBuilder->getForm('\Drupal\onlyoffice_form\Form\OnlyofficeFormFilterForm', $this->keys, $this->state, $state_options);
   }
 
   /**
@@ -354,8 +393,7 @@ class OnlyofficeFormListBuilder extends ControllerBase {
       $pdf_form_count = 0;
       try {
         // Use a direct database query as a fallback approach.
-        $database = \Drupal::database();
-        $query = $database->select('media', 'm')
+        $query = $this->database->select('media', 'm')
           ->condition('m.bundle', 'onlyoffice_pdf_form');
         $query->addExpression('COUNT(m.mid)', 'count');
         $result = $query->execute()->fetchField();
@@ -363,7 +401,7 @@ class OnlyofficeFormListBuilder extends ControllerBase {
       }
       catch (\Exception $e) {
         // If there's an error, just use 0 as the count.
-        \Drupal::logger('onlyoffice_form')->error('Error counting PDF forms: @message', ['@message' => $e->getMessage()]);
+        $this->logger->error('Error counting PDF forms: @message', ['@message' => $e->getMessage()]);
       }
 
       return [

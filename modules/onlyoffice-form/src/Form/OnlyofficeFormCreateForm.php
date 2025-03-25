@@ -33,8 +33,10 @@ use Drupal\file\Entity\File;
 use Drupal\media\Entity\Media;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
+use Drupal\file\FileUsage\DatabaseFileUsageBackend;
 use Drupal\onlyoffice\OnlyofficeUrlHelper;
 use Drupal\onlyoffice_form\Ajax\OpenInNewTabCommand;
 use Drupal\onlyoffice_form\OnlyofficeFormDocumentHelper;
@@ -73,6 +75,27 @@ class OnlyofficeFormCreateForm extends FormBase {
   protected $documentHelper;
 
   /**
+   * The file usage service.
+   *
+   * @var \Drupal\file\FileUsage\FileUsageInterface
+   */
+  protected $fileUsage;
+
+  /**
+   * The file system service.
+   *
+   * @var \Drupal\Core\File\FileSystemInterface
+   */
+  protected $fileSystem;
+
+  /**
+   * The extension list module service.
+   *
+   * @var \Drupal\Core\Extension\ModuleExtensionList
+   */
+  protected $extensionListModule;
+
+  /**
    * Constructs a new OnlyofficeFormCreateForm.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -83,17 +106,29 @@ class OnlyofficeFormCreateForm extends FormBase {
    *   The logger factory.
    * @param \Drupal\onlyoffice_form\OnlyofficeFormDocumentHelper $document_helper
    *   The ONLYOFFICE form document helper.
+   * @param \Drupal\file\FileUsage\DatabaseFileUsageBackend $file_usage
+   *   The file usage service.
+   * @param \Drupal\Core\File\FileSystemInterface $file_system
+   *   The file system service.
+   * @param \Drupal\Core\Extension\ModuleExtensionList $extension_list_module
+   *   The extension list module service.
    */
   public function __construct(
     EntityTypeManagerInterface $entity_type_manager,
     AccountProxyInterface $current_user,
     LoggerChannelFactoryInterface $logger_factory,
     OnlyofficeFormDocumentHelper $document_helper,
+    DatabaseFileUsageBackend $file_usage,
+    FileSystemInterface $file_system,
+    ModuleExtensionList $extension_list_module,
   ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->currentUser = $current_user;
     $this->loggerFactory = $logger_factory;
     $this->documentHelper = $document_helper;
+    $this->fileUsage = $file_usage;
+    $this->fileSystem = $file_system;
+    $this->extensionListModule = $extension_list_module;
   }
 
   /**
@@ -104,7 +139,10 @@ class OnlyofficeFormCreateForm extends FormBase {
       $container->get('entity_type.manager'),
       $container->get('current_user'),
       $container->get('logger.factory'),
-      $container->get('onlyoffice_form.document_helper')
+      $container->get('onlyoffice_form.document_helper'),
+      $container->get('file.usage'),
+      $container->get('file_system'),
+      $container->get('extension.list.module')
     );
   }
 
@@ -259,28 +297,28 @@ class OnlyofficeFormCreateForm extends FormBase {
 
       try {
         // Get the module path.
-        $module_path = \Drupal::service('extension.list.module')->getPath('onlyoffice_form');
+        $module_path = $this->extensionListModule->getPath('onlyoffice_form');
         $template_path = $module_path . '/assets/new.pdf';
 
         // Create the destination directory if it doesn't exist.
         $directory = 'public://onlyoffice_forms/';
-        \Drupal::service('file_system')->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY);
+        $this->fileSystem->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY);
 
         // Generate a safe filename.
         $filename = $name;
         if (!str_ends_with(strtolower($filename), '.pdf')) {
           $filename .= '.pdf';
         }
-        $destination = $directory . \Drupal::service('file_system')->basename($filename);
+        $destination = $directory . $this->fileSystem->basename($filename);
 
         // Copy the template file.
-        $uri = \Drupal::service('file_system')->copy($template_path, $destination, FileSystemInterface::EXISTS_RENAME);
+        $uri = $this->fileSystem->copy($template_path, $destination, FileSystemInterface::EXISTS_RENAME);
 
         if ($uri) {
           // Create a file entity.
           $file = File::create([
             'uri' => $uri,
-            'filename' => \Drupal::service('file_system')->basename($uri),
+            'filename' => $this->fileSystem->basename($uri),
             'filemime' => 'application/pdf',
             'status' => File::STATUS_PERMANENT,
             'uid' => $this->currentUser->id(),
@@ -317,7 +355,7 @@ class OnlyofficeFormCreateForm extends FormBase {
           $media->save();
 
           // Set file usage to prevent it from being deleted during cron.
-          \Drupal::service('file.usage')->add($file, 'onlyoffice_form', 'media', $media->id());
+          $this->fileUsage->add($file, 'onlyoffice_form', 'media', $media->id());
 
           // Add a success message.
           $response->addCommand(new MessageCommand($this->t('Blank PDF form has been created successfully.'), NULL, ['type' => 'status']));
@@ -376,7 +414,7 @@ class OnlyofficeFormCreateForm extends FormBase {
 
       try {
         // Load the file entity.
-        $file = File::load($fid);
+        $file = $this->entityTypeManager->getStorage('file')->load($fid);
 
         if ($file) {
           // Check if the file is a valid ONLYOFFICE form.
@@ -425,7 +463,7 @@ class OnlyofficeFormCreateForm extends FormBase {
           $media->save();
 
           // Set file usage to prevent it from being deleted during cron.
-          \Drupal::service('file.usage')->add($file, 'onlyoffice_form', 'media', $media->id());
+          $this->fileUsage->add($file, 'onlyoffice_form', 'media', $media->id());
 
           // Add a success message.
           $response->addCommand(new MessageCommand($this->t('PDF form has been uploaded successfully.'), NULL, ['type' => 'status']));

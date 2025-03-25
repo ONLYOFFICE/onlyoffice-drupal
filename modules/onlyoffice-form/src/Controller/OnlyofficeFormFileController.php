@@ -30,6 +30,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\onlyoffice_form\OnlyofficeFormDocumentHelper;
+use Drupal\file\FileUsage\DatabaseFileUsageBackend;
 
 /**
  * Controller for handling file uploads.
@@ -65,6 +66,13 @@ class OnlyofficeFormFileController extends ControllerBase {
   protected $documentHelper;
 
   /**
+   * The file usage service.
+   *
+   * @var \Drupal\file\FileUsage\DatabaseFileUsageBackend
+   */
+  protected $fileUsage;
+
+  /**
    * Constructs a new OnlyofficeFormFileController.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -75,17 +83,21 @@ class OnlyofficeFormFileController extends ControllerBase {
    *   The file system service.
    * @param \Drupal\onlyoffice_form\OnlyofficeFormDocumentHelper $document_helper
    *   The ONLYOFFICE form document helper.
+   * @param \Drupal\file\FileUsage\DatabaseFileUsageBackend $file_usage
+   *   The file usage service.
    */
   public function __construct(
     EntityTypeManagerInterface $entity_type_manager,
     LoggerChannelFactoryInterface $logger_factory,
     FileSystemInterface $file_system,
     OnlyofficeFormDocumentHelper $document_helper,
+    DatabaseFileUsageBackend $file_usage,
   ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->loggerFactory = $logger_factory;
     $this->fileSystem = $file_system;
     $this->documentHelper = $document_helper;
+    $this->fileUsage = $file_usage;
   }
 
   /**
@@ -96,7 +108,8 @@ class OnlyofficeFormFileController extends ControllerBase {
       $container->get('entity_type.manager'),
       $container->get('logger.factory'),
       $container->get('file_system'),
-      $container->get('onlyoffice_form.document_helper')
+      $container->get('onlyoffice_form.document_helper'),
+      $container->get('file.usage'),
     );
   }
 
@@ -171,7 +184,7 @@ class OnlyofficeFormFileController extends ControllerBase {
       $file->save();
 
       // Set file usage to prevent it from being deleted during cron.
-      \Drupal::service('file.usage')->add($file, 'onlyoffice_form', 'onlyoffice_form_pdf', $file->id());
+      $this->fileUsage->add($file, 'onlyoffice_form', 'onlyoffice_form_pdf', $file->id());
 
       // Return success response with file ID.
       return new JsonResponse([

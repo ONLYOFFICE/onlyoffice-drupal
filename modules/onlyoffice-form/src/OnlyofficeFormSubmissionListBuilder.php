@@ -26,14 +26,14 @@ use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Database\Connection;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\File\FileUrlGeneratorInterface;
-use Drupal\media\Entity\Media;
+use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\media\MediaInterface;
-use Drupal\user\Entity\User;
-use Drupal\file\Entity\File;
+use Psr\Log\LoggerInterface;
 
 /**
  * Provides a listing of ONLYOFFICE form submission entities.
@@ -90,6 +90,27 @@ class OnlyofficeFormSubmissionListBuilder extends ControllerBase {
   protected $fileUrlGenerator;
 
   /**
+   * The database connection.
+   *
+   * @var \Drupal\Core\Database\Connection
+   */
+  protected $database;
+
+  /**
+   * The form builder.
+   *
+   * @var \Drupal\Core\Form\FormBuilderInterface
+   */
+  protected $formBuilder;
+
+  /**
+   * The logger.
+   *
+   * @var \Psr\Log\LoggerInterface
+   */
+  protected $logger;
+
+  /**
    * Constructs a new OnlyofficeFormSubmissionListBuilder.
    *
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
@@ -104,6 +125,12 @@ class OnlyofficeFormSubmissionListBuilder extends ControllerBase {
    *   The date formatter service.
    * @param \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator
    *   The file URL generator.
+   * @param \Drupal\Core\Database\Connection $database
+   *   The database connection.
+   * @param \Drupal\Core\Form\FormBuilderInterface $form_builder
+   *   The form builder.
+   * @param \Psr\Log\LoggerInterface $logger
+   *   The logger.
    */
   public function __construct(
     RequestStack $request_stack,
@@ -112,6 +139,9 @@ class OnlyofficeFormSubmissionListBuilder extends ControllerBase {
     EntityTypeManagerInterface $entity_type_manager,
     DateFormatterInterface $date_formatter,
     FileUrlGeneratorInterface $file_url_generator,
+    Connection $database,
+    FormBuilderInterface $form_builder,
+    LoggerInterface $logger,
   ) {
     $this->request = $request_stack->getCurrentRequest();
     $this->configFactory = $config_factory;
@@ -119,6 +149,9 @@ class OnlyofficeFormSubmissionListBuilder extends ControllerBase {
     $this->entityTypeManager = $entity_type_manager;
     $this->dateFormatter = $date_formatter;
     $this->fileUrlGenerator = $file_url_generator;
+    $this->database = $database;
+    $this->formBuilder = $form_builder;
+    $this->logger = $logger;
     $this->initialize();
   }
 
@@ -132,7 +165,10 @@ class OnlyofficeFormSubmissionListBuilder extends ControllerBase {
       $container->get('current_user'),
       $container->get('entity_type.manager'),
       $container->get('date.formatter'),
-      $container->get('file_url_generator')
+      $container->get('file_url_generator'),
+      $container->get('database'),
+      $container->get('form_builder'),
+      $container->get('logger.factory')->get('onlyoffice_form')
     );
   }
 
@@ -329,7 +365,7 @@ class OnlyofficeFormSubmissionListBuilder extends ControllerBase {
         // Only show forms that have submissions.
         if (!empty($grouped_submissions)) {
           foreach ($grouped_submissions as $media_id => $form_submissions) {
-            $media = Media::load($media_id);
+            $media = $this->entityTypeManager->getStorage('media')->load($media_id);
             if (!$media) {
               continue;
             }
@@ -419,7 +455,7 @@ class OnlyofficeFormSubmissionListBuilder extends ControllerBase {
           $file_size = 0;
 
           if ($file_id) {
-            $file = File::load($file_id);
+            $file = $this->entityTypeManager->getStorage('file')->load($file_id);
             if ($file) {
               // Get the filename of the file for title.
               $file_uri = $file->getFileUri();
@@ -436,7 +472,7 @@ class OnlyofficeFormSubmissionListBuilder extends ControllerBase {
             $uid = $submission->uid->target_id ?? NULL;
             $user = NULL;
             if ($uid) {
-              $user = User::load($uid);
+              $user = $this->entityTypeManager->getStorage('user')->load($uid);
             }
             $submitter = $user ? $user->getAccountName() : $this->t('Anonymous');
 
@@ -474,7 +510,7 @@ class OnlyofficeFormSubmissionListBuilder extends ControllerBase {
           $uid = $submission->uid->target_id ?? NULL;
           $user = NULL;
           if ($uid) {
-            $user = User::load($uid);
+            $user = $this->entityTypeManager->getStorage('user')->load($uid);
           }
           $submitter = $user ? $user->getAccountName() : $this->t('Anonymous');
           $row['submitter'] = $submitter;
@@ -534,7 +570,7 @@ class OnlyofficeFormSubmissionListBuilder extends ControllerBase {
    *   A render array representing the filter form.
    */
   protected function buildFilterForm() {
-    return \Drupal::formBuilder()->getForm('\Drupal\onlyoffice_form\Form\OnlyofficeFormSubmissionFilterForm', $this->keys);
+    return $this->formBuilder->getForm('\Drupal\onlyoffice_form\Form\OnlyofficeFormSubmissionFilterForm', $this->keys);
   }
 
   /**
@@ -549,15 +585,14 @@ class OnlyofficeFormSubmissionListBuilder extends ControllerBase {
       // Count form submissions.
       $submission_count = 0;
       try {
-        $database = \Drupal::database();
-        $query = $database->select('onlyoffice_form_submission', 's');
+        $query = $this->database->select('onlyoffice_form_submission', 's');
         $query->addExpression('COUNT(s.id)', 'count');
         $result = $query->execute()->fetchField();
         $submission_count = (int) $result;
       }
       catch (\Exception $e) {
         // If there's an error, just use 0 as the count.
-        \Drupal::logger('onlyoffice_form')->error('Error counting submissions: @message', ['@message' => $e->getMessage()]);
+        $this->logger->error('Error counting submissions: @message', ['@message' => $e->getMessage()]);
       }
 
       return [
@@ -586,8 +621,7 @@ class OnlyofficeFormSubmissionListBuilder extends ControllerBase {
       // Count form submissions for this specific form.
       $submission_count = 0;
       try {
-        $database = \Drupal::database();
-        $query = $database->select('onlyoffice_form_submission', 's');
+        $query = $this->database->select('onlyoffice_form_submission', 's');
         $query->condition('s.media_id', $media->id());
         $query->addExpression('COUNT(s.id)', 'count');
         $result = $query->execute()->fetchField();
@@ -610,7 +644,7 @@ class OnlyofficeFormSubmissionListBuilder extends ControllerBase {
       }
       catch (\Exception $e) {
         // If there's an error, just use 0 as the count.
-        \Drupal::logger('onlyoffice_form')->error('Error counting submissions for form: @message', ['@message' => $e->getMessage()]);
+        $this->logger->error('Error counting submissions for form: @message', ['@message' => $e->getMessage()]);
       }
 
       return [

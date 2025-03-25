@@ -36,6 +36,10 @@ use Drupal\onlyoffice\OnlyofficeDocumentHelper;
 use Drupal\onlyoffice\OnlyofficeUrlHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Component\Uuid\Php as UuidGenerator;
+use Drupal\Core\TempStore\SharedTempStoreFactory;
+use Psr\Log\LoggerInterface;
+use Drupal\Core\Session\AccountProxyInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Plugin implementation of the 'onlyoffice_form_formatter' formatter.
@@ -79,6 +83,34 @@ class OnlyofficeFormFormatter extends FormatterBase {
   protected $entityTypeManager;
 
   /**
+   * The logger.
+   *
+   * @var \Psr\Log\LoggerInterface
+   */
+  protected $logger;
+
+  /**
+   * The tempstore factory.
+   *
+   * @var \Drupal\Core\TempStore\SharedTempStoreFactory
+   */
+  protected $tempstoreFactory;
+
+  /**
+   * The current user.
+   *
+   * @var \Drupal\Core\Session\AccountProxyInterface
+   */
+  protected $currentUser;
+
+  /**
+   * The request stack.
+   *
+   * @var \Symfony\Component\HttpFoundation\RequestStack
+   */
+  protected $requestStack;
+
+  /**
    * Construct the OnlyofficeFormFormatter.
    *
    * @param string $plugin_id
@@ -103,6 +135,14 @@ class OnlyofficeFormFormatter extends FormatterBase {
    *   The page cache disabling policy.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
+   * @param \Psr\Log\LoggerInterface $logger
+   *   The logger.
+   * @param \Drupal\Core\TempStore\SharedTempStoreFactory $tempstore_factory
+   *   The tempstore factory.
+   * @param \Drupal\Core\Session\AccountProxyInterface $current_user
+   *   The current user.
+   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   *   The request stack.
    */
   public function __construct(
     $plugin_id,
@@ -116,6 +156,10 @@ class OnlyofficeFormFormatter extends FormatterBase {
     LanguageManagerInterface $language_manager,
     KillSwitch $page_cache_kill_switch,
     EntityTypeManagerInterface $entity_type_manager,
+    LoggerInterface $logger,
+    SharedTempStoreFactory $tempstore_factory,
+    AccountProxyInterface $current_user,
+    RequestStack $request_stack,
   ) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings);
 
@@ -123,6 +167,10 @@ class OnlyofficeFormFormatter extends FormatterBase {
     $this->languageManager = $language_manager;
     $this->pageCacheKillSwitch = $page_cache_kill_switch;
     $this->entityTypeManager = $entity_type_manager;
+    $this->logger = $logger;
+    $this->currentUser = $current_user;
+    $this->tempstoreFactory = $tempstore_factory;
+    $this->requestStack = $request_stack;
   }
 
   /**
@@ -140,7 +188,11 @@ class OnlyofficeFormFormatter extends FormatterBase {
       $container->get('date.formatter'),
       $container->get('language_manager'),
       $container->get('page_cache_kill_switch'),
-      $container->get('entity_type.manager')
+      $container->get('entity_type.manager'),
+      $container->get('logger.factory')->get('onlyoffice_form'),
+      $container->get('tempstore.shared'),
+      $container->get('current_user'),
+      $container->get('request_stack')
     );
   }
 
@@ -281,14 +333,13 @@ class OnlyofficeFormFormatter extends FormatterBase {
         // Check if we should hide this form after submission.
         if ($this->getSetting('hide_after_submission')) {
           // Check if the current user has already submitted this form.
-          $current_user = \Drupal::currentUser();
           $query = $this->entityTypeManager->getStorage('onlyoffice_form_submission')->getQuery()
             ->condition('media_id', $media->id())
             ->accessCheck(TRUE);
 
           // For authenticated users, check by user ID.
-          if ($current_user->id()) {
-            $query->condition('uid', $current_user->id());
+          if ($this->currentUser->id()) {
+            $query->condition('uid', $this->currentUser->id());
             $submission_ids = $query->execute();
 
             // If there are submissions by this user, don't show the form.
@@ -305,7 +356,7 @@ class OnlyofficeFormFormatter extends FormatterBase {
           // For anonymous users, we need to use session-based tracking.
           else {
             // Use Drupal's shared tempstore for cross-session persistence.
-            $tempstore = \Drupal::service('tempstore.shared')->get('onlyoffice_form');
+            $tempstore = $this->tempstoreFactory->get('onlyoffice_form');
 
             // Use the same key format as in the controller.
             $key = 'submission_' . $media->id();
@@ -355,7 +406,7 @@ class OnlyofficeFormFormatter extends FormatterBase {
             ];
           }
           catch (\Exception $e) {
-            \Drupal::logger('onlyoffice_form')->error('Error generating editor config: @message', ['@message' => $e->getMessage()]);
+            $this->logger->error('Error generating editor config: @message', ['@message' => $e->getMessage()]);
             // Provide a fallback display.
             $element[$delta] = [
               '#markup' => $this->t('ONLYOFFICE Form preview unavailable'),
@@ -368,7 +419,7 @@ class OnlyofficeFormFormatter extends FormatterBase {
       }
     }
     catch (\Exception $e) {
-      \Drupal::logger('onlyoffice_form')->error('Error rendering ONLYOFFICE Form: @message', ['@message' => $e->getMessage()]);
+      $this->logger->error('Error rendering ONLYOFFICE Form: @message', ['@message' => $e->getMessage()]);
       // Provide a fallback display.
       $element[0] = [
         '#markup' => $this->t('ONLYOFFICE Form preview unavailable'),
@@ -392,7 +443,7 @@ class OnlyofficeFormFormatter extends FormatterBase {
     $mode = "fillForms";
 
     // Check if the current user has permission to edit forms.
-    if (\Drupal::currentUser()->hasPermission('edit onlyoffice forms')) {
+    if ($this->currentUser->hasPermission('edit onlyoffice forms')) {
       $mode = "edit";
     }
 
@@ -408,10 +459,10 @@ class OnlyofficeFormFormatter extends FormatterBase {
     }
 
     // Try to get current user's name.
-    $current_user = \Drupal::currentUser();
+    $current_user = $this->currentUser;
     if ($current_user->id()) {
       $user_id = $current_user->id();
-      $user_entity = \Drupal::entityTypeManager()->getStorage('user')->load($current_user->id());
+      $user_entity = $this->entityTypeManager->getStorage('user')->load($current_user->id());
       $documentKey .= "_" . $user_id;
       if ($user_entity) {
         $owner_name = $user_name = $user_entity->getDisplayName();
@@ -419,7 +470,7 @@ class OnlyofficeFormFormatter extends FormatterBase {
     }
     else {
       // For anonymous users, use a unique identifier stored in the session.
-      $session = \Drupal::request()->getSession();
+      $session = $this->requestStack->getCurrentRequest()->getSession();
       if (!$session->has('onlyoffice.guest.id')) {
         $uuid_generator = new UuidGenerator();
         $session->set('onlyoffice.guest.id', $uuid_generator->generate());
@@ -503,7 +554,7 @@ class OnlyofficeFormFormatter extends FormatterBase {
         }
         catch (\Exception $e) {
           // Log the error but continue processing other items.
-          \Drupal::logger('onlyoffice_form')->error('Error loading file for ONLYOFFICE Form: @message', ['@message' => $e->getMessage()]);
+          $this->logger->error('Error loading file for ONLYOFFICE Form: @message', ['@message' => $e->getMessage()]);
         }
       }
     }
