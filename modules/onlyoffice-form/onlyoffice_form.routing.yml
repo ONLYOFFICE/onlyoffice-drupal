@@ -93,7 +93,7 @@ entity.onlyoffice_form.create_form:
   path: '/admin/structure/onlyoffice-form/create'
   defaults:
     _form: '\Drupal\onlyoffice_form\Form\OnlyofficeFormCreateForm'
-    _title: 'Create ONLYOFFICE form'
+    _title: 'ONLYOFFICE form'
   requirements:
     _permission: 'administer onlyoffice forms'
   options:
