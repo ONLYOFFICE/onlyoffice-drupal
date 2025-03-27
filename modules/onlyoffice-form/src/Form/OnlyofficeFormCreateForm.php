@@ -235,6 +235,9 @@ class OnlyofficeFormCreateForm extends FormBase {
       ],
     ];
 
+    // Add a validation handler.
+    $form['#validate'][] = '::validateForm';
+
     return $form;
   }
 
@@ -243,6 +246,65 @@ class OnlyofficeFormCreateForm extends FormBase {
    */
   public function updateFormElements(array &$form, FormStateInterface $form_state) {
     return $form;
+  }
+
+  /**
+   * Validates the form.
+   */
+  public function validateForm(array &$form, FormStateInterface $form_state) {
+    $source = $form_state->getValue('source');
+
+    // Only validate PDF files when source is 'upload'.
+    if ($source === 'upload') {
+      // Get the file ID from the form state.
+      $fid = $form_state->getValue('upload_file');
+
+      // Handle array values (which happens with managed_file elements).
+      if (is_array($fid)) {
+        if (isset($fid['fids']) && is_array($fid['fids']) && !empty($fid['fids'])) {
+          $fid = reset($fid['fids']);
+        }
+        elseif (!empty($fid)) {
+          $fid = reset($fid);
+        }
+        else {
+          $fid = NULL;
+        }
+      }
+
+      if (!empty($fid)) {
+        try {
+          // Load the file entity.
+          $file = $this->entityTypeManager->getStorage('file')->load($fid);
+
+          if ($file) {
+            // Check if the file is a PDF.
+            $mime_type = $file->filemime->value;
+            $filename = $file->filename->value;
+            $extension = pathinfo($filename, PATHINFO_EXTENSION);
+
+            if ($mime_type !== 'application/pdf' && strtolower($extension) !== 'pdf') {
+              $this->loggerFactory->get('onlyoffice_form')->notice('Uploaded file is not a PDF: @mime', ['@mime' => $mime_type]);
+              $form_state->setErrorByName('upload_file', $this->t('The uploaded file must be a PDF.'));
+              return;
+            }
+
+            // Check if the file is a valid ONLYOFFICE form.
+            $file_uri = $file->uri->value;
+            $file_content = file_get_contents($file_uri);
+
+            if (!$this->documentHelper->isOnlyofficeForm($file_content)) {
+              $this->loggerFactory->get('onlyoffice_form')->notice('Uploaded file is not a valid ONLYOFFICE form');
+              $form_state->setErrorByName('upload_file', $this->t('The uploaded file is not a valid ONLYOFFICE form.'));
+            }
+          }
+        }
+        catch (\Exception $e) {
+          $this->loggerFactory->get('onlyoffice_form')->error('Error validating PDF form: @error', ['@error' => $e->getMessage()]);
+          $form_state->setErrorByName('upload_file', $this->t('Error validating PDF form: @error', ['@error' => $e->getMessage()]));
+        }
+      }
+    }
   }
 
   /**
@@ -380,17 +442,6 @@ class OnlyofficeFormCreateForm extends FormBase {
         $file = $this->entityTypeManager->getStorage('file')->load($fid);
 
         if ($file) {
-          // Check if the file is a valid ONLYOFFICE form.
-          $file_uri = $file->getFileUri();
-          $file_content = file_get_contents($file_uri);
-
-          if (!$this->documentHelper->isOnlyofficeForm($file_content)) {
-            $this->loggerFactory->get('onlyoffice_form')->notice('Uploaded file is not a valid ONLYOFFICE form');
-            // Set form error instead of using MessageCommand.
-            $form_state->setErrorByName('upload_file', $this->t('The uploaded file is not a valid ONLYOFFICE form.'));
-            return $this->replaceFormInModal($form, $form_state);
-          }
-
           // Make the file permanent.
           $file->setPermanent();
           $file->save();
