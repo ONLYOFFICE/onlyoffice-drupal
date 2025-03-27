@@ -170,6 +170,8 @@ class OnlyofficeFormListBuilder extends ControllerBase {
     $header['author'] = [
       'data' => $this->t('Author'),
       'class' => ['priority-low'],
+      'specifier' => 'uid',
+      'field' => 'uid',
     ];
     $header['type'] = [
       'data' => $this->t('Type'),
@@ -178,6 +180,8 @@ class OnlyofficeFormListBuilder extends ControllerBase {
     $header['size'] = [
       'data' => $this->t('Size'),
       'class' => ['priority-low'],
+      'specifier' => 'filesize',
+      'field' => 'filesize',
     ];
     $header['results'] = [
       'data' => $this->t('Results'),
@@ -268,13 +272,38 @@ class OnlyofficeFormListBuilder extends ControllerBase {
         $query->condition($group);
       }
 
+      // Get the sort key and direction from the request.
+      $sort = $this->request->query->get('sort') ?: 'title';
+      $direction = $this->request->query->get('direction') ?: 'asc';
+
+      // Apply sorting based on the requested field.
+      switch ($sort) {
+        case 'uid':
+          // Sort by owner ID.
+          $query->sort('uid', $direction);
+          break;
+
+        case 'filesize':
+          // For file size sorting, we'll need to handle this after loading the entities
+          // since it requires joining with the file table.
+          break;
+
+        case 'title':
+        default:
+          // Default sort by title.
+          $query->sort('name', $direction);
+          break;
+      }
+
       $media_ids = $query->execute();
 
       if (!empty($media_ids)) {
         $media_entities = $media_storage->loadMultiple($media_ids);
+        $rows = [];
 
         foreach ($media_entities as $media_id => $media) {
           $row = [];
+          $file_size = 0;
 
           // Title.
           $row['title']['data']['title'] = [
@@ -315,7 +344,7 @@ class OnlyofficeFormListBuilder extends ControllerBase {
           }
 
           // Format file size manually.
-          if (isset($file_size)) {
+          if ($file_size) {
             if ($file_size < 1024) {
               $row['size'] = $file_size . ' B';
             }
@@ -325,9 +354,12 @@ class OnlyofficeFormListBuilder extends ControllerBase {
             else {
               $row['size'] = number_format($file_size / 1048576, 2) . ' MB';
             }
+            // Store the raw file size for sorting.
+            $row['#file_size'] = $file_size;
           }
           else {
             $row['size'] = '';
+            $row['#file_size'] = 0;
           }
 
           // Results (placeholder for now)
@@ -355,12 +387,28 @@ class OnlyofficeFormListBuilder extends ControllerBase {
             '#suffix' => '</div>',
           ];
 
-          $build['table']['#rows'][$media_id] = $row;
+          $rows[$media_id] = $row;
         }
+
+        // Handle file size sorting if needed.
+        if ($sort === 'filesize') {
+          // Sort by file size.
+          uasort($rows, function ($a, $b) use ($direction) {
+            if ($direction === 'asc') {
+              return $a['#file_size'] <=> $b['#file_size'];
+            }
+            else {
+              return $b['#file_size'] <=> $a['#file_size'];
+            }
+          });
+        }
+
+        $build['table']['#rows'] = $rows;
       }
     }
     catch (\Exception $e) {
       // If there's an error loading the media entities, just continue without them.
+      $this->logger->error('Error loading media entities: @message', ['@message' => $e->getMessage()]);
     }
   }
 
