@@ -1,4 +1,9 @@
 # Change Log
+- new ONLYOFFICE Form submodule
+- new ONLYOFFICE Form media type
+- new ONLYOFFICE Form field type, widget and formatter
+- creating and managing ONLYOFFICE forms and submissions
+- editing pdf forms
 
 ## 
 ## Added
