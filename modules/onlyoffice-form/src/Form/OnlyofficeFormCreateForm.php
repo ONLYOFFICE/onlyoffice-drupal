@@ -200,7 +200,7 @@ class OnlyofficeFormCreateForm extends FormBase {
       '#upload_validators' => [
         'file_validate_extensions' => ['pdf'],
       ],
-      '#required' => FALSE,
+      '#required' => $source == 'upload',
       '#access' => $source == 'upload',
       '#attributes' => [
         'class' => ['onlyoffice-form-file-upload'],
@@ -262,12 +262,6 @@ class OnlyofficeFormCreateForm extends FormBase {
     // Handle the blank option.
     if ($source === 'blank') {
       $name = $form_state->getValue('name');
-
-      if (empty($name)) {
-        // Instead of adding a message command, set a form error and rebuild the form.
-        $form_state->setErrorByName('name', $this->t('Please provide a name for the form.'));
-        return $this->replaceFormInModal($form, $form_state);
-      }
 
       try {
         // Get the module path.
@@ -363,12 +357,10 @@ class OnlyofficeFormCreateForm extends FormBase {
     }
     // Handle the upload scenario.
     elseif ($source === 'upload') {
-      // Check if a file has been uploaded.
+      // Get the file ID from the form state.
       $fid = $form_state->getValue('upload_file');
 
-      $this->loggerFactory->get('onlyoffice_form')->notice('File upload submission with fid: @fid', ['@fid' => print_r($fid, TRUE)]);
-
-      // Extract the file ID from the array if needed.
+      // Handle array values (which happens with managed_file elements).
       if (is_array($fid)) {
         if (isset($fid['fids']) && is_array($fid['fids']) && !empty($fid['fids'])) {
           $fid = reset($fid['fids']);
@@ -379,13 +371,6 @@ class OnlyofficeFormCreateForm extends FormBase {
         else {
           $fid = NULL;
         }
-      }
-
-      // If no file has been uploaded yet, just return the form without an error message
-      // This allows the user to select a file using our custom file input.
-      if (empty($fid)) {
-        $response->addCommand(new MessageCommand($this->t('Please upload a PDF file.'), NULL, ['type' => 'error']));
-        return $response;
       }
 
       $this->loggerFactory->get('onlyoffice_form')->notice('Extracted file ID: @fid', ['@fid' => $fid]);
