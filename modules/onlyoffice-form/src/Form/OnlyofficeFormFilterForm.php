@@ -56,7 +56,7 @@ class OnlyofficeFormFilterForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, $search = NULL, $state = NULL, array $state_options = []) {
+  public function buildForm(array $form, FormStateInterface $form_state, $search = NULL) {
     $form['#attributes'] = ['class' => ['onlyoffice-form-filter-form']];
     $form['filter'] = [
       '#type' => 'details',
@@ -72,19 +72,12 @@ class OnlyofficeFormFilterForm extends FormBase {
       '#size' => 45,
       '#default_value' => $search,
     ];
-    $form['filter']['state'] = [
-      '#type' => 'select',
-      '#title' => $this->t('State'),
-      '#title_display' => 'invisible',
-      '#options' => $state_options,
-      '#default_value' => $state,
-    ];
     $form['filter']['submit'] = [
       '#type' => 'submit',
       '#button_type' => 'primary',
       '#value' => $this->t('Filter'),
     ];
-    if (!empty($search) || !empty($state)) {
+    if (!empty($search)) {
       $form['filter']['reset'] = [
         '#type' => 'submit',
         '#submit' => ['::resetForm'],
@@ -99,10 +92,8 @@ class OnlyofficeFormFilterForm extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $search = $form_state->getValue('search') ?? '';
-    $state = $form_state->getValue('state') ?? '';
     $query = [
       'search' => trim($search),
-      'state' => trim($state),
     ];
     $form_state->setRedirect($this->getRouteMatch()->getRouteName(), $this->getRouteMatch()->getRawParameters()->all(), [
       'query' => $query,

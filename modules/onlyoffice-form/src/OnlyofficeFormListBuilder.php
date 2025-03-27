@@ -49,25 +49,11 @@ class OnlyofficeFormListBuilder extends ControllerBase {
   protected $keys;
 
   /**
-   * Search state.
-   *
-   * @var string
-   */
-  protected $state;
-
-  /**
    * The entity type manager.
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
   protected $entityTypeManager;
-
-  /**
-   * The user storage object.
-   *
-   * @var \Drupal\user\UserStorageInterface
-   */
-  protected $userStorage;
 
   /**
    * The form builder.
@@ -124,7 +110,7 @@ class OnlyofficeFormListBuilder extends ControllerBase {
     $this->formBuilder = $form_builder;
     $this->logger = $logger;
     $this->database = $database;
-    $this->initialize();
+    $this->keys = $this->request->query->get('search') ?? '';
   }
 
   /**
@@ -140,18 +126,6 @@ class OnlyofficeFormListBuilder extends ControllerBase {
       $container->get('logger.factory')->get('onlyoffice_form'),
       $container->get('database'),
     );
-  }
-
-  /**
-   * Initialize OnlyofficeFormListBuilder object.
-   */
-  protected function initialize() {
-    $query = $this->request->query;
-
-    $this->keys = ($query->has('search')) ? $query->get('search') : '';
-    $this->state = ($query->has('state')) ? $query->get('state') : '';
-
-    $this->userStorage = $this->entityTypeManager->getStorage('user');
   }
 
   /**
@@ -412,13 +386,7 @@ class OnlyofficeFormListBuilder extends ControllerBase {
    *   A render array representing the filter form.
    */
   protected function buildFilterForm() {
-    $state_options = [
-      '' => $this->t('All forms'),
-      'active' => $this->t('Active forms'),
-      'inactive' => $this->t('Inactive forms'),
-    ];
-
-    return $this->formBuilder->getForm('\Drupal\onlyoffice_form\Form\OnlyofficeFormFilterForm', $this->keys, $this->state, $state_options);
+    return $this->formBuilder->getForm('\Drupal\onlyoffice_form\Form\OnlyofficeFormFilterForm', $this->keys);
   }
 
   /**
