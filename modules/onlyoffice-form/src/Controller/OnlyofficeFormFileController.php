@@ -143,15 +143,6 @@ class OnlyofficeFormFileController extends ControllerBase {
       ], 400);
     }
 
-    // Check file extension.
-    $extension = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_EXTENSION);
-    if (strtolower($extension) !== 'pdf') {
-      return new JsonResponse([
-        'status' => 'error',
-        'message' => $this->t('Only PDF files are allowed.'),
-      ], 400);
-    }
-
     // Prepare the destination directory.
     $directory = 'public://onlyoffice_forms/';
     $this->fileSystem->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY);
@@ -169,16 +160,6 @@ class OnlyofficeFormFileController extends ControllerBase {
       $destination = $directory . $uploadedFile->getClientOriginalName();
       $this->fileSystem->move($uploadedFile->getRealPath(), $destination);
       $file->setFileUri($destination);
-
-      // Check if the file is a valid ONLYOFFICE form.
-      $file_content = file_get_contents($destination);
-      if (!$this->documentHelper->isOnlyofficeForm($file_content)) {
-        $this->loggerFactory->get('onlyoffice_form')->notice('Uploaded file is not a valid ONLYOFFICE form');
-        return new JsonResponse([
-          'status' => 'error',
-          'message' => $this->t('The uploaded file is not a valid ONLYOFFICE form.'),
-        ], 400);
-      }
 
       // Save the file entity.
       $file->save();
