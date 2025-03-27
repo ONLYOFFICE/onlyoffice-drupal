@@ -117,7 +117,7 @@ onlyoffice_form.create_form:
     _controller: '\Drupal\onlyoffice_form\Controller\OnlyofficeFormController::createForm'
     _title: 'Create new ONLYOFFICE form'
   requirements:
-    _permission: 'create onlyoffice forms'
+    _permission: 'administer onlyoffice forms'
   options:
     _admin_route: TRUE
 
