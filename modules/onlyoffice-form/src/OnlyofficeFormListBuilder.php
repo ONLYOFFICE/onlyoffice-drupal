@@ -203,6 +203,8 @@ class OnlyofficeFormListBuilder extends ControllerBase {
       '#attributes' => [
         'class' => ['onlyoffice-forms'],
       ],
+      '#tableselect' => FALSE,
+      '#tabledrag' => FALSE,
     ];
 
     // Add PDF forms from the database.
@@ -242,27 +244,51 @@ class OnlyofficeFormListBuilder extends ControllerBase {
         $query->condition($group);
       }
 
-      // Get the sort key and direction from the request.
-      $sort = $this->request->query->get('sort') ?: 'title';
-      $direction = $this->request->query->get('direction') ?: 'asc';
+      // Get the sort field and direction from the table header.
+      $header = $this->buildHeader();
+      $order = $this->request->query->get('order', '');
+      $sort = $this->request->query->get('sort', 'asc');
 
-      // Apply sorting based on the requested field.
-      switch ($sort) {
-        case 'uid':
-          // Sort by owner ID.
-          $query->sort('uid', $direction);
-          break;
+      // Default sort is by title ascending.
+      $field = 'name';
+      $direction = 'ASC';
 
-        case 'filesize':
-          // For file size sorting, we'll need to handle this after loading the entities
-          // since it requires joining with the file table.
-          break;
+      // Map the requested sort field to the actual database field.
+      if (!empty($order)) {
+        // Find which field was selected for sorting.
+        foreach ($header as $info) {
+          if (is_array($info) && isset($info['data']) && $order === (string) $info['data']) {
+            // If this field has a 'specifier', use that for sorting.
+            if (isset($info['specifier'])) {
+              switch ($info['specifier']) {
+                case 'title':
+                  $field = 'name';
+                  break;
 
-        case 'title':
-        default:
-          // Default sort by title.
-          $query->sort('name', $direction);
-          break;
+                case 'uid':
+                  $field = 'uid';
+                  break;
+
+                case 'filesize':
+                  // Special case - we'll sort this after loading the entities.
+                  $field = 'filesize';
+                  break;
+
+                default:
+                  $field = $info['specifier'];
+                  break;
+              }
+            }
+            break;
+          }
+        }
+
+        $direction = ($sort === 'desc') ? 'DESC' : 'ASC';
+      }
+
+      // Apply sorting in the query if it's not a special case like filesize.
+      if ($field !== 'filesize') {
+        $query->sort($field, $direction);
       }
 
       $media_ids = $query->execute();
@@ -358,10 +384,10 @@ class OnlyofficeFormListBuilder extends ControllerBase {
         }
 
         // Handle file size sorting if needed.
-        if ($sort === 'filesize') {
+        if ($field === 'filesize') {
           // Sort by file size.
           uasort($rows, function ($a, $b) use ($direction) {
-            if ($direction === 'asc') {
+            if ($direction === 'ASC') {
               return $a['#file_size'] <=> $b['#file_size'];
             }
             else {
