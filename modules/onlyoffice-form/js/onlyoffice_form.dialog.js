@@ -58,6 +58,9 @@
         
         // Update submit button text
         updateSubmitButtonText($dialog, source);
+        
+        // Clear any error messages when changing source
+        clearErrorMessages($dialog);
       });
       
       // Custom file upload handling
@@ -82,7 +85,8 @@
             
             // Validate file type (PDF only)
             if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
-              alert(Drupal.t('Only PDF files are allowed.'));
+              // Replace alert with Drupal message
+              showErrorMessage($wrapper, Drupal.t('Only PDF files are allowed.'));
               // Reset the file input
               $(this).val('');
               return;
@@ -139,9 +143,9 @@
                   
                   // Display the specific error message if provided by the server
                   if (response && response.message) {
-                    alert(response.message);
+                    showErrorMessage($wrapper, response.message);
                   } else {
-                    alert(Drupal.t('Failed to upload the file. Please try again.'));
+                    showErrorMessage($wrapper, Drupal.t('Failed to upload the file. Please try again.'));
                   }
                   
                   removeSelectedFile($wrapper);
@@ -154,12 +158,12 @@
                 try {
                   var errorResponse = JSON.parse(xhr.responseText);
                   if (errorResponse && errorResponse.message) {
-                    alert(errorResponse.message);
+                    showErrorMessage($wrapper, errorResponse.message);
                   } else {
-                    alert(Drupal.t('Failed to upload the file. Please try again.'));
+                    showErrorMessage($wrapper, Drupal.t('Failed to upload the file. Please try again.'));
                   }
                 } catch (e) {
-                  alert(Drupal.t('Failed to upload the file. Please try again.'));
+                  showErrorMessage($wrapper, Drupal.t('Failed to upload the file. Please try again.'));
                 }
                 
                 removeSelectedFile($wrapper);
@@ -197,6 +201,63 @@
         
         // Replace the upload container with the loading indicator
         $wrapper.find('.onlyoffice-form-upload-container').replaceWith(loadingHtml);
+      }
+      
+      /**
+       * Shows an error message in the form.
+       *
+       * @param {jQuery} $wrapper
+       *   The file upload wrapper jQuery object.
+       * @param {string} message
+       *   The error message to display.
+       */
+      function showErrorMessage($wrapper, message) {
+        // Find the dialog containing this form
+        var $dialog = $wrapper.closest('.ui-dialog-content');
+        
+        if (!$dialog.length) {
+          // Fallback if we can't find the dialog
+          console.error('Could not find dialog container');
+          return;
+        }
+        
+        // Clear any existing messages
+        clearErrorMessages($dialog);
+        
+        // Create a messages container if it doesn't exist
+        if ($dialog.find('.onlyoffice-form-messages').length === 0) {
+          $dialog.prepend('<div class="onlyoffice-form-messages" data-drupal-messages></div>');
+        }
+        
+        // Use Drupal's Message API to add the error message
+        var messageWrapper = $dialog.find('.onlyoffice-form-messages')[0];
+        var messageInstance = new Drupal.Message(messageWrapper);
+        
+        // Add the error message
+        messageInstance.add(message, {
+          type: 'error',
+          id: 'onlyoffice-form-error'
+        });
+        
+        // Scroll to the top of the dialog
+        $dialog.scrollTop(0);
+      }
+      
+      /**
+       * Clears any error messages in the dialog.
+       *
+       * @param {jQuery} $dialog
+       *   The dialog jQuery object.
+       */
+      function clearErrorMessages($dialog) {
+        // Find the messages container
+        var messageWrapper = $dialog.find('.onlyoffice-form-messages')[0];
+        
+        // If the messages container exists, clear all messages
+        if (messageWrapper) {
+          var messageInstance = new Drupal.Message(messageWrapper);
+          messageInstance.clear();
+        }
       }
       
       /**
@@ -250,6 +311,9 @@
        *   The selected file object.
        */
       function showSelectedFile($wrapper, file) {
+        // Remove any existing error messages when successfully showing a file
+        $wrapper.find('.onlyoffice-form-messages').remove();
+        
         // Create the file preview HTML
         var filePreviewHtml = 
           `<div class="onlyoffice-form-uploaded-file">

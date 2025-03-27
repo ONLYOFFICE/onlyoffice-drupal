@@ -21,6 +21,7 @@ namespace Drupal\onlyoffice_form\Form;
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+use Drupal\Core\Ajax\HtmlCommand;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -253,13 +254,19 @@ class OnlyofficeFormCreateForm extends FormBase {
     // Get the source value.
     $source = $form_state->getValue('source');
 
+    // Check for validation errors and display them in the modal.
+    if ($form_state->hasAnyErrors()) {
+      return $this->replaceFormInModal($form, $form_state);
+    }
+
     // Handle the blank option.
     if ($source === 'blank') {
       $name = $form_state->getValue('name');
 
       if (empty($name)) {
-        $response->addCommand(new MessageCommand($this->t('Please provide a name for the form.'), NULL, ['type' => 'error']));
-        return $response;
+        // Instead of adding a message command, set a form error and rebuild the form.
+        $form_state->setErrorByName('name', $this->t('Please provide a name for the form.'));
+        return $this->replaceFormInModal($form, $form_state);
       }
 
       try {
@@ -342,12 +349,16 @@ class OnlyofficeFormCreateForm extends FormBase {
         }
         else {
           $this->loggerFactory->get('onlyoffice_form')->error('Could not copy template file to @destination', ['@destination' => $destination]);
-          $response->addCommand(new MessageCommand($this->t('Could not create the blank form.'), NULL, ['type' => 'error']));
+          // Set form error instead of using MessageCommand.
+          $form_state->setErrorByName('name', $this->t('Could not create the blank form.'));
+          return $this->replaceFormInModal($form, $form_state);
         }
       }
       catch (\Exception $e) {
         $this->loggerFactory->get('onlyoffice_form')->error('Error creating blank PDF form: @message', ['@message' => $e->getMessage()]);
-        $response->addCommand(new MessageCommand($this->t('An error occurred while creating the blank PDF form: @error', ['@error' => $e->getMessage()]), NULL, ['type' => 'error']));
+        // Set form error instead of using MessageCommand.
+        $form_state->setErrorByName('name', $this->t('An error occurred while creating the blank PDF form: @error', ['@error' => $e->getMessage()]));
+        return $this->replaceFormInModal($form, $form_state);
       }
     }
     // Handle the upload scenario.
@@ -390,8 +401,9 @@ class OnlyofficeFormCreateForm extends FormBase {
 
           if (!$this->documentHelper->isOnlyofficeForm($file_content)) {
             $this->loggerFactory->get('onlyoffice_form')->notice('Uploaded file is not a valid ONLYOFFICE form');
-            $response->addCommand(new MessageCommand($this->t('The uploaded file is not a valid ONLYOFFICE form.'), NULL, ['type' => 'error']));
-            return $response;
+            // Set form error instead of using MessageCommand.
+            $form_state->setErrorByName('upload_file', $this->t('The uploaded file is not a valid ONLYOFFICE form.'));
+            return $this->replaceFormInModal($form, $form_state);
           }
 
           // Make the file permanent.
@@ -450,18 +462,53 @@ class OnlyofficeFormCreateForm extends FormBase {
         }
         else {
           $this->loggerFactory->get('onlyoffice_form')->error('Could not load file with ID: @fid', ['@fid' => $fid]);
-          $response->addCommand(new MessageCommand($this->t('Could not load the uploaded file.'), NULL, ['type' => 'error']));
+          // Set form error instead of using MessageCommand.
+          $form_state->setErrorByName('upload_file', $this->t('Could not load the uploaded file.'));
+          return $this->replaceFormInModal($form, $form_state);
         }
       }
       catch (\Exception $e) {
         $this->loggerFactory->get('onlyoffice_form')->error('Error saving PDF form: @message', ['@message' => $e->getMessage()]);
-        $response->addCommand(new MessageCommand($this->t('An error occurred while saving the PDF form: @error', ['@error' => $e->getMessage()]), NULL, ['type' => 'error']));
+        // Set form error instead of using MessageCommand.
+        $form_state->setErrorByName('upload_file', $this->t('An error occurred while saving the PDF form: @error', ['@error' => $e->getMessage()]));
+        return $this->replaceFormInModal($form, $form_state);
       }
     }
     else {
       // For other sources, just close the dialog for now.
       $response->addCommand(new CloseModalDialogCommand());
     }
+
+    return $response;
+  }
+
+  /**
+   * Replaces the form in the modal with an updated version that includes error messages.
+   *
+   * @param array $form
+   *   The form array.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The form state.
+   *
+   * @return \Drupal\Core\Ajax\AjaxResponse
+   *   The Ajax response.
+   */
+  protected function replaceFormInModal(array $form, FormStateInterface $form_state) {
+    $response = new AjaxResponse();
+
+    // Add status messages to the top of the form.
+    $form = [
+      'status_messages' => [
+        '#type' => 'status_messages',
+        '#weight' => -1000,
+      ],
+    ] + $form;
+
+    // Get the form wrapper ID.
+    $wrapper_id = 'onlyoffice-form-create-form-wrapper';
+
+    // Replace the form content in the modal.
+    $response->addCommand(new HtmlCommand('#' . $wrapper_id, $form));
 
     return $response;
   }
