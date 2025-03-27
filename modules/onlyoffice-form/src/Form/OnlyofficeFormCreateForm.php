@@ -173,8 +173,6 @@ class OnlyofficeFormCreateForm extends FormBase {
       '#options' => [
         'blank' => $this->t('Blank'),
         'upload' => $this->t('Upload'),
-        'text_file' => $this->t('Text file'),
-        'form_gallery' => $this->t('Form gallery'),
       ],
       '#required' => TRUE,
       '#default_value' => $source,
@@ -209,31 +207,6 @@ class OnlyofficeFormCreateForm extends FormBase {
       '#theme' => 'onlyoffice_form_file_upload',
     ];
 
-    // Text file content - only visible for 'text_file' option.
-    $form['text_content'] = [
-      '#type' => 'textarea',
-      '#title' => $this->t('Text content'),
-      '#description' => $this->t('Enter the text content to create a form from.'),
-      '#required' => $source == 'text_file',
-      '#access' => $source == 'text_file',
-      '#rows' => 5,
-    ];
-
-    // Form gallery selector - only visible for 'form_gallery' option.
-    $form['gallery_template'] = [
-      '#type' => 'select',
-      '#title' => $this->t('Select template'),
-      '#description' => $this->t('Choose a template from the form gallery.'),
-      '#options' => [
-        'template_1' => $this->t('Invoice'),
-        'template_2' => $this->t('Contract'),
-        'template_3' => $this->t('Application Form'),
-        'template_4' => $this->t('Survey'),
-      ],
-      '#required' => $source == 'form_gallery',
-      '#access' => $source == 'form_gallery',
-    ];
-
     $form['actions'] = [
       '#type' => 'actions',
     ];
@@ -242,12 +215,6 @@ class OnlyofficeFormCreateForm extends FormBase {
     $button_text = $this->t('Create');
     if ($source == 'upload') {
       $button_text = $this->t('Upload');
-    }
-    elseif ($source == 'text_file') {
-      $button_text = $this->t('Convert');
-    }
-    elseif ($source == 'form_gallery') {
-      $button_text = $this->t('Use Template');
     }
 
     $form['actions']['submit'] = [

@@ -212,10 +212,6 @@
         
         if (source === 'upload') {
           dialogTitle = 'Upload ONLYOFFICE form';
-        } else if (source === 'text_file') {
-          dialogTitle = 'Create from text';
-        } else if (source === 'form_gallery') {
-          dialogTitle = 'Select from gallery';
         }
         
         // Find the dialog and update its title
@@ -237,10 +233,6 @@
         
         if (source === 'upload') {
           buttonText = 'Upload';
-        } else if (source === 'text_file') {
-          buttonText = 'Convert';
-        } else if (source === 'form_gallery') {
-          buttonText = 'Use Template';
         }
         
         // Find the submit button and update its text
