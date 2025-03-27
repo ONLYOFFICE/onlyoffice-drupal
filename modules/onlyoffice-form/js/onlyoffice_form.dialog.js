@@ -41,10 +41,6 @@
         if ($dialog.find('#onlyoffice-form-create-form-wrapper').length) {
           // Add our custom class to the dialog
           $dialog.parent().addClass('onlyoffice-form-ui-dialog');
-          
-          // Set initial dialog title based on the source
-          var source = $dialog.find('select[name="source"]').val();
-          updateDialogTitle($dialog, source);
         }
       });
       
@@ -52,9 +48,6 @@
       $(once('onlyoffice-form-source', 'select[name="source"]', context)).on('change', function () {
         var source = $(this).val();
         var $dialog = $(this).closest('.ui-dialog-content');
-        
-        // Update dialog title
-        updateDialogTitle($dialog, source);
         
         // Update submit button text
         updateSubmitButtonText($dialog, source);
@@ -185,27 +178,6 @@
         
         // Replace the upload container with the loading indicator
         $wrapper.find('.onlyoffice-form-upload-container').replaceWith(loadingHtml);
-      }
-      
-      /**
-       * Updates the dialog title based on the selected source.
-       *
-       * @param {jQuery} $dialog
-       *   The dialog jQuery object.
-       * @param {string} source
-       *   The selected source value.
-       */
-      function updateDialogTitle($dialog, source) {
-        var dialogTitle = 'Create ONLYOFFICE form';
-        
-        if (source === 'upload') {
-          dialogTitle = 'Upload ONLYOFFICE form';
-        }
-        
-        // Find the dialog and update its title
-        if ($dialog.length) {
-          $dialog.dialog('option', 'title', dialogTitle);
-        }
       }
       
       /**
