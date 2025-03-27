@@ -26,7 +26,6 @@
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\Core\Url;
 use Drupal\onlyoffice\OnlyofficeAppConfig;
 use Drupal\onlyoffice\OnlyofficeDocumentHelper;
 use Drupal\onlyoffice\OnlyofficeUrlHelper;
@@ -68,25 +67,25 @@ function onlyoffice_theme($existing, $type, $theme, $path) {
  * Implements hook_entity_operation().
  */
 function onlyoffice_entity_operation(EntityInterface $entity) {
-  // Wrap everything in a try/catch to prevent any errors from breaking the page
+  // Wrap everything in a try/catch to prevent any errors from breaking the page.
   try {
-    // First, make sure this is a media entity
+    // First, make sure this is a media entity.
     if ($entity->getEntityTypeId() !== 'media') {
       return [];
     }
-    
-    // Check if the entity is valid
+
+    // Check if the entity is valid.
     if (!method_exists($entity, 'getSource')) {
       return [];
     }
-    
-    // Reload the entity to ensure it's fully loaded
+
+    // Reload the entity to ensure it's fully loaded.
     try {
       /** @var \Drupal\media\Entity\Media $media */
       $media = \Drupal::entityTypeManager()
         ->getStorage('media')
         ->load($entity->id());
-        
+
       if (!$media) {
         return [];
       }
@@ -95,14 +94,14 @@ function onlyoffice_entity_operation(EntityInterface $entity) {
       \Drupal::logger('onlyoffice')->error('Failed to load media entity: @message', ['@message' => $e->getMessage()]);
       return [];
     }
-    
-    // Check if the media entity has a source
+
+    // Check if the media entity has a source.
     try {
       $source = $media->getSource();
       if (!$source) {
         return [];
       }
-      
+
       $pluginId = $source->getPluginId();
       if (!in_array($pluginId, ['file', 'onlyoffice_m_form', 'onlyoffice_pdf_form'])) {
         return [];
@@ -112,43 +111,43 @@ function onlyoffice_entity_operation(EntityInterface $entity) {
       \Drupal::logger('onlyoffice')->error('Error accessing media source: @message', ['@message' => $e->getMessage()]);
       return [];
     }
-    
-    // Check access
+
+    // Check access.
     $account = \Drupal::currentUser()->getAccount();
     if (!$media->access('view', $account)) {
       return [];
     }
-    
-    // Get the source field and file
+
+    // Get the source field and file.
     try {
-      // Get the source field name
+      // Get the source field name.
       $source_field_name = OnlyofficeDocumentHelper::getSourceFieldName($media);
-      
-      // Check if the field exists and has a value
+
+      // Check if the field exists and has a value.
       if (!$media->hasField($source_field_name) || $media->get($source_field_name)->isEmpty()) {
         return [];
       }
-      
-      // Get the file entity
+
+      // Get the file entity.
       $file = $media->get($source_field_name)->entity;
-      
-      // Check if the file entity exists
+
+      // Check if the file entity exists.
       if (!$file) {
         return [];
       }
-      
+
       $extension = OnlyofficeDocumentHelper::getExtension($file->getFilename());
-      
+
       if (OnlyofficeDocumentHelper::getDocumentType($extension) === NULL) {
         return [];
       }
-      
+
       $title = t('View in ONLYOFFICE');
-      
+
       if ((OnlyofficeDocumentHelper::isEditable($media) || OnlyofficeDocumentHelper::isFillForms($media)) && $media->access('update', $account)) {
         $title = t('Edit in ONLYOFFICE');
       }
-      
+
       return [
         'onlyoffice' => [
           'title' => $title,
@@ -163,7 +162,7 @@ function onlyoffice_entity_operation(EntityInterface $entity) {
     }
   }
   catch (\Throwable $t) {
-    // Catch absolutely any error to prevent breaking the page
+    // Catch absolutely any error to prevent breaking the page.
     \Drupal::logger('onlyoffice')->error('Unhandled error in onlyoffice_entity_operation: @message', ['@message' => $t->getMessage()]);
     return [];
   }

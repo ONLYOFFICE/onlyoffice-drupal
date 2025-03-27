@@ -136,7 +136,7 @@ class OnlyofficeEditorController extends ControllerBase {
     if (preg_match(OnlyofficeAppConfig::USER_AGENT_MOBILE, $request->headers->get('User-Agent'))) {
       $editorType = 'mobile';
     }
-    
+
     $mode = $request->query->get('mode', 'edit');
 
     $build = [
