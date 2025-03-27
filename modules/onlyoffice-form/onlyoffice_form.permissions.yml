@@ -2,21 +2,3 @@ administer onlyoffice forms:
   title: 'Administer ONLYOFFICE forms'
   description: 'Create and manage ONLYOFFICE forms.'
   restrict access: true
-
-access onlyoffice forms overview:
-  title: 'Access ONLYOFFICE forms overview'
-  description: 'Access the ONLYOFFICE forms overview page.'
-
-view onlyoffice pdf forms:
-  title: 'View ONLYOFFICE PDF forms'
-
-create onlyoffice pdf forms:
-  title: 'Create ONLYOFFICE PDF forms'
-  description: 'Create new ONLYOFFICE PDF forms.'
-
-edit onlyoffice pdf forms:
-  title: 'Edit ONLYOFFICE PDF forms'
-  description: 'Edit existing ONLYOFFICE PDF forms.'
-
-delete onlyoffice pdf forms:
-  title: 'Delete ONLYOFFICE PDF forms'
