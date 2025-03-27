@@ -64,6 +64,8 @@
 
 .onlyoffice-form-ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset {
   float: right;
+  margin-block: 0 !important;
+  margin-inline-end: 0 !important;
 }
 
 .onlyoffice-form-ui-dialog .ui-button {

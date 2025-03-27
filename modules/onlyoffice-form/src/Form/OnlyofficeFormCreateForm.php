@@ -223,7 +223,7 @@ class OnlyofficeFormCreateForm extends FormBase {
       '#value' => $button_text,
       '#button_type' => 'primary',
       '#attributes' => [
-        'class' => ['button', 'button--primary', 'button--action'],
+        'class' => ['button', 'button--primary'],
       ],
       '#ajax' => [
         'callback' => '::submitAjaxForm',
