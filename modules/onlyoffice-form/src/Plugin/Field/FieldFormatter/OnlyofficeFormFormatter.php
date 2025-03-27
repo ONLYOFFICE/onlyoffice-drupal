@@ -457,13 +457,7 @@ class OnlyofficeFormFormatter extends FormatterBase {
     $editor_width = $this->getSetting('width') . $this->getSetting('width_unit');
     $editor_height = $this->getSetting('height') . $this->getSetting('height_unit');
 
-    // For ONLYOFFICE forms, we use "fillForms" mode.
-    $mode = "fillForms";
-
-    // Check if the current user has permission to edit forms.
-    if ($this->currentUser->hasPermission('edit onlyoffice forms')) {
-      $mode = "edit";
-    }
+    $mode = "edit";
 
     // Get the owner's display name, or use the current user if owner is null.
     $owner = $file->getOwner();
