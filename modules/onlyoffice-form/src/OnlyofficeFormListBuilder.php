@@ -183,10 +183,6 @@ class OnlyofficeFormListBuilder extends ControllerBase {
       'specifier' => 'filesize',
       'field' => 'filesize',
     ];
-    $header['results'] = [
-      'data' => $this->t('Results'),
-      'class' => ['priority-medium'],
-    ];
     $header['operations'] = [
       'data' => $this->t('Operations'),
     ];
@@ -361,9 +357,6 @@ class OnlyofficeFormListBuilder extends ControllerBase {
             $row['size'] = '';
             $row['#file_size'] = 0;
           }
-
-          // Results (placeholder for now)
-          $row['results'] = '0';
 
           // Operations.
           $operations = [];
