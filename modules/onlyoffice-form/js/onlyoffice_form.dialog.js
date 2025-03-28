@@ -216,10 +216,10 @@
         <div class="onlyoffice-form-file-preview">
           <img src="/modules/contrib/onlyoffice-drupal/modules/onlyoffice-form/images/pdf.svg" alt="PDF File" width="96" height="96">
           <div class="onlyoffice-form-file-info">
-            <div class="onlyoffice-form-file-title">Title: ${file.name}</div>
+            <div class="onlyoffice-form-file-title"><span>Title</span>: ${file.name}</div>
           </div>
         </div>
-        <button type="button" class="onlyoffice-form-remove-button">Remove</button>
+        <button type="button" class="onlyoffice-form-remove-button button">Remove</button>
       </div>`;
         
         // Replace the upload container or loading indicator with the file preview
@@ -243,7 +243,7 @@
         var uploadButtonHtml = 
           '<div class="onlyoffice-form-upload-container">' +
             '<div class="onlyoffice-form-upload-button-wrapper">' +
-              '<button type="button" class="onlyoffice-form-upload-button">Choose File</button>' +
+              '<button type="button" class="onlyoffice-form-upload-button button">Select file</button>' +
             '</div>' +
           '</div>';
         

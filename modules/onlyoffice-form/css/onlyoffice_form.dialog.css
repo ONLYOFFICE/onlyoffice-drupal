@@ -109,17 +109,6 @@
   background: #fff;
 }
 
-.onlyoffice-form-upload-button {
-  background: #D3D4D9;
-  border: 1px solid #ddd;
-  border-radius: 3px;
-  padding: 15px 40px;
-  font-size: 16px;
-  cursor: pointer;
-  color: #232429;
-  font-weight: 600;
-}
-
 .onlyoffice-form-upload-button:hover {
   background: #e8e8e8;
 }
@@ -156,15 +145,13 @@
   font-size: 14px;
 }
 
-.onlyoffice-form-remove-button {
-  background: #D3D4D9;
-  border: 1px solid #ddd;
-  border-radius: 3px;
-  padding: 15px 40px;
-  font-size: 16px;
-  cursor: pointer;
+.onlyoffice-form-file-title span {
   color: #232429;
-  font-weight: 600;
+  font-weight: 700;
+}
+
+.onlyoffice-form-remove-button {
+  margin-inline: 0.75rem !important;
 }
 
 .onlyoffice-form-remove-button:hover {
