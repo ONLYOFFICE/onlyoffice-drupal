@@ -2,7 +2,7 @@ name: 'ONLYOFFICE Connector'
 type: module
 description: 'The ONLYOFFICE module enables users to edit files in the Media module from Drupal using ONLYOFFICE Docs packaged as Document Server'
 core_version_requirement: "~10.2.11 || ^10.3.9 || ^11.0.8"
-package: Media
+package: ONLYOFFICE
 configure: onlyoffice.settings_form
 dependencies:
   - drupal:media
