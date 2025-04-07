@@ -383,7 +383,7 @@ class OnlyofficeFormSubmissionListBuilder extends ControllerBase {
 
             // Form name.
             $row['form']['data']['form'] = [
-              '#markup' => '<a target="_blank" href="' . OnlyofficeUrlHelper::getEditorUrl($media)->toString() . '">' . $media_name . '</a>',
+              '#markup' => '<a href="' . Url::fromRoute('entity.onlyoffice_form_submission.collection', ['media' => $media->id()])->toString() . '">' . $media_name . '</a>',
               '#prefix' => '<div style="width: 100%; overflow: hidden; text-overflow: ellipsis;">',
               '#suffix' => '</div>',
             ];
@@ -393,12 +393,6 @@ class OnlyofficeFormSubmissionListBuilder extends ControllerBase {
 
             // Operations.
             $operations = [];
-
-            // View submissions for this form.
-            $operations['open'] = [
-              'title' => $this->t('Open'),
-              'url' => Url::fromRoute('entity.onlyoffice_form_submission.collection', ['media' => $media->id()]),
-            ];
 
             // Delete all submissions for this form.
             $operations['delete'] = [
@@ -525,16 +519,7 @@ class OnlyofficeFormSubmissionListBuilder extends ControllerBase {
           // Operations.
           $operations = [];
 
-          // View the submitted file.
           if ($file) {
-            $operations['view'] = [
-              'title' => $this->t('View'),
-              'url' => Url::fromRoute('entity.onlyoffice_form_submission.view', ['onlyoffice_form_submission' => $submission->id()]),
-              'attributes' => [
-                'target' => '_blank',
-              ],
-            ];
-
             // Download the submitted file.
             $operations['download'] = [
               'title' => $this->t('Download'),
