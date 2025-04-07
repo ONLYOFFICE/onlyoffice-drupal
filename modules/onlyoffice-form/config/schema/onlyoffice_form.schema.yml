@@ -1,6 +1,6 @@
 field.formatter.settings.onlyoffice_form_formatter:
   type: mapping
-  label: 'ONLYOFFICE Form formatter settings'
+  label: 'ONLYOFFICE form formatter settings'
   mapping:
     save_submissions:
       type: string

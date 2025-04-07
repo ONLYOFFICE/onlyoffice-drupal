@@ -34,7 +34,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @FieldWidget(
  *   id = "onlyoffice_form_widget",
- *   label = @Translation("ONLYOFFICE Form"),
+ *   label = @Translation("ONLYOFFICE form"),
  *   field_types = {
  *     "onlyoffice_form"
  *   }
@@ -106,8 +106,8 @@ class OnlyofficeFormWidget extends WidgetBase implements ContainerFactoryPluginI
     // Media entity reference.
     $element['target_id'] = [
       '#type' => 'entity_autocomplete',
-      '#title' => $this->t('ONLYOFFICE Form'),
-      '#description' => $this->t('Select an existing ONLYOFFICE Form or create a new one.'),
+      '#title' => $this->t('ONLYOFFICE form'),
+      '#description' => $this->t('Select an existing ONLYOFFICE form or create a new one.'),
       '#target_type' => 'media',
       '#selection_handler' => 'default',
       '#selection_settings' => [

@@ -32,8 +32,8 @@ use Drupal\Core\TypedData\DataDefinition;
  *
  * @FieldType(
  *   id = "onlyoffice_form",
- *   label = @Translation("ONLYOFFICE Form"),
- *   description = @Translation("This field stores a reference to an ONLYOFFICE Form media entity with optional description."),
+ *   label = @Translation("ONLYOFFICE form"),
+ *   description = @Translation("This field stores a reference to an ONLYOFFICE form media entity with optional description."),
  *   category = @Translation("ONLYOFFICE"),
  *   default_widget = "onlyoffice_form_widget",
  *   default_formatter = "onlyoffice_form_formatter",
@@ -48,7 +48,7 @@ class OnlyofficeFormItem extends FieldItemBase {
     // Define the field properties.
     $properties['target_id'] = DataDefinition::create('integer')
       ->setLabel(new TranslatableMarkup('Media ID'))
-      ->setDescription(new TranslatableMarkup('The ID of the ONLYOFFICE Form media entity.'))
+      ->setDescription(new TranslatableMarkup('The ID of the ONLYOFFICE form media entity.'))
       ->setRequired(TRUE);
 
     $properties['description'] = DataDefinition::create('string')

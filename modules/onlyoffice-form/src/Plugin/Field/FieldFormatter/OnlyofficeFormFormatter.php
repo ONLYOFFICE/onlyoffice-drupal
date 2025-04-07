@@ -46,7 +46,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
  *
  * @FieldFormatter(
  *   id = "onlyoffice_form_formatter",
- *   label = @Translation("ONLYOFFICE Form"),
+ *   label = @Translation("ONLYOFFICE form"),
  *   field_types = {
  *     "onlyoffice_form"
  *   }
@@ -427,7 +427,7 @@ class OnlyofficeFormFormatter extends FormatterBase {
             $this->logger->error('Error generating editor config: @message', ['@message' => $e->getMessage()]);
             // Provide a fallback display.
             $element[$delta] = [
-              '#markup' => $this->t('ONLYOFFICE Form preview unavailable'),
+              '#markup' => $this->t('ONLYOFFICE form preview unavailable'),
               '#cache' => [
                 'max-age' => 0,
               ],
@@ -437,10 +437,10 @@ class OnlyofficeFormFormatter extends FormatterBase {
       }
     }
     catch (\Exception $e) {
-      $this->logger->error('Error rendering ONLYOFFICE Form: @message', ['@message' => $e->getMessage()]);
+      $this->logger->error('Error rendering ONLYOFFICE form: @message', ['@message' => $e->getMessage()]);
       // Provide a fallback display.
       $element[0] = [
-        '#markup' => $this->t('ONLYOFFICE Form preview unavailable'),
+        '#markup' => $this->t('ONLYOFFICE form preview unavailable'),
         '#cache' => [
           'max-age' => 0,
         ],
@@ -554,7 +554,7 @@ class OnlyofficeFormFormatter extends FormatterBase {
         }
         catch (\Exception $e) {
           // Log the error but continue processing other items.
-          $this->logger->error('Error loading file for ONLYOFFICE Form: @message', ['@message' => $e->getMessage()]);
+          $this->logger->error('Error loading file for ONLYOFFICE form: @message', ['@message' => $e->getMessage()]);
         }
       }
     }

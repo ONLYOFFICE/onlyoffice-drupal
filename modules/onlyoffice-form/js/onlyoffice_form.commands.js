@@ -1,6 +1,6 @@
 /**
  * @file
- * Defines custom Ajax commands for the ONLYOFFICE Form module.
+ * Defines custom Ajax commands for the ONLYOFFICE form module.
  */
 
 /*

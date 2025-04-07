@@ -29,12 +29,12 @@ use Drupal\user\EntityOwnerInterface;
 use Drupal\user\EntityOwnerTrait;
 
 /**
- * Defines the ONLYOFFICE Form Submission entity.
+ * Defines the ONLYOFFICE form submission entity.
  *
  * @ContentEntityType(
  *   id = "onlyoffice_form_submission",
- *   label = @Translation("ONLYOFFICE Form Submission"),
- *   label_collection = @Translation("ONLYOFFICE Form Submissions"),
+ *   label = @Translation("ONLYOFFICE form submission"),
+ *   label_collection = @Translation("ONLYOFFICE form submissions"),
  *   label_singular = @Translation("ONLYOFFICE form submission"),
  *   label_plural = @Translation("ONLYOFFICE form submissions"),
  *   label_count = @PluralTranslation(

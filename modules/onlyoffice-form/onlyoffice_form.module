@@ -36,7 +36,7 @@ function onlyoffice_form_help($route_name, RouteMatchInterface $route_match) {
     case 'help.page.onlyoffice_form':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The ONLYOFFICE Form module provides integration with ONLYOFFICE forms.') . '</p>';
+      $output .= '<p>' . t('The ONLYOFFICE form module provides integration with ONLYOFFICE forms.') . '</p>';
       return $output;
   }
 }

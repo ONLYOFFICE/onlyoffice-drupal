@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Install, update and uninstall functions for the ONLYOFFICE Form module.
+ * Install, update and uninstall functions for the ONLYOFFICE form module.
  */
 
 /**
@@ -116,12 +116,12 @@ function onlyoffice_form_install() {
   $directory = 'public://onlyoffice_forms';
   \Drupal::service('file_system')->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY);
 
-  // Create the ONLYOFFICE PDF Form media type.
+  // Create the ONLYOFFICE PDF form media type.
   _onlyoffice_form_create_media_type();
 }
 
 /**
- * Creates the ONLYOFFICE PDF Form media type.
+ * Creates the ONLYOFFICE PDF form media type.
  */
 function _onlyoffice_form_create_media_type() {
   $media_type_id = 'onlyoffice_pdf_form';
@@ -158,8 +158,8 @@ function _onlyoffice_form_create_media_type() {
     // Create the media type with the source field configuration.
     $media_type = MediaType::create([
       'id' => $media_type_id,
-      'label' => 'ONLYOFFICE PDF Form',
-      'description' => 'PDF forms for use with ONLYOFFICE Form Editor.',
+      'label' => 'ONLYOFFICE PDF form',
+      'description' => 'PDF forms for use with ONLYOFFICE editor.',
       'source' => 'onlyoffice_pdf_form',
       'source_configuration' => [
         'source_field' => $source_field_name,
@@ -213,7 +213,7 @@ function _onlyoffice_form_create_media_type() {
       'settings' => [],
     ])->save();
 
-    \Drupal::messenger()->addStatus(t('Created the ONLYOFFICE PDF Form media type.'));
+    \Drupal::messenger()->addStatus(t('Created the ONLYOFFICE PDF form media type.'));
   }
 }
 
@@ -244,10 +244,10 @@ function onlyoffice_form_uninstall() {
   if (!empty($media_ids)) {
     $media_entities = $media_storage->loadMultiple($media_ids);
     $media_storage->delete($media_entities);
-    \Drupal::messenger()->addStatus(t('Deleted @count ONLYOFFICE PDF Form media entities.', ['@count' => count($media_ids)]));
+    \Drupal::messenger()->addStatus(t('Deleted @count ONLYOFFICE PDF form media entities.', ['@count' => count($media_ids)]));
   }
 
-  // Delete the ONLYOFFICE PDF Form media type.
+  // Delete the ONLYOFFICE PDF form media type.
   $media_type_storage = \Drupal::entityTypeManager()->getStorage('media_type');
   $media_type = $media_type_storage->load('onlyoffice_pdf_form');
   if ($media_type) {
