@@ -62,6 +62,23 @@ class OnlyofficeDocumentHelper {
   }
 
   /**
+   * Returns a file path to a new document template.
+   */
+  public static function getNewTemplatePath($ext, $language = 'en') {
+    if (!in_array($ext, ['docx', 'xlsx', 'pptx', 'pdf'])) {
+      throw new \Exception("Unsupported file type: " . $ext);
+    }
+
+    $path = \Drupal::service('extension.list.module')->getPath('onlyoffice') . "/assets/document-templates/" . $language . "/new." . $ext;
+
+    if (!file_exists($path)) {
+      throw new \Exception("Template file not found: " . $path);
+    }
+
+    return $path;
+  }
+
+  /**
    * Returns true if the format is supported for editing, otherwise false.
    */
   public static function isEditable(Media $media) {
@@ -169,7 +186,7 @@ class OnlyofficeDocumentHelper {
           ],
           'submitForm' => [
             'visible' => $show_submit,
-            'resultMessage' => t("Document saved"),
+            'resultMessage' => t("Form submitted successfully")->render(),
           ],
         ],
       ],
