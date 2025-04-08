@@ -1,6 +1,6 @@
 # Main page with tabs
 onlyoffice_form.admin:
-  path: '/admin/structure/onlyoffice-form'
+  path: '/admin/content/onlyoffice-form'
   defaults:
     _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
     _title: 'ONLYOFFICE form'
@@ -9,7 +9,7 @@ onlyoffice_form.admin:
 
 # Forms tab (default tab)
 entity.onlyoffice_form.collection:
-  path: '/admin/structure/onlyoffice-form/forms'
+  path: '/admin/content/onlyoffice-form/forms'
   defaults:
     _controller: '\Drupal\onlyoffice_form\OnlyofficeFormListBuilder::render'
     _title: 'ONLYOFFICE form'
@@ -20,7 +20,7 @@ entity.onlyoffice_form.collection:
 
 # Submissions tab
 entity.onlyoffice_form_submission.collection:
-  path: '/admin/structure/onlyoffice-form/submissions/{media}'
+  path: '/admin/content/onlyoffice-form/submissions/{media}'
   defaults:
     _controller: '\Drupal\onlyoffice_form\OnlyofficeFormSubmissionListBuilder::render'
     _title: 'ONLYOFFICE form'
@@ -35,7 +35,7 @@ entity.onlyoffice_form_submission.collection:
 
 # Download a submission file
 entity.onlyoffice_form_submission.download:
-  path: '/admin/structure/onlyoffice-form/submission/{onlyoffice_form_submission}/download'
+  path: '/admin/content/onlyoffice-form/submission/{onlyoffice_form_submission}/download'
   defaults:
     _controller: '\Drupal\onlyoffice_form\Controller\OnlyofficeFormSubmissionController::downloadFile'
     _title: 'Download Submission'
@@ -49,7 +49,7 @@ entity.onlyoffice_form_submission.download:
 
 # View a submission file in the ONLYOFFICE editor
 entity.onlyoffice_form_submission.view:
-  path: '/admin/structure/onlyoffice-form/submission/{onlyoffice_form_submission}/view'
+  path: '/admin/content/onlyoffice-form/submission/{onlyoffice_form_submission}/view'
   defaults:
     _controller: '\Drupal\onlyoffice_form\Controller\OnlyofficeFormSubmissionController::view'
     _title: 'View Submission'
@@ -63,7 +63,7 @@ entity.onlyoffice_form_submission.view:
 
 # Delete all submissions for a specific form
 entity.onlyoffice_form_submission.delete_by_form:
-  path: '/admin/structure/onlyoffice-form/submissions/{media}/delete'
+  path: '/admin/content/onlyoffice-form/submissions/{media}/delete'
   defaults:
     _form: '\Drupal\onlyoffice_form\Form\OnlyofficeFormSubmissionDeleteForm'
     _title: 'Delete all submissions'
@@ -77,7 +77,7 @@ entity.onlyoffice_form_submission.delete_by_form:
         
 # Delete a single submission
 entity.onlyoffice_form_submission.delete_form:
-  path: '/admin/structure/onlyoffice-form/submission/{onlyoffice_form_submission}/delete'
+  path: '/admin/content/onlyoffice-form/submission/{onlyoffice_form_submission}/delete'
   defaults:
     _form: '\Drupal\onlyoffice_form\Form\OnlyofficeFormSubmissionDeleteSingleForm'
     _title: 'Delete submission'
@@ -90,7 +90,7 @@ entity.onlyoffice_form_submission.delete_form:
         type: entity:onlyoffice_form_submission
 
 entity.onlyoffice_form.create_form:
-  path: '/admin/structure/onlyoffice-form/create'
+  path: '/admin/content/onlyoffice-form/create'
   defaults:
     _form: '\Drupal\onlyoffice_form\Form\OnlyofficeFormCreateForm'
     _title: 'ONLYOFFICE form'
@@ -132,7 +132,7 @@ onlyoffice_form.callback:
 
 # Bulk delete confirmation form
 onlyoffice_form.bulk_delete_confirm:
-  path: '/admin/structure/onlyoffice-form/forms/delete/{ids}'
+  path: '/admin/content/onlyoffice-form/forms/delete/{ids}'
   defaults:
     _form: '\Drupal\onlyoffice_form\Form\OnlyofficeFormBulkDeleteConfirmForm'
     _title: 'Delete forms'

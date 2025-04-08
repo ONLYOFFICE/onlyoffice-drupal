@@ -1,5 +1,6 @@
-entity.onlyoffice_form.collection:
+onlyoffice_form.admin:
   title: 'ONLYOFFICE form'
-  parent: system.admin_structure
-  description: 'Create and manage ONLYOFFICE forms.'
-  route_name: entity.onlyoffice_form.collection
+  description: 'Manage ONLYOFFICE PDF forms and submissions.'
+  parent: system.admin_content
+  route_name: onlyoffice_form.admin
+  weight: 10
