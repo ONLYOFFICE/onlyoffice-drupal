@@ -25,6 +25,7 @@ jobs:
       - name: Build Artifact
         run: |
           cd ${{ github.workspace }}
+          git submodule update --init --recursive
           mkdir -p ./onlyoffice-drupal
           rsync -av --exclude='onlyoffice-drupal' ./ ./onlyoffice-drupal
           cd ./onlyoffice-drupal

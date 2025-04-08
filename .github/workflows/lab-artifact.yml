@@ -16,6 +16,7 @@ jobs:
       - name: Build Artifact
         run: |
           cd ${{ github.workspace }}
+          git submodule update --init --recursive
           mkdir -p ./deploy/onlyoffice-drupal
           rsync -av --exclude='deploy' ./ ./deploy/onlyoffice-drupal
           cd ./deploy/onlyoffice-drupal
