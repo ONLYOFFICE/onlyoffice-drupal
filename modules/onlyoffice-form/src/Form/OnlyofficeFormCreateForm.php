@@ -38,9 +38,11 @@ use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\file\FileUsage\DatabaseFileUsageBackend;
+use Drupal\onlyoffice\OnlyofficeDocumentHelper;
 use Drupal\onlyoffice\OnlyofficeUrlHelper;
 use Drupal\onlyoffice_form\Ajax\OpenInNewTabCommand;
 use Drupal\onlyoffice_form\OnlyofficeFormDocumentHelper;
+use Drupal\Core\Language\LanguageManagerInterface;
 
 /**
  * Provides a form for creating a new ONLYOFFICE form.
@@ -97,6 +99,13 @@ class OnlyofficeFormCreateForm extends FormBase {
   protected $extensionListModule;
 
   /**
+   * The language manager.
+   *
+   * @var \Drupal\Core\Language\LanguageManagerInterface
+   */
+  protected $languageManager;
+
+  /**
    * Constructs a new OnlyofficeFormCreateForm.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -113,6 +122,8 @@ class OnlyofficeFormCreateForm extends FormBase {
    *   The file system service.
    * @param \Drupal\Core\Extension\ModuleExtensionList $extension_list_module
    *   The extension list module service.
+   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   *   The language manager.
    */
   public function __construct(
     EntityTypeManagerInterface $entity_type_manager,
@@ -122,6 +133,7 @@ class OnlyofficeFormCreateForm extends FormBase {
     DatabaseFileUsageBackend $file_usage,
     FileSystemInterface $file_system,
     ModuleExtensionList $extension_list_module,
+    LanguageManagerInterface $language_manager,
   ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->currentUser = $current_user;
@@ -130,6 +142,7 @@ class OnlyofficeFormCreateForm extends FormBase {
     $this->fileUsage = $file_usage;
     $this->fileSystem = $file_system;
     $this->extensionListModule = $extension_list_module;
+    $this->languageManager = $language_manager;
   }
 
   /**
@@ -143,7 +156,8 @@ class OnlyofficeFormCreateForm extends FormBase {
       $container->get('onlyoffice_form.document_helper'),
       $container->get('file.usage'),
       $container->get('file_system'),
-      $container->get('extension.list.module')
+      $container->get('extension.list.module'),
+      $container->get('language_manager')
     );
   }
 
@@ -327,8 +341,8 @@ class OnlyofficeFormCreateForm extends FormBase {
 
       try {
         // Get the module path.
-        $module_path = $this->extensionListModule->getPath('onlyoffice_form');
-        $template_path = $module_path . '/assets/new.pdf';
+        $language = $this->languageManager->getCurrentLanguage()->getId();
+        $template_path = OnlyofficeDocumentHelper::getNewTemplatePath('pdf', $language);
 
         // Create the destination directory if it doesn't exist.
         $directory = 'public://onlyoffice_forms/';
