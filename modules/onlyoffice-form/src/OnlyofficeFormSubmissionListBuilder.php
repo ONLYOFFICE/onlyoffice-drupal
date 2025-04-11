@@ -526,6 +526,13 @@ class OnlyofficeFormSubmissionListBuilder extends ControllerBase {
           $operations = [];
 
           if ($file) {
+            // Open the submitted file.
+            $operations['open'] = [
+              'title' => $this->t('Open'),
+              'url' => Url::fromRoute('entity.onlyoffice_form_submission.view', ['onlyoffice_form_submission' => $submission->id()]),
+              'attributes' => ['target' => '_blank'],
+            ];
+
             // Download the submitted file.
             $operations['download'] = [
               'title' => $this->t('Download'),
