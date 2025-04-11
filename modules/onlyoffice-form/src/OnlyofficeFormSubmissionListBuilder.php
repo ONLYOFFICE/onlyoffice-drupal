@@ -394,10 +394,10 @@ class OnlyofficeFormSubmissionListBuilder extends ControllerBase {
             // Operations.
             $operations = [];
 
-            // Edit form.
-            $operations['edit_form'] = [
-              'title' => $this->t('Edit form'),
-              'url' => OnlyofficeUrlHelper::getEditorUrl($media),
+            // Open submission by form.
+            $operations['open'] = [
+              'title' => $this->t('Open'),
+              'url' => Url::fromRoute('entity.onlyoffice_form_submission.collection', ['media' => $media->id()]),
             ];
 
             // Delete all submissions for this form.
