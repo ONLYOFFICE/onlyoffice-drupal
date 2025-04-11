@@ -305,7 +305,10 @@ class OnlyofficeFormListBuilder extends ControllerBase {
           $row['title']['data']['title'] = [
             '#type' => 'link',
             '#title' => $media->label(),
-            '#url' => $media->toUrl('edit-form'),
+            '#url' => OnlyofficeUrlHelper::getEditorUrl($media),
+            '#attributes' => [
+              'target' => '_blank',
+            ],
           ];
 
           // Author.
