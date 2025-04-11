@@ -186,7 +186,7 @@ class OnlyofficeDocumentHelper {
           ],
           'submitForm' => [
             'visible' => $show_submit,
-            'resultMessage' => t("Form submitted successfully")->render(),
+            'resultMessage' => t("Your PDF form has been submitted. You may download your filled PDF form via context menu.")->render(),
           ],
         ],
       ],
