@@ -33,7 +33,6 @@ use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\media\MediaInterface;
-use Drupal\onlyoffice\OnlyofficeUrlHelper;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -491,9 +490,7 @@ class OnlyofficeFormSubmissionListBuilder extends ControllerBase {
 
           // Form - Link to the form.
           $form_media = $media;
-          $row['form']['data']['form'] = [
-            '#markup' => '<a target="_blank" href="' . OnlyofficeUrlHelper::getEditorUrl($form_media)->toString() . '">' . $form_media->label() . '</a>',
-          ];
+          $row['form'] = $form_media->label();
 
           // Type - Always PDF for now.
           $row['type'] = 'PDF';
