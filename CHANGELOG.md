@@ -1,14 +1,13 @@
 # Change Log
+
+## 
+## Added
+- support for drupal 11
 - new ONLYOFFICE Form submodule
 - new ONLYOFFICE Form media type
 - new ONLYOFFICE Form field type, widget and formatter
 - creating and managing ONLYOFFICE forms and submissions
 - editing pdf forms
-
-## 
-## Added
-- support for drupal 11
-- support docxf and oform formats
 - media types ONLYOFFICE Form and ONLYOFFICE MasterForm
 
 ## Changed
