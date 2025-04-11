@@ -3,7 +3,7 @@
  * Styles for ONLYOFFICE form dialogs.
  */
 
- /**
+/**
  *
  * (c) Copyright Ascensio System SIA 2025
  *
@@ -183,8 +183,12 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+}
+  100% {
+    transform: rotate(360deg);
+}
 }
 
 /* Hide the default file upload elements */
