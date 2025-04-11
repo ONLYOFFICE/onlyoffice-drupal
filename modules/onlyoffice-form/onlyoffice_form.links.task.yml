@@ -1,0 +1,16 @@
+onlyoffice_form.admin:
+  title: 'ONLYOFFICE form'
+  route_name: entity.onlyoffice_form.collection
+  base_route: system.admin_content
+
+onlyoffice_form.pdf_forms:
+  title: 'PDF Forms'
+  route_name: entity.onlyoffice_form.collection
+  parent_id: onlyoffice_form.admin
+  weight: 0
+
+onlyoffice_form.submitted_forms:
+  title: 'Submitted forms'
+  route_name: entity.onlyoffice_form_submission.collection
+  parent_id: onlyoffice_form.admin
+  weight: 10

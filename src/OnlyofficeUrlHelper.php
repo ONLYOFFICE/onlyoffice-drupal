@@ -113,7 +113,7 @@ class OnlyofficeUrlHelper {
   /**
    * Sign a query parameters with a given key and algorithm.
    */
-  private static function signLinkParameters(array $parameters) {
+  public static function signLinkParameters(array $parameters) {
     $payload = \implode('?', $parameters);
 
     $signature = JWT::urlsafeB64Encode(JWT::sign($payload, Settings::getHashSalt() . \Drupal::service('private_key')->get(), 'HS256'));

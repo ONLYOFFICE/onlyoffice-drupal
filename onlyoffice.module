@@ -67,43 +67,106 @@ function onlyoffice_theme($existing, $type, $theme, $path) {
  * Implements hook_entity_operation().
  */
 function onlyoffice_entity_operation(EntityInterface $entity) {
-  if ($entity->getEntityTypeId() != "media") {
+  // Wrap everything in a try/catch
+  // to prevent any errors from breaking the page.
+  try {
+    // First, make sure this is a media entity.
+    if ($entity->getEntityTypeId() !== 'media') {
+      return [];
+    }
+
+    // Check if the entity is valid.
+    if (!method_exists($entity, 'getSource')) {
+      return [];
+    }
+
+    // Reload the entity to ensure it's fully loaded.
+    try {
+      /** @var \Drupal\media\Entity\Media $media */
+      $media = \Drupal::entityTypeManager()
+        ->getStorage('media')
+        ->load($entity->id());
+
+      if (!$media) {
+        return [];
+      }
+    }
+    catch (\Exception $e) {
+      \Drupal::logger('onlyoffice')->error('Failed to load media entity: @message', ['@message' => $e->getMessage()]);
+      return [];
+    }
+
+    // Check if the media entity has a source.
+    try {
+      $source = $media->getSource();
+      if (!$source) {
+        return [];
+      }
+
+      $pluginId = $source->getPluginId();
+      if (!in_array($pluginId, ['file', 'onlyoffice_m_form', 'onlyoffice_pdf_form'])) {
+        return [];
+      }
+    }
+    catch (\Exception $e) {
+      \Drupal::logger('onlyoffice')->error('Error accessing media source: @message', ['@message' => $e->getMessage()]);
+      return [];
+    }
+
+    // Check access.
+    $account = \Drupal::currentUser()->getAccount();
+    if (!$media->access('view', $account)) {
+      return [];
+    }
+
+    // Get the source field and file.
+    try {
+      // Get the source field name.
+      $source_field_name = OnlyofficeDocumentHelper::getSourceFieldName($media);
+
+      // Check if the field exists and has a value.
+      if (!$media->hasField($source_field_name) || $media->get($source_field_name)->isEmpty()) {
+        return [];
+      }
+
+      // Get the file entity.
+      $file = $media->get($source_field_name)->entity;
+
+      // Check if the file entity exists.
+      if (!$file) {
+        return [];
+      }
+
+      $extension = OnlyofficeDocumentHelper::getExtension($file->getFilename());
+
+      if (OnlyofficeDocumentHelper::getDocumentType($extension) === NULL) {
+        return [];
+      }
+
+      $title = t('View in ONLYOFFICE');
+
+      if ((OnlyofficeDocumentHelper::isEditable($media) || OnlyofficeDocumentHelper::isFillForms($media)) && $media->access('update', $account)) {
+        $title = t('Edit in ONLYOFFICE');
+      }
+
+      return [
+        'onlyoffice' => [
+          'title' => $title,
+          'weight' => 50,
+          'url' => OnlyofficeUrlHelper::getEditorUrl($media),
+        ],
+      ];
+    }
+    catch (\Exception $e) {
+      \Drupal::logger('onlyoffice')->error('Error in onlyoffice_entity_operation: @message', ['@message' => $e->getMessage()]);
+      return [];
+    }
+  }
+  catch (\Throwable $t) {
+    // Catch absolutely any error to prevent breaking the page.
+    \Drupal::logger('onlyoffice')->error('Unhandled error in onlyoffice_entity_operation: @message', ['@message' => $t->getMessage()]);
     return [];
   }
-  /** @var \Drupal\media\Entity\Media $media */
-  $media = $entity;
-  $pluginId = $media->getSource()->getPluginId();
-
-  if ($pluginId != "file" && $pluginId != "onlyoffice_m_form" && $pluginId != "onlyoffice_form") {
-    return [];
-  }
-
-  $account = \Drupal::currentUser()->getAccount();
-
-  if (!$media->access("view", $account)) {
-    return [];
-  }
-
-  $file = $media->get(OnlyofficeDocumentHelper::getSourceFieldName($media))->entity;
-  $extension = OnlyofficeDocumentHelper::getExtension($file->getFilename());
-
-  if (OnlyofficeDocumentHelper::getDocumentType($extension) == NULL) {
-    return [];
-  }
-
-  $title = t("View in ONLYOFFICE");
-
-  if ((OnlyofficeDocumentHelper::isEditable($media) || OnlyofficeDocumentHelper::isFillForms($media)) && $media->access("update", $account)) {
-    $title = t("Edit in ONLYOFFICE");
-  }
-
-  return [
-    'onlyoffice' => [
-      'title' => $title,
-      'weight' => 50,
-      'url' => OnlyofficeUrlHelper::getEditorUrl($media),
-    ],
-  ];
 }
 
 /**

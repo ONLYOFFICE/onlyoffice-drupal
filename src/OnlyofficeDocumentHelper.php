@@ -62,6 +62,23 @@ class OnlyofficeDocumentHelper {
   }
 
   /**
+   * Returns a file path to a new document template.
+   */
+  public static function getNewTemplatePath($ext, $language = 'en') {
+    if (!in_array($ext, ['docx', 'xlsx', 'pptx', 'pdf'])) {
+      throw new \Exception("Unsupported file type: " . $ext);
+    }
+
+    $path = \Drupal::service('extension.list.module')->getPath('onlyoffice') . "/assets/document-templates/" . $language . "/new." . $ext;
+
+    if (!file_exists($path)) {
+      throw new \Exception("Template file not found: " . $path);
+    }
+
+    return $path;
+  }
+
+  /**
    * Returns true if the format is supported for editing, otherwise false.
    */
   public static function isEditable(Media $media) {
@@ -89,6 +106,22 @@ class OnlyofficeDocumentHelper {
    * Get the source field name a media type.
    */
   public static function getSourceFieldName(Media $media) {
+    // Make sure the bundle entity is loaded.
+    if (!$media->bundle->entity) {
+      // Try to load the media type entity.
+      $media_type = \Drupal::entityTypeManager()
+        ->getStorage('media_type')
+        ->load($media->bundle());
+
+      if (!$media_type) {
+        throw new \Exception('Media type not found for bundle: ' . $media->bundle());
+      }
+
+      return $media->getSource()
+        ->getSourceFieldDefinition($media_type)
+        ->getName();
+    }
+
     return $media->getSource()
       ->getSourceFieldDefinition($media->bundle->entity)
       ->getName();
@@ -113,6 +146,8 @@ class OnlyofficeDocumentHelper {
     $editorConfig_customization_goback_url,
     $editor_width,
     $editor_height,
+    $document_permissions_fillForms = FALSE,
+    $show_submit = FALSE,
   ) {
 
     $document_fileType = static::getExtension($document_title);
@@ -134,6 +169,7 @@ class OnlyofficeDocumentHelper {
         'permissions' => [
           'download' => TRUE,
           'edit' => $document_permissions_edit,
+          'fillForms' => $document_permissions_fillForms,
         ],
       ],
       'editorConfig' => [
@@ -147,6 +183,10 @@ class OnlyofficeDocumentHelper {
         'customization' => [
           'goback' => [
             'url' => $editorConfig_customization_goback_url,
+          ],
+          'submitForm' => [
+            'visible' => $show_submit,
+            'resultMessage' => t("Your PDF form has been submitted. You may download your filled PDF form via context menu.")->render(),
           ],
         ],
       ],
