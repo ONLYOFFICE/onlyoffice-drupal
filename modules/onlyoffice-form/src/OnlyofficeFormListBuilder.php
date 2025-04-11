@@ -403,7 +403,6 @@ class OnlyofficeFormListBuilder extends ControllerBase {
       }
     }
     catch (\Exception $e) {
-      // If there's an error loading the media entities, just continue without them.
       $this->logger->error('Error loading media entities: @message', ['@message' => $e->getMessage()]);
     }
   }

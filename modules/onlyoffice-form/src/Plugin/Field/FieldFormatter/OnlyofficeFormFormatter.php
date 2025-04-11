@@ -523,7 +523,7 @@ class OnlyofficeFormFormatter extends FormatterBase {
   protected function getEntitiesToView(FieldItemListInterface $items, $langcode) {
     $entities = [];
 
-    // Load media entities manually since our field type is not an EntityReferenceItem.
+    // Load media entities manually.
     foreach ($items as $delta => $item) {
       if (!empty($item->target_id)) {
         try {

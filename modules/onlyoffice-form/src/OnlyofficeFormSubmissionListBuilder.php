@@ -418,7 +418,8 @@ class OnlyofficeFormSubmissionListBuilder extends ControllerBase {
       }
     }
     catch (\Exception $e) {
-      // If there's an error loading the submissions, just continue without them.
+      // If there's an error loading the submissions,
+      // just continue without them.
     }
   }
 
@@ -557,7 +558,8 @@ class OnlyofficeFormSubmissionListBuilder extends ControllerBase {
       }
     }
     catch (\Exception $e) {
-      // If there's an error loading the submissions, just continue without them.
+      // If there's an error loading the submissions,
+      // just continue without them.
     }
   }
 

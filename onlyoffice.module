@@ -67,7 +67,8 @@ function onlyoffice_theme($existing, $type, $theme, $path) {
  * Implements hook_entity_operation().
  */
 function onlyoffice_entity_operation(EntityInterface $entity) {
-  // Wrap everything in a try/catch to prevent any errors from breaking the page.
+  // Wrap everything in a try/catch
+  // to prevent any errors from breaking the page.
   try {
     // First, make sure this is a media entity.
     if ($entity->getEntityTypeId() !== 'media') {

@@ -533,7 +533,7 @@ class OnlyofficeFormCreateForm extends FormBase {
   }
 
   /**
-   * Replaces the form in the modal with an updated version that includes error messages.
+   * Replaces the form in the modal with version that includes error messages.
    *
    * @param array $form
    *   The form array.

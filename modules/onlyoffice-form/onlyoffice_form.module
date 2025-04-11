@@ -82,7 +82,7 @@ function template_preprocess_onlyoffice_form_file_upload(array &$variables) {
   // Log the file ID for debugging.
   \Drupal::logger('onlyoffice_form')->notice('File ID in preprocess: @fid', ['@fid' => print_r($fid, TRUE)]);
 
-  // If the file ID is an array (which happens with managed_file elements), extract the actual ID.
+  // If the file ID is an array, extract the actual ID.
   if (is_array($fid)) {
     // Check if it's in the format used by managed_file.
     if (isset($fid['fids']) && is_array($fid['fids']) && !empty($fid['fids'])) {
