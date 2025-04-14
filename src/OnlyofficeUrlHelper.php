@@ -46,7 +46,7 @@ class OnlyofficeUrlHelper {
   public static function getEditorLink(Media $media) {
     $title = t("View in ONLYOFFICE");
 
-    if (OnlyofficeDocumentHelper::isEditable($media) || OnlyofficeDocumentHelper::isFillForms($media)) {
+    if (OnlyofficeDocumentHelper::isEditable($media)) {
       $title = t("Edit in ONLYOFFICE");
     }
 
