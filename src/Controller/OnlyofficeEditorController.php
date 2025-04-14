@@ -124,8 +124,6 @@ class OnlyofficeEditorController extends ControllerBase {
 
     if (
       $pluginId != "file"
-      && $pluginId != "onlyoffice_m_form"
-      && $pluginId != "onlyoffice_form"
       && $pluginId != "onlyoffice_pdf_form"
     ) {
       throw new UnsupportedMediaTypeHttpException();

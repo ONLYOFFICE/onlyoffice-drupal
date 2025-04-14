@@ -104,7 +104,7 @@ function onlyoffice_entity_operation(EntityInterface $entity) {
       }
 
       $pluginId = $source->getPluginId();
-      if (!in_array($pluginId, ['file', 'onlyoffice_m_form', 'onlyoffice_pdf_form'])) {
+      if (!in_array($pluginId, ['file', 'onlyoffice_pdf_form'])) {
         return [];
       }
     }
