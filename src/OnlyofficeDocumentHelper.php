@@ -91,18 +91,6 @@ class OnlyofficeDocumentHelper {
   }
 
   /**
-   * Returns true if the format is a fillable form otherwise false.
-   */
-  public static function isFillForms(Media $media) {
-    $file = $media->get(static::getSourceFieldName($media))->entity;
-    $extension = static::getExtension($file->getFilename());
-
-    $format = OnlyofficeAppConfig::getSupportedFormats()[$extension] ?? NULL;
-
-    return isset($format["fillForms"]) && $format["fillForms"];
-  }
-
-  /**
    * Get the source field name a media type.
    */
   public static function getSourceFieldName(Media $media) {
