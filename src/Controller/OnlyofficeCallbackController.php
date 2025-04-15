@@ -202,10 +202,6 @@ class OnlyofficeCallbackController extends ControllerBase {
       );
     }
 
-    if ($linkParameters[1] == 'fillForm') {
-      return new JsonResponse(['error' => 0], 200);
-    }
-
     $uuid = $linkParameters[0];
 
     if (!$uuid || !Uuid::isValid($uuid)) {

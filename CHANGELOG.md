@@ -8,7 +8,6 @@
 - new ONLYOFFICE Form field type, widget and formatter
 - creating and managing ONLYOFFICE forms and submissions
 - editing pdf forms
-- media types ONLYOFFICE Form and ONLYOFFICE MasterForm
 
 ## Changed
 - fixed the problem when the file was saved empty if there was an error getting the file from the document server (https://www.drupal.org/project/onlyoffice/issues/3362004)
