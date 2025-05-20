@@ -23,11 +23,14 @@
         "firebase/php-jwt": "^6.0"
     },
     "require-dev": {
-        "drupal/coder": "^8.3"
+        "drupal/coder": "^8.3",
+        "captainhook/plugin-composer": "^5.3",
+        "ramsey/conventional-commits": "^1.6"
     },
     "config": {
         "allow-plugins": {
-            "dealerdirect/phpcodesniffer-composer-installer": true
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "captainhook/plugin-composer": true
         }
     },
     "scripts": {
