@@ -3,7 +3,7 @@
 namespace Drupal\onlyoffice\Plugin\Field\FieldFormatter;
 
 /**
- * Copyright (c) Ascensio System SIA 2023.
+ * Copyright (c) Ascensio System SIA 2025.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
