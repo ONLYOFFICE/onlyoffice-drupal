@@ -35,7 +35,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2025-05-20 16:09+0500\n"
-"PO-Revision-Date: 2025-05-26 16:21+0300\n"
+"PO-Revision-Date: 2025-05-27 11:24+0300\n"
 "Last-Translator: \n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: zh_CN\n"
@@ -276,7 +276,7 @@ msgstr "下载"
 #: src/OnlyofficeFormSubmissionListBuilder.php:636
 msgid ""
 "Showing filtered results for %form. <a href=\"@reset_url\">Clear filter</a>"
-msgstr "显示 %form 的筛选结果。<a href=\\\"@reset_url\\\">清除筛选</a>"
+msgstr "显示 %form 的筛选结果。<a href=\"@reset_url\">清除筛选</a>"
 
 #: src/OnlyofficeFormSubmissionListBuilder.php:595
 msgid "Error counting submissions: @message"

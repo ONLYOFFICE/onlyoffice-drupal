@@ -35,7 +35,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2025-05-20 15:38+0500\n"
-"PO-Revision-Date: 2025-05-26 17:23+0300\n"
+"PO-Revision-Date: 2025-05-27 11:39+0300\n"
 "Last-Translator: \n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: it\n"
@@ -602,7 +602,7 @@ msgstr "Sei sicuro di voler cancellare questo invio?"
 
 #: src/Form/OnlyofficeFormSubmissionDeleteSingleForm.php:131
 msgid "The submission has been deleted."
-msgstr "L’invio è stato cancellato."
+msgstr "L'invio è stato cancellato."
 
 #: src/Form/OnlyofficeFormSubmissionFilterForm.php:46
 msgid "Filter submissions"
@@ -622,7 +622,7 @@ msgstr "No"
 
 #: src/Plugin/Field/FieldFormatter/OnlyofficeFormFormatter.php:233
 msgid "Select “Yes” to hide the form fields after submitting"
-msgstr "Seleziona “Sì” per nascondere i campi del modulo dopo l’invio"
+msgstr "Seleziona “Sì” per nascondere i campi del modulo dopo l'invio"
 
 #: src/Plugin/Field/FieldFormatter/OnlyofficeFormFormatter.php:244;262
 msgid "Percents"
@@ -685,7 +685,7 @@ msgstr "ID media"
 
 #: src/Plugin/Field/FieldType/OnlyofficeFormItem.php:51
 msgid "The ID of the ONLYOFFICE form media entity."
-msgstr "L’ID dell’entità media modulo ONLYOFFICE."
+msgstr "L'ID dell'entità media modulo ONLYOFFICE."
 
 #: src/Plugin/Field/FieldType/OnlyofficeFormItem.php:55
 #: src/Plugin/Field/FieldWidget/OnlyofficeFormWidget.php:136
@@ -701,7 +701,7 @@ msgid ""
 "This field stores a reference to an ONLYOFFICE form media entity with "
 "optional description."
 msgstr ""
-"Questo campo memorizza un riferimento a un’entità media modulo ONLYOFFICE "
+"Questo campo memorizza un riferimento a un'entità media modulo ONLYOFFICE "
 "con descrizione opzionale."
 
 #: src/Plugin/Field/FieldWidget/OnlyofficeFormWidget.php:110
