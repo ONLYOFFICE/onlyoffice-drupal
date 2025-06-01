@@ -28,18 +28,18 @@ use Drupal\Core\Url;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Field\Attribute\FieldWidget;
 
 /**
  * Plugin implementation of the 'onlyoffice_form_widget' widget.
- *
- * @FieldWidget(
- *   id = "onlyoffice_form_widget",
- *   label = @Translation("ONLYOFFICE form"),
- *   field_types = {
- *     "onlyoffice_form"
- *   }
- * )
  */
+#[FieldWidget(
+  id: "onlyoffice_form_widget",
+  label: new \Drupal\Core\StringTranslation\TranslatableMarkup("ONLYOFFICE form"),
+  field_types: [
+    "onlyoffice_form"
+  ]
+)]
 class OnlyofficeFormWidget extends WidgetBase implements ContainerFactoryPluginInterface {
 
   /**

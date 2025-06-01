@@ -26,19 +26,19 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\DataDefinition;
+use Drupal\Core\Field\Attribute\FieldType;
 
 /**
  * Plugin implementation of the 'onlyoffice_form' field type.
  *
- * @FieldType(
- *   id = "onlyoffice_form",
- *   label = @Translation("ONLYOFFICE form"),
- *   description = @Translation("This field stores a reference to an ONLYOFFICE form media entity with optional description."),
- *   category = @Translation("ONLYOFFICE"),
- *   default_widget = "onlyoffice_form_widget",
- *   default_formatter = "onlyoffice_form_formatter",
- * )
  */
+#[FieldType(
+  id: "onlyoffice_form",
+  label: new TranslatableMarkup("ONLYOFFICE form"),
+  description: new TranslatableMarkup("This field stores a reference to an ONLYOFFICE form media entity with optional description."),
+  default_widget: "onlyoffice_form_widget",
+  default_formatter: "onlyoffice_form_formatter",
+ )]
 class OnlyofficeFormItem extends FieldItemBase {
 
   /**
