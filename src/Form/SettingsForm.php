@@ -23,6 +23,8 @@ namespace Drupal\onlyoffice\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Symfony\Component\Validator\Constraints\Url;
+use Symfony\Component\Validator\Validation;
 
 /**
  * Configure ONLYOFFICE Connector settings for this site.
@@ -64,9 +66,31 @@ class SettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
+  public function validateForm(array &$form, FormStateInterface $form_state) {
+    $url = $form_state->getValue('doc_server_url');
+
+    $validator = Validation::createValidator();
+    $errors = $validator->validate($url, new Url());
+
+    if (count($errors) > 0) {
+      $messages = [];
+
+      foreach ($errors as $error) {
+        $messages[] = $error->getMessage();
+      }
+
+      $form_state->setErrorByName('doc_server_url', implode("\n", $messages));
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function submitForm(array &$form, FormStateInterface $form_state) {
+    $docsUrl = rtrim($form_state->getValue('doc_server_url'), "/");
+
     $this->config('onlyoffice.settings')
-      ->set('doc_server_url', $form_state->getValue('doc_server_url'))
+      ->set('doc_server_url', $docsUrl)
       ->set('doc_server_jwt', $form_state->getValue('doc_server_jwt'))
       ->save();
     parent::submitForm($form, $form_state);
