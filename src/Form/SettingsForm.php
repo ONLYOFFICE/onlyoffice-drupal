@@ -75,8 +75,8 @@ class SettingsForm extends ConfigFormBase {
     if (count($errors) > 0) {
       $messages = [];
 
-      foreach($errors as $error) {
-        $messages[] = $error->getMessage();        
+      foreach ($errors as $error) {
+        $messages[] = $error->getMessage();
       }
 
       $form_state->setErrorByName('doc_server_url', implode("\n", $messages));
