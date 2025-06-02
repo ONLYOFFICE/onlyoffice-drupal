@@ -3,7 +3,7 @@
 namespace Drupal\onlyoffice;
 
 /**
- * Copyright (c) Ascensio System SIA 2023.
+ * Copyright (c) Ascensio System SIA 2025.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -46,7 +46,7 @@ class OnlyofficeUrlHelper {
   public static function getEditorLink(Media $media) {
     $title = t("View in ONLYOFFICE");
 
-    if (OnlyofficeDocumentHelper::isEditable($media) || OnlyofficeDocumentHelper::isFillForms($media)) {
+    if (OnlyofficeDocumentHelper::isEditable($media)) {
       $title = t("Edit in ONLYOFFICE");
     }
 
@@ -62,20 +62,6 @@ class OnlyofficeUrlHelper {
   public static function getCallbackUrl(Media $media) {
     $linkParameters = [
       $media->uuid(),
-    ];
-
-    $key = static::signLinkParameters($linkParameters);
-
-    return Url::fromRoute('onlyoffice.callback', ['key' => $key])->setAbsolute()->toString();
-  }
-
-  /**
-   * Return URL to callback for fill form from client side.
-   */
-  public static function getCallbackFillFormUrl(Media $media) {
-    $linkParameters = [
-      $media->uuid(),
-      'fillForm',
     ];
 
     $key = static::signLinkParameters($linkParameters);
@@ -113,7 +99,7 @@ class OnlyofficeUrlHelper {
   /**
    * Sign a query parameters with a given key and algorithm.
    */
-  private static function signLinkParameters(array $parameters) {
+  public static function signLinkParameters(array $parameters) {
     $payload = \implode('?', $parameters);
 
     $signature = JWT::urlsafeB64Encode(JWT::sign($payload, Settings::getHashSalt() . \Drupal::service('private_key')->get(), 'HS256'));

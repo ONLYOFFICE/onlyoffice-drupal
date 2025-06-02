@@ -3,7 +3,7 @@
 namespace Drupal\onlyoffice;
 
 /**
- * Copyright (c) Ascensio System SIA 2023.
+ * Copyright (c) Ascensio System SIA 2025.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -62,6 +62,23 @@ class OnlyofficeDocumentHelper {
   }
 
   /**
+   * Returns a file path to a new document template.
+   */
+  public static function getNewTemplatePath($ext, $language = 'en') {
+    if (!in_array($ext, ['docx', 'xlsx', 'pptx', 'pdf'])) {
+      throw new \Exception("Unsupported file type: " . $ext);
+    }
+
+    $path = \Drupal::service('extension.list.module')->getPath('onlyoffice') . "/assets/document-templates/" . $language . "/new." . $ext;
+
+    if (!file_exists($path)) {
+      throw new \Exception("Template file not found: " . $path);
+    }
+
+    return $path;
+  }
+
+  /**
    * Returns true if the format is supported for editing, otherwise false.
    */
   public static function isEditable(Media $media) {
@@ -74,21 +91,25 @@ class OnlyofficeDocumentHelper {
   }
 
   /**
-   * Returns true if the format is a fillable form otherwise false.
-   */
-  public static function isFillForms(Media $media) {
-    $file = $media->get(static::getSourceFieldName($media))->entity;
-    $extension = static::getExtension($file->getFilename());
-
-    $format = OnlyofficeAppConfig::getSupportedFormats()[$extension] ?? NULL;
-
-    return isset($format["fillForms"]) && $format["fillForms"];
-  }
-
-  /**
    * Get the source field name a media type.
    */
   public static function getSourceFieldName(Media $media) {
+    // Make sure the bundle entity is loaded.
+    if (!$media->bundle->entity) {
+      // Try to load the media type entity.
+      $media_type = \Drupal::entityTypeManager()
+        ->getStorage('media_type')
+        ->load($media->bundle());
+
+      if (!$media_type) {
+        throw new \Exception('Media type not found for bundle: ' . $media->bundle());
+      }
+
+      return $media->getSource()
+        ->getSourceFieldDefinition($media_type)
+        ->getName();
+    }
+
     return $media->getSource()
       ->getSourceFieldDefinition($media->bundle->entity)
       ->getName();
@@ -98,22 +119,24 @@ class OnlyofficeDocumentHelper {
    * Returns the document configuration for the document editing service.
    */
   public static function createEditorConfig(
-        $editor_type,
-        $document_key,
-        $document_title,
-        $document_url,
-        $document_info_owner,
-        $document_info_uploaded,
-        $document_permissions_edit,
-        $editorConfig_callbackUrl,
-        $editorConfig_mode,
-        $editorConfig_lang,
-        $editorConfig_user_id,
-        $editorConfig_user_name,
-        $editorConfig_customization_goback_url,
-        $editor_width,
-        $editor_height
-    ) {
+    $editor_type,
+    $document_key,
+    $document_title,
+    $document_url,
+    $document_info_owner,
+    $document_info_uploaded,
+    $document_permissions_edit,
+    $editorConfig_callbackUrl,
+    $editorConfig_mode,
+    $editorConfig_lang,
+    $editorConfig_user_id,
+    $editorConfig_user_name,
+    $editorConfig_customization_goback_url,
+    $editor_width,
+    $editor_height,
+    $document_permissions_fillForms = FALSE,
+    $show_submit = FALSE,
+  ) {
 
     $document_fileType = static::getExtension($document_title);
 
@@ -134,6 +157,7 @@ class OnlyofficeDocumentHelper {
         'permissions' => [
           'download' => TRUE,
           'edit' => $document_permissions_edit,
+          'fillForms' => $document_permissions_fillForms,
         ],
       ],
       'editorConfig' => [
@@ -147,6 +171,10 @@ class OnlyofficeDocumentHelper {
         'customization' => [
           'goback' => [
             'url' => $editorConfig_customization_goback_url,
+          ],
+          'submitForm' => [
+            'visible' => $show_submit,
+            'resultMessage' => t("Your PDF form has been submitted. You can download your filled PDF form via context menu.")->render(),
           ],
         ],
       ],

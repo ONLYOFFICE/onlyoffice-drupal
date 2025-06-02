@@ -2,7 +2,8 @@ name: Release
 
 on:
   push:
-    branches: [main]
+    tags:
+      - 'v*'
 
 permissions:
   contents: write
@@ -12,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Install Zip
         run: sudo apt-get install zip
       - name: Get Info
@@ -25,6 +26,7 @@ jobs:
       - name: Build Artifact
         run: |
           cd ${{ github.workspace }}
+          git submodule update --init --recursive
           mkdir -p ./onlyoffice-drupal
           rsync -av --exclude='onlyoffice-drupal' ./ ./onlyoffice-drupal
           cd ./onlyoffice-drupal

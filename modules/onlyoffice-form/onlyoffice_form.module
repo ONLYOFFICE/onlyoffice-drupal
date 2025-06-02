@@ -1,0 +1,134 @@
+<?php
+
+/**
+ * @file
+ * Contains onlyoffice_form.module.
+ */
+
+/**
+ * Copyright (c) Ascensio System SIA 2025.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\file\FileInterface;
+use Drupal\Core\Field\FieldTypeCategoryManagerInterface;
+
+/**
+ * Implements hook_help().
+ */
+function onlyoffice_form_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.onlyoffice_form':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The ONLYOFFICE form module provides integration with ONLYOFFICE forms.') . '</p>';
+      return $output;
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function onlyoffice_form_theme() {
+  return [
+    'onlyoffice_form_file_upload' => [
+      'render element' => 'element',
+    ],
+  ];
+}
+
+/**
+ * Prepares variables for onlyoffice form file upload templates.
+ *
+ * Default template: onlyoffice-form-file-upload.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - element: A render element representing the file.
+ */
+function template_preprocess_onlyoffice_form_file_upload(array &$variables) {
+  $element = $variables['element'];
+
+  // Standard managed file preprocessing.
+  $variables['attributes'] = [];
+  if (isset($element['#id'])) {
+    $variables['attributes']['id'] = $element['#id'];
+  }
+  if (!empty($element['#attributes']['class'])) {
+    $variables['attributes']['class'] = (array) $element['#attributes']['class'];
+  }
+
+  // File ID and file object.
+  $fid = NULL;
+  if (isset($element['#value']) && !empty($element['#value'])) {
+    $fid = $element['#value'];
+  }
+
+  // Log the file ID for debugging.
+  \Drupal::logger('onlyoffice_form')->notice('File ID in preprocess: @fid', ['@fid' => print_r($fid, TRUE)]);
+
+  // If the file ID is an array, extract the actual ID.
+  if (is_array($fid)) {
+    // Check if it's in the format used by managed_file.
+    if (isset($fid['fids']) && is_array($fid['fids']) && !empty($fid['fids'])) {
+      $fid = reset($fid['fids']);
+    }
+    else {
+      $fid = reset($fid);
+    }
+  }
+
+  \Drupal::logger('onlyoffice_form')->notice('Extracted file ID: @fid', ['@fid' => $fid]);
+
+  $file = $fid ? \Drupal::entityTypeManager()->getStorage('file')->load($fid) : NULL;
+
+  // Prepare file information.
+  $variables['has_file'] = !empty($fid) && !empty($file);
+  $variables['file'] = NULL;
+
+  if ($file instanceof FileInterface) {
+    // Use the file URL generator service.
+    $file_url_generator = \Drupal::service('file_url_generator');
+    $file_url = $file_url_generator->generateAbsoluteString($file->getFileUri());
+
+    $variables['file'] = [
+      'id' => $file->id(),
+      'name' => $file->getFilename(),
+      'url' => $file_url,
+      'size' => format_size($file->getSize()),
+    ];
+  }
+
+  // Add the element description.
+  $variables['description'] = $element['#description'] ?? '';
+
+  // Pass the hidden elements to the template.
+  $variables['element'] = $element;
+
+  // Add base path for image URLs.
+  $variables['base_path'] = base_path();
+}
+
+/**
+ * Implements hook_field_type_category_info_alter().
+ */
+function onlyoffice_form_field_type_category_info_alter(&$definitions) {
+  // The `onlyoffice_form` field type belongs in the `general` category, so the
+  // libraries need to be attached using an alter hook.
+  $definitions[FieldTypeCategoryManagerInterface::FALLBACK_CATEGORY]['libraries'][] = 'onlyoffice_form/onlyoffice_form.onlyoffice_form-icon';
+}

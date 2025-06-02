@@ -3,7 +3,7 @@
 namespace Drupal\onlyoffice;
 
 /**
- * Copyright (c) Ascensio System SIA 2023.
+ * Copyright (c) Ascensio System SIA 2025.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -52,7 +52,6 @@ class OnlyofficeAppConfig {
     "doc" => ["type" => "word"],
     "docm" => ["type" => "word"],
     "docx" => ["type" => "word", "edit" => TRUE],
-    "docxf" => ["type" => "word", "edit" => TRUE],
     "dot" => ["type" => "word"],
     "dotm" => ["type" => "word"],
     "dotx" => ["type" => "word"],
@@ -64,12 +63,10 @@ class OnlyofficeAppConfig {
     "odt" => ["type" => "word"],
     "ott" => ["type" => "word"],
     "oxps" => ["type" => "word"],
-    "pdf" => ["type" => "word"],
     "rtf" => ["type" => "word"],
     "txt" => ["type" => "word"],
     "xps" => ["type" => "word"],
     "xml" => ["type" => "word"],
-    "oform" => ["type" => "word", "fillForms" => TRUE],
 
     "csv" => ["type" => "cell"],
     "fods" => ["type" => "cell"],
@@ -94,6 +91,8 @@ class OnlyofficeAppConfig {
     "ppt" => ["type" => "slide"],
     "pptm" => ["type" => "slide"],
     "pptx" => ["type" => "slide", "edit" => TRUE],
+
+    "pdf" => ["type" => "pdf", "edit" => TRUE],
   ];
 
   /**

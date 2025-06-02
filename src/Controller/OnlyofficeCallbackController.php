@@ -3,7 +3,7 @@
 namespace Drupal\onlyoffice\Controller;
 
 /**
- * Copyright (c) Ascensio System SIA 2023.
+ * Copyright (c) Ascensio System SIA 2025.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -110,12 +110,12 @@ class OnlyofficeCallbackController extends ControllerBase {
    *   The time service.
    */
   public function __construct(
-        UserStorageInterface $user_storage,
-        EntityRepositoryInterface $entity_repository,
-        FileSystemInterface $file_system,
-        StreamWrapperManagerInterface $streamWrapperManager,
-        TimeInterface $time
-    ) {
+    UserStorageInterface $user_storage,
+    EntityRepositoryInterface $entity_repository,
+    FileSystemInterface $file_system,
+    StreamWrapperManagerInterface $streamWrapperManager,
+    TimeInterface $time,
+  ) {
     $this->userStorage = $user_storage;
     $this->entityRepository = $entity_repository;
     $this->fileSystem = $file_system;
@@ -200,10 +200,6 @@ class OnlyofficeCallbackController extends ControllerBase {
         ['error' => 1, 'message' => 'Invalid link key: ' . $key . '.'],
         400
       );
-    }
-
-    if ($linkParameters[1] == 'fillForm') {
-      return new JsonResponse(['error' => 0], 200);
     }
 
     $uuid = $linkParameters[0];

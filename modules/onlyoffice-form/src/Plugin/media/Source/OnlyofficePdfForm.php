@@ -1,9 +1,9 @@
 <?php
 
-namespace Drupal\onlyoffice\Plugin\media\Source;
+namespace Drupal\onlyoffice_form\Plugin\media\Source;
 
 /**
- * Copyright (c) Ascensio System SIA 2023.
+ * Copyright (c) Ascensio System SIA 2025.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -25,28 +25,28 @@ use Drupal\media\MediaTypeInterface;
 use Drupal\media\Plugin\media\Source\File;
 
 /**
- * Onlyoffice Master Form entity media source.
+ * Onlyoffice PDF Form entity media source.
  *
  * @see \Drupal\file\FileInterface
  *
  * @MediaSource(
- *   id = "onlyoffice_m_form",
- *   label = @Translation("ONLYOFFICE Master Form"),
- *   description = @Translation("Use onlyoffice master form files for reusable media."),
+ *   id = "onlyoffice_pdf_form",
+ *   label = @Translation("ONLYOFFICE PDF Form"),
+ *   description = @Translation("Use onlyoffice pdf forms for reusable media."),
  *   allowed_field_types = {"file"},
- *   default_thumbnail_filename = "docxf.png",
+ *   default_thumbnail_filename = "pdf.svg",
  *   forms = {
  *     "media_library_add" = "\Drupal\media_library\Form\FileUploadForm",
  *   },
  * )
  */
-class OnlyofficeMasterForm extends File {
+class OnlyofficePdfForm extends File {
 
   /**
    * {@inheritdoc}
    */
   public function createSourceField(MediaTypeInterface $type) {
-    return parent::createSourceField($type)->set('settings', ['file_extensions' => 'docxf']);
+    return parent::createSourceField($type)->set('settings', ['file_extensions' => 'pdf']);
   }
 
 }

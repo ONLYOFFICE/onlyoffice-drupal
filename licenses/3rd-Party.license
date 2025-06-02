@@ -1,4 +1,4 @@
-ONLYOFFICE Connector module for Drupal uses code from the following 3rd party projects:
+ONLYOFFICE module for Drupal uses code from the following 3rd party projects:
 
 Drupal/core   - Drupal is an open source content management platform supporting a variety of websites ranging from personal weblogs to large community-driven websites. (https://github.com/drupal/core/blob/9.4.x/LICENSE.txt)
 License:        GPL 2.0

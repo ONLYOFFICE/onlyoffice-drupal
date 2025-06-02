@@ -3,7 +3,7 @@
 namespace Drupal\onlyoffice\Controller;
 
 /**
- * Copyright (c) Ascensio System SIA 2023.
+ * Copyright (c) Ascensio System SIA 2025.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -94,7 +94,7 @@ class OnlyofficeEditorController extends ControllerBase {
     OnlyofficeDocumentHelper $document_helper,
     DateFormatterInterface $date_formatter,
     LanguageManagerInterface $language_manager,
-    ModuleExtensionList $extension_list_module
+    ModuleExtensionList $extension_list_module,
   ) {
     $this->renderer = $renderer;
     $this->documentHelper = $document_helper;
@@ -122,7 +122,10 @@ class OnlyofficeEditorController extends ControllerBase {
   public function editor(Media $media, Request $request) {
     $pluginId = $media->getSource()->getPluginId();
 
-    if ($pluginId != "file" && $pluginId != "onlyoffice_m_form" && $pluginId != "onlyoffice_form") {
+    if (
+      $pluginId != "file"
+      && $pluginId != "onlyoffice_pdf_form"
+    ) {
       throw new UnsupportedMediaTypeHttpException();
     }
 
@@ -132,8 +135,10 @@ class OnlyofficeEditorController extends ControllerBase {
       $editorType = 'mobile';
     }
 
+    $mode = $request->query->get('mode', 'edit');
+
     $build = [
-      'page' => $this->getDocumentConfig($editorType, $media),
+      'page' => $this->getDocumentConfig($editorType, $media, $mode),
     ];
 
     $build['page']['#theme'] = 'onlyoffice_editor';
@@ -148,7 +153,7 @@ class OnlyofficeEditorController extends ControllerBase {
   /**
    * Method for generating configuration for document editor service.
    */
-  private function getDocumentConfig($editorType, Media $media) {
+  private function getDocumentConfig($editorType, Media $media, $mode) {
     $context = [
       '@type' => $media->bundle(),
       '%label' => $media->label(),
@@ -165,7 +170,7 @@ class OnlyofficeEditorController extends ControllerBase {
     }
 
     $user = $this->currentUser()->getAccount();
-    $can_edit = $this->documentHelper->isEditable($media) || $this->documentHelper->isFillForms($media);
+    $can_edit = $this->documentHelper->isEditable($media);
     $edit_permission = $media->access("update", $user);
 
     $editorConfig = $this->documentHelper->createEditorConfig(
@@ -177,7 +182,7 @@ class OnlyofficeEditorController extends ControllerBase {
           $this->dateFormatter->format($media->getCreatedTime(), 'short'),
           $edit_permission,
           $edit_permission ? OnlyofficeUrlHelper::getCallbackUrl($media) : NULL,
-          $edit_permission && $can_edit ? 'edit' : 'view',
+          $edit_permission && $can_edit && $mode == 'edit' ? 'edit' : 'view',
           $this->languageManager->getCurrentLanguage()->getId(),
           $user->id(),
           $user->getDisplayName(),
