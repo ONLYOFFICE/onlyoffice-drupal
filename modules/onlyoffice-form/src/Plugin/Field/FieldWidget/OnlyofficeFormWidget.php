@@ -37,7 +37,7 @@ use Drupal\Core\Field\Attribute\FieldWidget;
   id: "onlyoffice_form_widget",
   label: new \Drupal\Core\StringTranslation\TranslatableMarkup("ONLYOFFICE form"),
   field_types: [
-    "onlyoffice_form"
+    "onlyoffice_form",
   ]
 )]
 class OnlyofficeFormWidget extends WidgetBase implements ContainerFactoryPluginInterface {

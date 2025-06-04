@@ -49,7 +49,7 @@ use Drupal\Core\Field\Attribute\FieldFormatter;
   id: "onlyoffice_form_formatter",
   label: new \Drupal\Core\StringTranslation\TranslatableMarkup("ONLYOFFICE form"),
   field_types: [
-    "onlyoffice_form"
+    "onlyoffice_form",
   ]
 )]
 class OnlyofficeFormFormatter extends FormatterBase {
