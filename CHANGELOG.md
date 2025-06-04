@@ -1,6 +1,6 @@
 # Change Log
 
-## 
+## 2.0.0
 ## Added
 - new ONLYOFFICE Form submodule
 - new ONLYOFFICE Form media type
