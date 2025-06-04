@@ -38,7 +38,7 @@ use Drupal\Core\Field\Attribute\FieldType;
   description: new TranslatableMarkup("This field stores a reference to an ONLYOFFICE form media entity with optional description."),
   default_widget: "onlyoffice_form_widget",
   default_formatter: "onlyoffice_form_formatter",
- )]
+)]
 class OnlyofficeFormItem extends FieldItemBase {
 
   /**
