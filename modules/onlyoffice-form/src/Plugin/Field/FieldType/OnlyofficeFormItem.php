@@ -30,7 +30,6 @@ use Drupal\Core\Field\Attribute\FieldType;
 
 /**
  * Plugin implementation of the 'onlyoffice_form' field type.
- *
  */
 #[FieldType(
   id: "onlyoffice_form",
