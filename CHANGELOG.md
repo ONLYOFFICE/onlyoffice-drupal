@@ -2,7 +2,6 @@
 
 ## 
 ## Added
-- support for drupal 11
 - new ONLYOFFICE Form submodule
 - new ONLYOFFICE Form media type
 - new ONLYOFFICE Form field type, widget and formatter
