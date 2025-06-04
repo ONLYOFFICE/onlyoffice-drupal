@@ -1,6 +1,6 @@
 # Change Log
 
-## 
+##
 ## Added
 - support for drupal 11
 - new ONLYOFFICE Form submodule
