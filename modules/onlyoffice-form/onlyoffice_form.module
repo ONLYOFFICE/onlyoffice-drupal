@@ -120,8 +120,10 @@ function template_preprocess_onlyoffice_form_file_upload(array &$variables) {
   // Pass the hidden elements to the template.
   $variables['element'] = $element;
 
-  // Add base path for image URLs.
-  $variables['base_path'] = base_path();
+  // Add module path for image URLs.
+  $resolver = \Drupal::service('extension.path.resolver');
+  $module_path = $resolver->getPath('module', 'onlyoffice_form');
+  $variables['module_path'] = base_path() . $module_path;
 }
 
 /**
