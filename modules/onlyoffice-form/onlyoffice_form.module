@@ -109,8 +109,6 @@ function template_preprocess_onlyoffice_form_file_upload(array &$variables) {
     $variables['file'] = [
       'id' => $file->id(),
       'name' => $file->getFilename(),
-      'url' => $file_url,
-      'size' => format_size($file->getSize()),
     ];
   }
 
