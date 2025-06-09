@@ -102,10 +102,6 @@ function template_preprocess_onlyoffice_form_file_upload(array &$variables) {
   $variables['file'] = NULL;
 
   if ($file instanceof FileInterface) {
-    // Use the file URL generator service.
-    $file_url_generator = \Drupal::service('file_url_generator');
-    $file_url = $file_url_generator->generateAbsoluteString($file->getFileUri());
-
     $variables['file'] = [
       'id' => $file->id(),
       'name' => $file->getFilename(),
