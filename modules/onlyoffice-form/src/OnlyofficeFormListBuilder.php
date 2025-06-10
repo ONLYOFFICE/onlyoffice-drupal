@@ -179,7 +179,7 @@ class OnlyofficeFormListBuilder extends ControllerBase {
         'class' => ['onlyoffice-form-help-text'],
       ],
       'content' => [
-        '#markup' => $this->t('The <strong>PDF forms</strong> management page lists all available forms, which can be filtered by keyword (including title, description, and author).'),
+        '#markup' => $this->t('Create and edit <strong>PDF forms</strong> with <strong>ONLYOFFICE</strong> in this module. Publish them directly to your website, making it easy for visitors to fill them out online. Track all submissions in the Submitted forms tab, where you can view every entry.'),
         '#prefix' => '<div>',
         '#suffix' => '</div>',
       ],
