@@ -66,3 +66,15 @@
 .onlyoffice-form-bulk-form .form-item {
   margin-right: 5px;
 }
+
+/**
+ * Help text styling.
+ */
+.onlyoffice-form-help-text {
+  margin-bottom: 1.5em;
+}
+
+.onlyoffice-form-help-text div {
+  font-size: 1em;
+  line-height: 1.5;
+}

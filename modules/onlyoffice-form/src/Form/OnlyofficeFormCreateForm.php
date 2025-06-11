@@ -42,6 +42,7 @@ use Drupal\onlyoffice\OnlyofficeDocumentHelper;
 use Drupal\onlyoffice\OnlyofficeUrlHelper;
 use Drupal\onlyoffice_form\Ajax\OpenInNewTabCommand;
 use Drupal\onlyoffice_form\OnlyofficeFormDocumentHelper;
+use Drupal\Core\Extension\ExtensionPathResolver;
 use Drupal\Core\Language\LanguageManagerInterface;
 
 /**
@@ -106,6 +107,13 @@ class OnlyofficeFormCreateForm extends FormBase {
   protected $languageManager;
 
   /**
+   * The extension path resolver.
+   *
+   * @var \Drupal\Core\Extension\ExtensionPathResolver
+   */
+  protected $pathResolver;
+
+  /**
    * Constructs a new OnlyofficeFormCreateForm.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -124,6 +132,8 @@ class OnlyofficeFormCreateForm extends FormBase {
    *   The extension list module service.
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager.
+   * @param \Drupal\Core\Extension\ExtensionPathResolver $path_resolver
+   *   The extension path resolver.
    */
   public function __construct(
     EntityTypeManagerInterface $entity_type_manager,
@@ -134,6 +144,7 @@ class OnlyofficeFormCreateForm extends FormBase {
     FileSystemInterface $file_system,
     ModuleExtensionList $extension_list_module,
     LanguageManagerInterface $language_manager,
+    ExtensionPathResolver $path_resolver,
   ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->currentUser = $current_user;
@@ -143,6 +154,7 @@ class OnlyofficeFormCreateForm extends FormBase {
     $this->fileSystem = $file_system;
     $this->extensionListModule = $extension_list_module;
     $this->languageManager = $language_manager;
+    $this->pathResolver = $path_resolver;
   }
 
   /**
@@ -157,7 +169,8 @@ class OnlyofficeFormCreateForm extends FormBase {
       $container->get('file.usage'),
       $container->get('file_system'),
       $container->get('extension.list.module'),
-      $container->get('language_manager')
+      $container->get('language_manager'),
+      $container->get('extension.path.resolver')
     );
   }
 
@@ -174,6 +187,13 @@ class OnlyofficeFormCreateForm extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form['#prefix'] = '<div id="onlyoffice-form-create-form-wrapper">';
     $form['#suffix'] = '</div>';
+
+    // Add module path for URLs.
+    $module_path = base_path() . $this->pathResolver->getPath('module', 'onlyoffice_form');
+
+    $form['#attached']['drupalSettings']['myModule'] = [
+      'modulePath' => $module_path,
+    ];
 
     // Attach the dialog library.
     $form['#attached']['library'][] = 'onlyoffice_form/onlyoffice_form.dialog';

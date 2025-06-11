@@ -87,6 +87,10 @@ class OnlyofficeUrlHelper {
    * Return URL to document in manager documents.
    */
   public static function getGoBackUrl(Media $media) {
+    if ($media->getSource()->getPluginId() == 'onlyoffice_pdf_form') {
+      return Url::fromRoute('entity.onlyoffice_form.collection')->setAbsolute()->toString();
+    }
+
     $url = Url::fromRoute('entity.media.collection')->setAbsolute();
 
     if ($media->hasField('directory') && $media->get('directory')->getString()) {

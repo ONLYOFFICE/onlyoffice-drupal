@@ -9,12 +9,9 @@
  * - file: Information about the uploaded file, including:
  *   - id: The file ID.
  *   - name: The file name.
- *   - url: The file URL.
- *   - size: The formatted file size.
- * - upload_button: The upload button.
- * - remove_button: The remove button.
  * - description: The field description.
  * - element: The original form element.
+ * - module_path: The path to the module directory.
  *
  * @see template_preprocess_onlyoffice_form_file_upload()
  *
@@ -26,7 +23,7 @@
     {% if has_file %}
       <div class="onlyoffice-form-uploaded-file">
         <div class="onlyoffice-form-file-preview">
-          <img src="/modules/contrib/onlyoffice-drupal/modules/onlyoffice-form/images/pdf.svg" alt="PDF File" width="96" height="96">
+          <img src="{{ module_path }}/images/pdf.svg" alt="PDF File" width="96" height="96">
           <div class="onlyoffice-form-file-info">
             <div class="onlyoffice-form-file-title">Title: {{ file.name }}</div>
           </div>

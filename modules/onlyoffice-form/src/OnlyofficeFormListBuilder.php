@@ -172,6 +172,19 @@ class OnlyofficeFormListBuilder extends ControllerBase {
   public function render() {
     $build = [];
 
+    // Add help text at the top of the page.
+    $build['help_text'] = [
+      '#type' => 'container',
+      '#attributes' => [
+        'class' => ['onlyoffice-form-help-text'],
+      ],
+      'content' => [
+        '#markup' => $this->t('Create and edit <strong>PDF forms</strong> with <strong>ONLYOFFICE</strong> in this module. Publish them directly to your website, making it easy for visitors to fill them out online. Track all submissions in the Submitted forms tab, where you can view every entry.'),
+        '#prefix' => '<div>',
+        '#suffix' => '</div>',
+      ],
+    ];
+
     // Add button to create new form with modal dialog.
     $build['add_form'] = [
       '#type' => 'link',

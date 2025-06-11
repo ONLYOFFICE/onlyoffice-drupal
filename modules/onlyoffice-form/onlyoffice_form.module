@@ -102,15 +102,9 @@ function template_preprocess_onlyoffice_form_file_upload(array &$variables) {
   $variables['file'] = NULL;
 
   if ($file instanceof FileInterface) {
-    // Use the file URL generator service.
-    $file_url_generator = \Drupal::service('file_url_generator');
-    $file_url = $file_url_generator->generateAbsoluteString($file->getFileUri());
-
     $variables['file'] = [
       'id' => $file->id(),
       'name' => $file->getFilename(),
-      'url' => $file_url,
-      'size' => format_size($file->getSize()),
     ];
   }
 
@@ -120,8 +114,10 @@ function template_preprocess_onlyoffice_form_file_upload(array &$variables) {
   // Pass the hidden elements to the template.
   $variables['element'] = $element;
 
-  // Add base path for image URLs.
-  $variables['base_path'] = base_path();
+  // Add module path for image URLs.
+  $resolver = \Drupal::service('extension.path.resolver');
+  $module_path = $resolver->getPath('module', 'onlyoffice_form');
+  $variables['module_path'] = base_path() . $module_path;
 }
 
 /**

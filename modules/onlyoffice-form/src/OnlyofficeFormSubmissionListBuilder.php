@@ -258,6 +258,19 @@ class OnlyofficeFormSubmissionListBuilder extends ControllerBase {
   public function render(?MediaInterface $media = NULL) {
     $build = [];
 
+    // Add help text at the top of the page.
+    $build['help_text'] = [
+      '#type' => 'container',
+      '#attributes' => [
+        'class' => ['onlyoffice-form-help-text'],
+      ],
+      'content' => [
+        '#markup' => $this->t('Access and view the forms submitted by your site visitors in this tab.'),
+        '#prefix' => '<div>',
+        '#suffix' => '</div>',
+      ],
+    ];
+
     // Add the tabs for navigation.
     $build['tabs'] = [
       '#type' => 'container',
