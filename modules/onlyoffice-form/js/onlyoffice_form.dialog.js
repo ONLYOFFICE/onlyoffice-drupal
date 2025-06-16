@@ -214,7 +214,7 @@
         var filePreviewHtml = 
           `<div class="onlyoffice-form-uploaded-file">
         <div class="onlyoffice-form-file-preview">
-          <img src="/modules/contrib/onlyoffice-drupal/modules/onlyoffice-form/images/pdf.svg" alt="PDF File" width="96" height="96">
+          <img src="${drupalSettings.myModule.modulePath}/images/pdf.svg" alt="PDF File" width="96" height="96">
           <div class="onlyoffice-form-file-info">
             <div class="onlyoffice-form-file-title"><span>Title</span>: ${file.name}</div>
           </div>
