@@ -37,7 +37,13 @@ To submit bug reports and feature suggestions, or track changes: [drupal.org/pro
 
 ## Requirements
 
-This module requires no modules outside of Drupal core.
+- **firebase/php-jwt**: 6.0.0 or higher
+
+Make sure to run:
+
+```bash
+composer require firebase/php-jwt:^6.0
+```
 
 ## Installation
 
