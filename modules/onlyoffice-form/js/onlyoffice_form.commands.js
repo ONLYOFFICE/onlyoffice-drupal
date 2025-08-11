@@ -1,5 +1,10 @@
+/**
+ * @file
+ * Defines custom Ajax commands for the ONLYOFFICE form module.
+ */
+
 /*
- * (c) Copyright Ascensio System SIA 2023
+ * (c) Copyright Ascensio System SIA 2025
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,15 +22,20 @@
 */
 
 (function (Drupal) {
-  if (typeof DocsAPI !== 'undefined') {
+  'use strict';
 
-    let editors = document.getElementsByClassName("onlyoffice-editor");
+  /**
+   * Command to open a URL in a new tab.
+   *
+   * @param {Drupal.Ajax} [ajax]
+   *   The Drupal Ajax object.
+   * @param {object} response
+   *   The Ajax response.
+   * @param {string} response.url
+   *   The URL to open in a new tab.
+   */
+  Drupal.AjaxCommands.prototype.openInNewTab = function (ajax, response) {
+    window.open(response.url, '_blank');
+  };
 
-    let count = editors.length;
-    for (let i = 0; i < count; i++) {
-      let dataId = editors[0].id;
-      editors[0].id = editors[0].id + "_" + i;
-      new DocsAPI.DocEditor(editors[0].id, drupalSettings.onlyofficeData[dataId].config);
-    }
-  }
 })(Drupal);

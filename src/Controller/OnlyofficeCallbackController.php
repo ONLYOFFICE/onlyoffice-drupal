@@ -3,7 +3,7 @@
 namespace Drupal\onlyoffice\Controller;
 
 /**
- * Copyright (c) Ascensio System SIA 2023.
+ * Copyright (c) Ascensio System SIA 2025.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,25 +21,26 @@ namespace Drupal\onlyoffice\Controller;
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Component\Uuid\Uuid;
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\File\Exception\InvalidStreamWrapperException;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
 use Drupal\file\Entity\File;
 use Drupal\file\FileInterface;
+use Drupal\media\Entity\Media;
+use Drupal\onlyoffice\OnlyofficeAppConfig;
+use Drupal\onlyoffice\OnlyofficeDocumentHelper;
 use Drupal\onlyoffice\OnlyofficeUrlHelper;
 use Drupal\user\Entity\User;
 use Drupal\user\UserStorageInterface;
-use Drupal\media\Entity\Media;
-use Drupal\Core\Entity\EntityRepositoryInterface;
-use Drupal\Component\Datetime\TimeInterface;
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Firebase\JWT\JWT;
-use Drupal\onlyoffice\OnlyofficeAppConfig;
-use Drupal\onlyoffice\OnlyofficeDocumentHelper;
 
 /**
  * Returns responses for ONLYOFFICE Connector routes.
@@ -109,12 +110,12 @@ class OnlyofficeCallbackController extends ControllerBase {
    *   The time service.
    */
   public function __construct(
-        UserStorageInterface $user_storage,
-        EntityRepositoryInterface $entity_repository,
-        FileSystemInterface $file_system,
-        StreamWrapperManagerInterface $streamWrapperManager,
-        TimeInterface $time
-    ) {
+    UserStorageInterface $user_storage,
+    EntityRepositoryInterface $entity_repository,
+    FileSystemInterface $file_system,
+    StreamWrapperManagerInterface $streamWrapperManager,
+    TimeInterface $time,
+  ) {
     $this->userStorage = $user_storage;
     $this->entityRepository = $entity_repository;
     $this->fileSystem = $file_system;
@@ -178,7 +179,7 @@ class OnlyofficeCallbackController extends ControllerBase {
       }
 
       try {
-        $bodyFromToken = JWT::decode($token, $this->config('onlyoffice.settings')->get('doc_server_jwt'), ["HS256"]);
+        $bodyFromToken = JWT::decode($token, new Key($this->config('onlyoffice.settings')->get('doc_server_jwt'), 'HS256'));
 
         $body = $inBody ? $bodyFromToken : $bodyFromToken->payload;
       }
@@ -303,19 +304,27 @@ class OnlyofficeCallbackController extends ControllerBase {
     $directory = $this->fileSystem->dirname($file->getFileUri());
     $separator = substr($directory, -1) == '/' ? '' : '/';
     $newDestination = $directory . $separator . $file->getFilename();
-    $new_data = file_get_contents($download_url);
 
-    $newFile = $this->writeData($new_data, $newDestination);
+    if ($new_data = file_get_contents($download_url)) {
+      $newFile = $this->writeData($new_data, $newDestination);
 
-    $media->set(OnlyofficeDocumentHelper::getSourceFieldName($media), $newFile);
-    $media->setNewRevision();
-    $media->setRevisionUser($this->currentUser()->getAccount());
-    $media->setRevisionCreationTime($this->time->getRequestTime());
-    $media->setRevisionLogMessage('');
-    $media->save();
+      $media->set(OnlyofficeDocumentHelper::getSourceFieldName($media), $newFile);
+      $media->setNewRevision();
+      $media->setRevisionUser($this->currentUser()->getAccount());
+      $media->setRevisionCreationTime($this->time->getRequestTime());
+      $media->setRevisionLogMessage('');
+      $media->save();
 
-    $this->getLogger('onlyoffice')->notice('Media @type %label was successfully saved.', $context);
-    return new JsonResponse(['error' => 0], 200);
+      $this->getLogger('onlyoffice')->notice('Media @type %label was successfully saved.', $context);
+      return new JsonResponse(['error' => 0], 200);
+    }
+    else {
+      $this->getLogger('onlyoffice')->error('Error download file from @url.', ['@url' => $download_url]);
+      return new JsonResponse(
+        ['error' => 1, 'message' => 'Error download file from ' . $download_url],
+        400
+      );
+    }
   }
 
   /**

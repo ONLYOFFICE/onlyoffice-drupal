@@ -3,7 +3,7 @@
 namespace Drupal\onlyoffice\Plugin\Field\FieldFormatter;
 
 /**
- * Copyright (c) Ascensio System SIA 2023.
+ * Copyright (c) Ascensio System SIA 2025.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,19 +21,21 @@ namespace Drupal\onlyoffice\Plugin\Field\FieldFormatter;
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Datetime\DateFormatterInterface;
-use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
-use Drupal\Core\Form\FormStateInterface;
-use Drupal\file\Plugin\Field\FieldFormatter\FileFormatterBase;
+use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
+use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\Core\PageCache\ResponsePolicy\KillSwitch;
 use Drupal\file\Entity\File;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\onlyoffice\OnlyofficeDocumentHelper;
 use Drupal\onlyoffice\OnlyofficeUrlHelper;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Plugin implementation of the 'file_document' formatter.
+ * Plugin implementation of the 'onlyoffice_preview' formatter.
  *
  * @FieldFormatter(
  *   id = "onlyoffice_preview",
@@ -44,7 +46,7 @@ use Drupal\onlyoffice\OnlyofficeUrlHelper;
  *   }
  * )
  */
-class OnlyofficePreviewFormatter extends FileFormatterBase {
+class OnlyofficePreviewFormatter extends OnlyofficeBaseFormatter {
 
   /**
    * The date formatter service.
@@ -59,6 +61,13 @@ class OnlyofficePreviewFormatter extends FileFormatterBase {
    * @var \Drupal\Core\Language\LanguageManagerInterface
    */
   protected $languageManager;
+
+  /**
+   * The page cache disabling policy.
+   *
+   * @var \Drupal\Core\PageCache\ResponsePolicy\KillSwitch
+   */
+  protected $pageCacheKillSwitch;
 
   /**
    * Construct the OnlyofficePreviewFormatter.
@@ -81,6 +90,8 @@ class OnlyofficePreviewFormatter extends FileFormatterBase {
    *   The date formatter service.
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager.
+   * @param \Drupal\Core\PageCache\ResponsePolicy\KillSwitch $page_cache_kill_switch
+   *   The page cache disabling policy.
    */
   public function __construct(
     $plugin_id,
@@ -91,12 +102,14 @@ class OnlyofficePreviewFormatter extends FileFormatterBase {
     $view_mode,
     array $third_party_settings,
     DateFormatterInterface $date_formatter,
-    LanguageManagerInterface $language_manager
+    LanguageManagerInterface $language_manager,
+    KillSwitch $page_cache_kill_switch,
   ) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings);
 
     $this->dateFormatter = $date_formatter;
     $this->languageManager = $language_manager;
+    $this->pageCacheKillSwitch = $page_cache_kill_switch;
   }
 
   /**
@@ -112,76 +125,9 @@ class OnlyofficePreviewFormatter extends FileFormatterBase {
       $configuration['view_mode'],
       $configuration['third_party_settings'],
       $container->get('date.formatter'),
-      $container->get('language_manager')
+      $container->get('language_manager'),
+      $container->get('page_cache_kill_switch')
     );
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function defaultSettings() {
-    return [
-      'width_unit' => '%',
-      'width' => 100,
-      'height_unit' => 'px',
-      'height' => 640,
-    ] + parent::defaultSettings();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function settingsForm(array $form, FormStateInterface $form_state) {
-    return parent::settingsForm($form, $form_state) + [
-      'width_unit' => [
-        '#type' => 'radios',
-        '#title' => $this->t('Width units'),
-        '#default_value' => $this->getSetting('width_unit'),
-        '#options' => [
-          '%' => $this->t('Percents'),
-          'px' => $this->t('Pixels'),
-        ],
-      ],
-      'width' => [
-        '#type' => 'number',
-        '#title' => $this->t('Width'),
-        '#default_value' => $this->getSetting('width'),
-        '#size' => 5,
-        '#maxlength' => 5,
-        '#min' => 0,
-        '#required' => TRUE,
-      ],
-      'height_unit' => [
-        '#type' => 'radios',
-        '#title' => $this->t('Height units'),
-        '#default_value' => $this->getSetting('height_unit'),
-        '#options' => [
-          '%' => $this->t('Percents'),
-          'px' => $this->t('Pixels'),
-        ],
-      ],
-      'height' => [
-        '#type' => 'number',
-        '#title' => $this->t('Height'),
-        '#default_value' => $this->getSetting('height'),
-        '#size' => 5,
-        '#maxlength' => 5,
-        '#min' => 0,
-        '#required' => TRUE,
-      ],
-    ];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function settingsSummary() {
-    $summary = parent::settingsSummary();
-    $widthName = $this->t('Width');
-    $heightName = $this->t('Height');
-    $summary[] = $widthName . ': ' . $this->getSetting('width') . $this->getSetting('width_unit');
-    $summary[] = $heightName . ': ' . $this->getSetting('height') . $this->getSetting('height_unit');
-    return $summary;
   }
 
   /**
@@ -207,15 +153,9 @@ class OnlyofficePreviewFormatter extends FileFormatterBase {
    * {@inheritdoc}
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
+    $this->pageCacheKillSwitch->trigger();
 
-    $element = [
-      '#attached' => [
-        'library' => [
-          'onlyoffice/onlyoffice.api',
-          'onlyoffice/onlyoffice.preview',
-        ],
-      ],
-    ];
+    $element = parent::viewElements($items, $langcode);
 
     /** @var \Drupal\file\Entity\File $file */
     foreach ($this->getEntitiesToView($items, $langcode) as $delta => $file) {
@@ -228,7 +168,12 @@ class OnlyofficePreviewFormatter extends FileFormatterBase {
               $file->id()
           );
 
-        $element[$delta] = ['#markup' => sprintf('<div id="%s" class="onlyoffice-editor"></div>', $editor_id)];
+        $element[$delta] = [
+          '#markup' => sprintf('<div id="%s" class="onlyoffice-editor"></div>', $editor_id),
+          '#cache' => [
+            'max-age' => 0,
+          ],
+        ];
 
         $element['#attached']['drupalSettings']['onlyofficeData'][$editor_id] = [
           'config' => $this->getEditorConfig($file),
@@ -264,6 +209,28 @@ class OnlyofficePreviewFormatter extends FileFormatterBase {
           $editor_width,
           $editor_height
       );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function needsEntityLoad(EntityReferenceItem $item) {
+    return parent::needsEntityLoad($item) && $item->isDisplayed();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function checkAccess(EntityInterface $entity) {
+    // Only check access if the current file access control handler explicitly
+    // opts in by implementing FileAccessFormatterControlHandlerInterface.
+    $access_handler_class = $entity->getEntityType()->getHandlerClass('access');
+    if (is_subclass_of($access_handler_class, '\Drupal\file\FileAccessFormatterControlHandlerInterface')) {
+      return $entity->access('view', NULL, TRUE);
+    }
+    else {
+      return AccessResult::allowed();
+    }
   }
 
 }

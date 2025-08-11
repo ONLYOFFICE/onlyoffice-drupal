@@ -3,7 +3,7 @@
 namespace Drupal\onlyoffice\Controller;
 
 /**
- * Copyright (c) Ascensio System SIA 2023.
+ * Copyright (c) Ascensio System SIA 2025.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -27,11 +27,12 @@ use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\onlyoffice\OnlyofficeAppConfig;
 use Drupal\onlyoffice\OnlyofficeUrlHelper;
 use Drupal\user\UserStorageInterface;
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use Firebase\JWT\JWT;
 
 /**
  * Returns responses for ONLYOFFICE Connector routes.
@@ -62,7 +63,7 @@ class OnlyofficeDownloadController extends ControllerBase {
    */
   public function __construct(
     EntityRepositoryInterface $entity_repository,
-    UserStorageInterface $user_storage
+    UserStorageInterface $user_storage,
   ) {
     $this->entityRepository = $entity_repository;
     $this->userStorage = $user_storage;
@@ -97,7 +98,7 @@ class OnlyofficeDownloadController extends ControllerBase {
       }
 
       try {
-        JWT::decode($token, $this->config('onlyoffice.settings')->get('doc_server_jwt'), ["HS256"]);
+        JWT::decode($token, new Key($this->config('onlyoffice.settings')->get('doc_server_jwt'), 'HS256'));
       }
       catch (\Exception $e) {
         $this->getLogger('onlyoffice')->error('Invalid request token.');

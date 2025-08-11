@@ -3,7 +3,7 @@
 namespace Drupal\onlyoffice;
 
 /**
- * Copyright (c) Ascensio System SIA 2023.
+ * Copyright (c) Ascensio System SIA 2025.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -40,7 +40,7 @@ class OnlyofficeAppConfig {
    *
    * @var string
    */
-  private const DOC_SERVICE_API_URL = "web-apps/apps/api/documents/api.js";
+  private const DOC_SERVICE_API_URL = "/web-apps/apps/api/documents/api.js";
 
   /**
    * Data about supported formats.
@@ -48,7 +48,6 @@ class OnlyofficeAppConfig {
    * @var array
    */
   private const SUPPORTED_FORMATS = [
-    "djvu" => ["type" => "word"],
     "doc" => ["type" => "word"],
     "docm" => ["type" => "word"],
     "docx" => ["type" => "word", "edit" => TRUE],
@@ -58,29 +57,45 @@ class OnlyofficeAppConfig {
     "epub" => ["type" => "word"],
     "fb2" => ["type" => "word"],
     "fodt" => ["type" => "word"],
+    "htm" => ["type" => "word"],
     "html" => ["type" => "word"],
+    "hwp" => ["type" => "word"],
+    "hwpx" => ["type" => "word"],
+    "md" => ["type" => "word"],
     "mht" => ["type" => "word"],
+    "mhtml" => ["type" => "word"],
     "odt" => ["type" => "word"],
     "ott" => ["type" => "word"],
-    "oxps" => ["type" => "word"],
-    "pdf" => ["type" => "word"],
+    "pages" => ["type" => "word"],
     "rtf" => ["type" => "word"],
+    "stw" => ["type" => "word"],
+    "sxw" => ["type" => "word"],
     "txt" => ["type" => "word"],
-    "xps" => ["type" => "word"],
+    "wps" => ["type" => "word"],
+    "wpt" => ["type" => "word"],
     "xml" => ["type" => "word"],
 
     "csv" => ["type" => "cell"],
+    "et" => ["type" => "cell"],
+    "ett" => ["type" => "cell"],
     "fods" => ["type" => "cell"],
+    "numbers" => ["type" => "cell"],
     "ods" => ["type" => "cell"],
     "ots" => ["type" => "cell"],
+    "sxc" => ["type" => "cell"],
     "xls" => ["type" => "cell"],
+    "xlsb" => ["type" => "cell"],
     "xlsm" => ["type" => "cell"],
     "xlsx" => ["type" => "cell", "edit" => TRUE],
     "xlt" => ["type" => "cell"],
     "xltm" => ["type" => "cell"],
     "xltx" => ["type" => "cell"],
 
+    "dps" => ["type" => "slide"],
+    "dpt" => ["type" => "slide"],
     "fodp" => ["type" => "slide"],
+    "key" => ["type" => "slide"],
+    "odg" => ["type" => "slide"],
     "odp" => ["type" => "slide"],
     "otp" => ["type" => "slide"],
     "pot" => ["type" => "slide"],
@@ -92,6 +107,21 @@ class OnlyofficeAppConfig {
     "ppt" => ["type" => "slide"],
     "pptm" => ["type" => "slide"],
     "pptx" => ["type" => "slide", "edit" => TRUE],
+    "sxi" => ["type" => "slide"],
+
+    "djvu" => ["type" => "pdf"],
+    "docxf" => ["type" => "pdf"],
+    "oform" => ["type" => "pdf"],
+    "oxps" => ["type" => "pdf"],
+    "pdf" => ["type" => "pdf", "edit" => TRUE],
+    "xps" => ["type" => "pdf"],
+
+    "vsdx" => ["type" => "diagram"],
+    "vsdm" => ["type" => "diagram"],
+    "vssm" => ["type" => "diagram"],
+    "vssx" => ["type" => "diagram"],
+    "vstm" => ["type" => "diagram"],
+    "vstx" => ["type" => "diagram"],
   ];
 
   /**

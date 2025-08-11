@@ -3,7 +3,7 @@
 namespace Drupal\onlyoffice;
 
 /**
- * Copyright (c) Ascensio System SIA 2023.
+ * Copyright (c) Ascensio System SIA 2025.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -87,6 +87,10 @@ class OnlyofficeUrlHelper {
    * Return URL to document in manager documents.
    */
   public static function getGoBackUrl(Media $media) {
+    if ($media->getSource()->getPluginId() == 'onlyoffice_pdf_form') {
+      return Url::fromRoute('entity.onlyoffice_form.collection')->setAbsolute()->toString();
+    }
+
     $url = Url::fromRoute('entity.media.collection')->setAbsolute();
 
     if ($media->hasField('directory') && $media->get('directory')->getString()) {
@@ -99,7 +103,7 @@ class OnlyofficeUrlHelper {
   /**
    * Sign a query parameters with a given key and algorithm.
    */
-  private static function signLinkParameters(array $parameters) {
+  public static function signLinkParameters(array $parameters) {
     $payload = \implode('?', $parameters);
 
     $signature = JWT::urlsafeB64Encode(JWT::sign($payload, Settings::getHashSalt() . \Drupal::service('private_key')->get(), 'HS256'));

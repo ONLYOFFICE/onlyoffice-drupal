@@ -1,0 +1,4 @@
+administer onlyoffice forms:
+  title: 'Administer ONLYOFFICE forms'
+  description: 'Create and manage ONLYOFFICE forms.'
+  restrict access: true

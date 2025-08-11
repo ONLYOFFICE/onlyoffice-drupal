@@ -1,0 +1,80 @@
+/**
+ * @file
+ * Styles for ONLYOFFICE form admin pages.
+ */
+
+/**
+ *
+ * (c) Copyright Ascensio System SIA 2025
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
+ */
+
+.onlyoffice-forms {
+  margin-top: 1em;
+}
+
+.onlyoffice-form-filter-form .form-item {
+  margin-right: 1em;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.onlyoffice-form-filter-form .form-actions {
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.onlyoffice-form-dropbutton {
+  position: relative;
+}
+
+/* Table styling for form submissions list */
+.onlyoffice-form-submissions th.form {
+  width: 50%;
+}
+
+.onlyoffice-form-submissions td.form {
+  max-width: 0;
+}
+
+.onlyoffice-form-submissions td.form a {
+  display: inline-block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/**
+ * Bulk form.
+ */
+.onlyoffice-form-bulk-form .form-item {
+  margin-right: 5px;
+}
+
+/**
+ * Help text styling.
+ */
+.onlyoffice-form-help-text {
+  margin-bottom: 1.5em;
+}
+
+.onlyoffice-form-help-text div {
+  font-size: 1em;
+  line-height: 1.5;
+}

@@ -1,11 +1,11 @@
 # French translation of ONLYOFFICE Connector
-# (c) Copyright Ascensio System SIA 2023
+# (c) Copyright Ascensio System SIA 2025
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: ONLYOFFICE Connector\n"
 "POT-Creation-Date: 2022-03-03 11:00+0000\n"
-"PO-Revision-Date: 2022-04-04 13:01+0300\n"
+"PO-Revision-Date: 2025-05-21 11:51+0500\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr_FR\n"
@@ -13,7 +13,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 3.0.1\n"
+"X-Generator: Poedit 3.6\n"
 
 msgid "Allows editing office files."
 msgstr "Permet d'éditer des fichiers bureautiques."
@@ -24,7 +24,7 @@ msgstr "Le connecteur ONLYOFFICE permet aux utilisateurs d'éditer des documents
 msgid "Installation and configuration"
 msgstr "Installation et configuration"
 
-msgid "Explore how to install and configure the ONLYOFFICE connector for Drupal on the <a href=\":onlyoffice-drupal\">official project page</a>."
+msgid "Explore how to install and configure the ONLYOFFICE module for Drupal on the <a href=\":onlyoffice-drupal\">official project page</a>."
 msgstr "Découvrez comment installer et configurer le connecteur ONLYOFFICE pour Drupal sur la <a href=\":onlyoffice-drupal\">page officielle du projet</a>."
 
 msgid "Manage ONLYOFFICE Connector settings."
