@@ -11,9 +11,18 @@ jobs:
   editorconfig:
     runs-on: ubuntu-latest
     steps:
+      - name: Set up Gitea Actions flag
+        run: echo "RUNNING_ON_GITEA=${{ env.GITEA_ACTIONS || 'false' }}" >> $GITHUB_OUTPUT
+        id: gitea_flag
+
       - uses: actions/checkout@v4
+        if: ${{ steps.gitea_flag.outputs.RUNNING_ON_GITEA != 'true' }}
+
       - uses: editorconfig-checker/action-editorconfig-checker@main
+        if: ${{ steps.gitea_flag.outputs.RUNNING_ON_GITEA != 'true' }}
+
       - run: editorconfig-checker
+        if: ${{ steps.gitea_flag.outputs.RUNNING_ON_GITEA != 'true' }}
 
   csscomb:
     runs-on: ubuntu-latest
