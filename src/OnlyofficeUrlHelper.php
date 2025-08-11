@@ -2,6 +2,25 @@
 
 namespace Drupal\onlyoffice;
 
+/**
+ * Copyright (c) Ascensio System SIA 2025.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+
 use Drupal\Core\Link;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Url;
@@ -68,6 +87,10 @@ class OnlyofficeUrlHelper {
    * Return URL to document in manager documents.
    */
   public static function getGoBackUrl(Media $media) {
+    if ($media->getSource()->getPluginId() == 'onlyoffice_pdf_form') {
+      return Url::fromRoute('entity.onlyoffice_form.collection')->setAbsolute()->toString();
+    }
+
     $url = Url::fromRoute('entity.media.collection')->setAbsolute();
 
     if ($media->hasField('directory') && $media->get('directory')->getString()) {
@@ -80,7 +103,7 @@ class OnlyofficeUrlHelper {
   /**
    * Sign a query parameters with a given key and algorithm.
    */
-  private static function signLinkParameters(array $parameters) {
+  public static function signLinkParameters(array $parameters) {
     $payload = \implode('?', $parameters);
 
     $signature = JWT::urlsafeB64Encode(JWT::sign($payload, Settings::getHashSalt() . \Drupal::service('private_key')->get(), 'HS256'));

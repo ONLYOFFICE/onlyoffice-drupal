@@ -1,6 +1,6 @@
-onlyoffice.preview:
+onlyoffice.editor:
   js:
-    js/onlyoffice-preview.js: {}
+    js/onlyoffice-editor.js: {}
   css:
     base:
       css/onlyoffice-preview.css: { }

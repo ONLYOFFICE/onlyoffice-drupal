@@ -1,0 +1,6 @@
+onlyoffice_form.admin:
+  title: 'ONLYOFFICE form'
+  description: 'Manage ONLYOFFICE PDF forms and submissions.'
+  parent: system.admin_content
+  route_name: onlyoffice_form.admin
+  weight: 10

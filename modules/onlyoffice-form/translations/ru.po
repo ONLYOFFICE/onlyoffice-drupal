@@ -1,0 +1,722 @@
+# $Id$
+#
+# LANGUAGE translation of Drupal (general)
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+# Generated from files:
+#  onlyoffice_form.module: n/a
+#  src/Form/OnlyofficeFormCreateForm.php: n/a
+#  onlyoffice_form.install: n/a
+#  onlyoffice_form.info.yml: n/a
+#  onlyoffice_form.links.menu.yml: n/a
+#  onlyoffice_form.links.task.yml: n/a
+#  onlyoffice_form.routing.yml: n/a
+#  src/Plugin/Field/FieldFormatter/OnlyofficeFormFormatter.php: n/a
+#  src/Plugin/Field/FieldType/OnlyofficeFormItem.php: n/a
+#  src/Plugin/Field/FieldWidget/OnlyofficeFormWidget.php: n/a
+#  onlyoffice_form.permissions.yml: n/a
+#  src/Form/OnlyofficeFormSubmissionDeleteForm.php: n/a
+#  config/schema/onlyoffice_form.schema.yml: n/a
+#  js/onlyoffice_form.dialog.js: n/a
+#  src/OnlyofficeFormListBuilder.php: n/a
+#  src/OnlyofficeFormSubmissionListBuilder.php: n/a
+#  src/Form/OnlyofficeFormBulkDeleteConfirmForm.php: n/a
+#  src/Form/OnlyofficeFormBulkForm.php: n/a
+#  src/Form/OnlyofficeFormDeleteForm.php: n/a
+#  src/Form/OnlyofficeFormSubmissionDeleteSingleForm.php: n/a
+#  src/Controller/OnlyofficeFormCallbackController.php: n/a
+#  src/Controller/OnlyofficeFormFileController.php: n/a
+#  src/Controller/OnlyofficeFormSubmissionController.php: n/a
+#  src/Entity/OnlyofficeFormSubmission.php: n/a
+#  src/Form/OnlyofficeFormFilterForm.php: n/a
+#  src/Form/OnlyofficeFormSubmissionFilterForm.php: n/a
+#  src/Plugin/media/Source/OnlyofficePdfForm.php: n/a
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2025-05-20 15:38+0500\n"
+"PO-Revision-Date: 2025-05-27 11:24+0300\n"
+"Last-Translator: \n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
+"X-Generator: Poedit 3.4.1\n"
+
+#: onlyoffice_form.module:38
+msgid "About"
+msgstr "О программе"
+
+#: onlyoffice_form.module:39
+msgid "The ONLYOFFICE form module provides integration with ONLYOFFICE forms."
+msgstr "Модуль формы ONLYOFFICE обеспечивает интеграцию с формами ONLYOFFICE"
+
+#: onlyoffice_form.module:83
+msgid "File ID in preprocess: @fid"
+msgstr "Идентификатор файла в процессе предварительной обработки: @fid"
+
+#: onlyoffice_form.module:96 src/Form/OnlyofficeFormCreateForm.php:452
+msgid "Extracted file ID: @fid"
+msgstr "Извлеченный идентификатор файла: @fid"
+
+#: onlyoffice_form.install:216
+msgid "Created the ONLYOFFICE PDF form media type."
+msgstr "Создан тип носителя PDF-формы ONLYOFFICE."
+
+#: onlyoffice_form.install:247
+msgid "Deleted @count ONLYOFFICE PDF form media entities."
+msgstr "Удалено @count объектов носителя PDF-формы ONLYOFFICE."
+
+#: onlyoffice_form.info.yml:0 onlyoffice_form.links.menu.yml:0
+#: onlyoffice_form.links.task.yml:0 onlyoffice_form.routing.yml:0;0;0;0
+#: src/Plugin/Field/FieldFormatter/OnlyofficeFormFormatter.php:44
+#: src/Plugin/Field/FieldType/OnlyofficeFormItem.php:30
+#: src/Plugin/Field/FieldWidget/OnlyofficeFormWidget.php:109;32
+msgid "ONLYOFFICE form"
+msgstr "Форма ONLYOFFICE"
+
+#: onlyoffice_form.info.yml:0
+msgid "Allows users to create and manage ONLYOFFICE forms."
+msgstr "Позволяет пользователям создавать формы ONLYOFFICE и управлять ими."
+
+#: onlyoffice_form.info.yml:0
+#: src/Plugin/Field/FieldType/OnlyofficeFormItem.php:30
+msgid "ONLYOFFICE"
+msgstr "ONLYOFFICE"
+
+#: onlyoffice_form.links.menu.yml:0
+msgid "Manage ONLYOFFICE PDF forms and submissions."
+msgstr "Управление PDF-формами ONLYOFFICE и отправками."
+
+#: onlyoffice_form.links.task.yml:0
+msgid "PDF Forms"
+msgstr "PDF-формы"
+
+#: onlyoffice_form.links.task.yml:0
+msgid "Submitted forms"
+msgstr "Отправленные формы"
+
+#: onlyoffice_form.permissions.yml:0
+msgid "Administer ONLYOFFICE forms"
+msgstr "Администрирование форм ONLYOFFICE"
+
+#: onlyoffice_form.permissions.yml:0
+msgid "Create and manage ONLYOFFICE forms."
+msgstr "Создание и управление формами ONLYOFFICE"
+
+#: onlyoffice_form.routing.yml:0
+msgid "Download Submission"
+msgstr "Загрузить отправку"
+
+#: onlyoffice_form.routing.yml:0
+msgid "View Submission"
+msgstr "Просмотреть отправку"
+
+#: onlyoffice_form.routing.yml:0
+#: src/Form/OnlyofficeFormSubmissionDeleteForm.php:126
+msgid "Delete all submissions"
+msgstr "Удалить все отправки"
+
+#: onlyoffice_form.routing.yml:0
+msgid "Delete submission"
+msgstr "Удалить отправку"
+
+#: onlyoffice_form.routing.yml:0
+msgid "Upload File"
+msgstr "Загрузить файл"
+
+#: onlyoffice_form.routing.yml:0
+#: src/Plugin/Field/FieldWidget/OnlyofficeFormWidget.php:124
+msgid "Create new ONLYOFFICE form"
+msgstr "Создать новую форму ONLYOFFICE"
+
+#: onlyoffice_form.routing.yml:0
+msgid "Delete forms"
+msgstr "Удалить формы"
+
+#: config/schema/onlyoffice_form.schema.yml:0
+msgid "ONLYOFFICE form formatter settings"
+msgstr "Настройки форматирования форм ONLYOFFICE"
+
+#: config/schema/onlyoffice_form.schema.yml:0
+#: src/Plugin/Field/FieldFormatter/OnlyofficeFormFormatter.php:221
+msgid "Save all form submissions"
+msgstr "Сохранить все отправленные формы"
+
+#: config/schema/onlyoffice_form.schema.yml:0
+#: src/Plugin/Field/FieldFormatter/OnlyofficeFormFormatter.php:231
+msgid "Hide all forms after submitting"
+msgstr "Скрыть все формы после отправки"
+
+#: config/schema/onlyoffice_form.schema.yml:0
+#: src/Plugin/Field/FieldFormatter/OnlyofficeFormFormatter.php:241
+msgid "Width units"
+msgstr "Единицы ширины"
+
+#: config/schema/onlyoffice_form.schema.yml:0
+#: src/Plugin/Field/FieldFormatter/OnlyofficeFormFormatter.php:250;284
+msgid "Width"
+msgstr "Ширина"
+
+#: config/schema/onlyoffice_form.schema.yml:0
+#: src/Plugin/Field/FieldFormatter/OnlyofficeFormFormatter.php:259
+msgid "Height units"
+msgstr "Единицы высоты"
+
+#: config/schema/onlyoffice_form.schema.yml:0
+#: src/Plugin/Field/FieldFormatter/OnlyofficeFormFormatter.php:268;285
+msgid "Height"
+msgstr "Высота"
+
+#: js/onlyoffice_form.dialog.js:0
+msgid "Uploading..."
+msgstr "Загрузка..."
+
+#: src/OnlyofficeFormListBuilder.php:139
+#: src/OnlyofficeFormSubmissionListBuilder.php:198
+msgid "Title"
+msgstr "Заголовок"
+
+#: src/OnlyofficeFormListBuilder.php:145
+msgid "Author"
+msgstr "Автор"
+
+#: src/OnlyofficeFormListBuilder.php:151
+#: src/OnlyofficeFormSubmissionListBuilder.php:206
+msgid "Type"
+msgstr "Тип"
+
+#: src/OnlyofficeFormListBuilder.php:155
+#: src/OnlyofficeFormSubmissionListBuilder.php:210
+msgid "Size"
+msgstr "Размер"
+
+#: src/OnlyofficeFormListBuilder.php:161
+#: src/OnlyofficeFormSubmissionListBuilder.php:222;242
+msgid "Operations"
+msgstr "Операции"
+
+#: src/OnlyofficeFormListBuilder.php:178
+msgid "Create & Upload"
+msgstr "Создать и загрузить"
+
+#: src/OnlyofficeFormListBuilder.php:201
+msgid "No ONLYOFFICE forms available."
+msgstr "Нет доступных форм ONLYOFFICE."
+
+#: src/OnlyofficeFormListBuilder.php:321
+#: src/OnlyofficeFormSubmissionListBuilder.php:478;516
+msgid "Anonymous"
+msgstr "Анонимно"
+
+#: src/OnlyofficeFormListBuilder.php:368
+msgid "Edit"
+msgstr "Изменить"
+
+#: src/OnlyofficeFormListBuilder.php:375
+#: src/OnlyofficeFormSubmissionListBuilder.php:404;545
+#: src/Form/OnlyofficeFormBulkDeleteConfirmForm.php:109
+#: src/Form/OnlyofficeFormBulkForm.php:211
+#: src/Form/OnlyofficeFormDeleteForm.php:51
+#: src/Form/OnlyofficeFormSubmissionDeleteSingleForm.php:118
+msgid "Delete"
+msgstr "Удалить"
+
+#: src/OnlyofficeFormListBuilder.php:406
+msgid "Error loading media entities: @message"
+msgstr "Ошибка загрузки объектов носителя: @message"
+
+#: src/OnlyofficeFormListBuilder.php:441
+msgid "Error counting PDF forms: @message"
+msgstr "Ошибка подсчета PDF-форм: @message"
+
+#: src/OnlyofficeFormListBuilder.php:445
+msgid "@count form"
+msgid_plural "@count forms"
+msgstr[0] "@count форм"
+msgstr[1] ""
+msgstr[2] ""
+
+#: src/OnlyofficeFormSubmissionListBuilder.php:202;228
+msgid "Form"
+msgstr "Форма"
+
+#: src/OnlyofficeFormSubmissionListBuilder.php:214
+msgid "Submitter"
+msgstr "Отправитель"
+
+#: src/OnlyofficeFormSubmissionListBuilder.php:218
+msgid "Submitted"
+msgstr "Отправлено"
+
+#: src/OnlyofficeFormSubmissionListBuilder.php:238
+msgid "Submissions"
+msgstr "Отправления"
+
+#: src/OnlyofficeFormSubmissionListBuilder.php:282
+msgid "No submissions available for this form."
+msgstr "Для этой формы нет доступных отправок."
+
+#: src/OnlyofficeFormSubmissionListBuilder.php:305
+msgid "No PDF forms with submissions available."
+msgstr "Нет доступных PDF-форм с отправками."
+
+#: src/OnlyofficeFormSubmissionListBuilder.php:398;529
+msgid "Open"
+msgstr "Открыть"
+
+#: src/OnlyofficeFormSubmissionListBuilder.php:455
+msgid "Submission @id"
+msgstr "Отправка @id"
+
+#: src/OnlyofficeFormSubmissionListBuilder.php:536
+msgid "Download"
+msgstr "Скачать"
+
+#: src/OnlyofficeFormSubmissionListBuilder.php:636
+msgid ""
+"Showing filtered results for %form. <a href=\"@reset_url\">Clear filter</a>"
+msgstr ""
+"Показаны отфильтрованные результаты для %form. <a "
+"href=\"@reset_url\">Очистить фильтр</a>"
+
+#: src/OnlyofficeFormSubmissionListBuilder.php:595
+msgid "Error counting submissions: @message"
+msgstr "Ошибка подсчета отправок: @message"
+
+#: src/OnlyofficeFormSubmissionListBuilder.php:647
+msgid "Error counting submissions for form: @message"
+msgstr "Ошибка подсчета отправок для формы: @message"
+
+#: src/OnlyofficeFormSubmissionListBuilder.php:599
+msgid "@count submission"
+msgid_plural "@count submissions"
+msgstr[0] "@count отправок"
+msgstr[1] ""
+msgstr[2] ""
+
+#: src/OnlyofficeFormSubmissionListBuilder.php:651
+msgid "@count submission for %form"
+msgid_plural "@count submissions for %form"
+msgstr[0] "@count отправка для %form"
+msgstr[1] ""
+msgstr[2] ""
+
+#: src/Controller/OnlyofficeFormCallbackController.php:347
+msgid "Stored submission in shared tempstore with key: @key"
+msgstr "Сохраненная отправка в общем временном хранилище с ключом: @key"
+
+#: src/Controller/OnlyofficeFormCallbackController.php:271
+msgid "Disconnected from the media @type %label co-editing."
+msgstr "Отключено от совместного редактирования носителя @type %label."
+
+#: src/Controller/OnlyofficeFormCallbackController.php:275
+msgid "Connected to the media @type %label co-editing."
+msgstr "Подключено к совместному редактированию носителя @type %label."
+
+#: src/Controller/OnlyofficeFormCallbackController.php:350
+msgid "Form submission for media @type %label was successfully saved."
+msgstr "Отправка формы для носителя @type %label успешно сохранена."
+
+#: src/Controller/OnlyofficeFormCallbackController.php:173
+msgid "The request body is missing."
+msgstr "Тело запроса отсутствует."
+
+#: src/Controller/OnlyofficeFormCallbackController.php:192
+msgid "The request token is missing."
+msgstr "Токен запроса отсутствует."
+
+#: src/Controller/OnlyofficeFormCallbackController.php:205
+msgid "Invalid request token."
+msgstr "Недопустимый токен запроса."
+
+#: src/Controller/OnlyofficeFormCallbackController.php:216
+msgid "Invalid link key: @key."
+msgstr "Недопустимый ключ ссылки: @key."
+
+#: src/Controller/OnlyofficeFormCallbackController.php:226
+msgid "Invalid parameter UUID: @uuid."
+msgstr "Недопустимый параметр UUID: @uuid"
+
+#: src/Controller/OnlyofficeFormCallbackController.php:236
+msgid "The targeted media resource with UUID @uuid does not exist."
+msgstr "Целевой ресурс мультимедиа с UUID @uuid не существует."
+
+#: src/Controller/OnlyofficeFormCallbackController.php:296
+msgid "URL parameter not found when saving media @type %label."
+msgstr "Параметр URL не найден при сохранении медиа @type %label"
+
+#: src/Controller/OnlyofficeFormCallbackController.php:355
+msgid "Error download file from @url."
+msgstr "Ошибка загрузки файла с @url"
+
+#: src/Controller/OnlyofficeFormFileController.php:132
+msgid "No file uploaded."
+msgstr "Файл не загружен"
+
+#: src/Controller/OnlyofficeFormFileController.php:142
+msgid "Invalid file upload."
+msgstr "Недопустимая загрузка файла"
+
+#: src/Controller/OnlyofficeFormFileController.php:182
+msgid "Failed to save the file. Please try again."
+msgstr "Не удалось сохранить файл. Повторите попытку"
+
+#: src/Controller/OnlyofficeFormFileController.php:178
+msgid "Error uploading file: @error"
+msgstr "Ошибка загрузки файла: @error"
+
+#: src/Controller/OnlyofficeFormSubmissionController.php:221
+msgid "File not found."
+msgstr "Файл не найден."
+
+#: src/Controller/OnlyofficeFormSubmissionController.php:223
+msgid "The file associated with this submission could not be found."
+msgstr "Не удалось найти файл, связанный с этой отправкой."
+
+#: src/Controller/OnlyofficeFormSubmissionController.php:232
+msgid "File not found on disk."
+msgstr "Файл не найден на диске."
+
+#: src/Controller/OnlyofficeFormSubmissionController.php:234
+msgid ""
+"The file associated with this submission exists in the database but could "
+"not be found on disk."
+msgstr ""
+"Файл, связанный с этой отправкой, существует в базе данных, но не найден на "
+"диске."
+
+#: src/Controller/OnlyofficeFormSubmissionController.php:251
+msgid "Sorry, this file format isn't supported (@extension)"
+msgstr "К сожалению, этот формат файла не поддерживается (@extension)"
+
+#: src/Controller/OnlyofficeFormSubmissionController.php:280
+msgid "View Submission: @filename"
+msgstr "Просмотр отправки: @filename"
+
+#: src/Controller/OnlyofficeFormSubmissionController.php:249
+msgid "File @type %label is not supported current module."
+msgstr "Файл @type %label не поддерживается текущим модулем."
+
+#: src/Entity/OnlyofficeFormSubmission.php:31;31
+msgid "ONLYOFFICE form submission"
+msgstr "Отправка формы ONLYOFFICE"
+
+#: src/Entity/OnlyofficeFormSubmission.php:31;31
+msgid "ONLYOFFICE form submissions"
+msgstr "Отправка форм ONLYOFFICE"
+
+#: src/Form/OnlyofficeFormBulkDeleteConfirmForm.php:82
+msgid "Are you sure you want to delete this form?"
+msgstr "Вы уверены, что хотите удалить эту форму?"
+
+#: src/Form/OnlyofficeFormBulkDeleteConfirmForm.php:84
+msgid "Are you sure you want to delete these @count forms?"
+msgstr "Вы уверены, что хотите удалить эти формы: @count?"
+
+#: src/Form/OnlyofficeFormBulkDeleteConfirmForm.php:100
+#: src/Form/OnlyofficeFormSubmissionDeleteSingleForm.php:111
+msgid "This action cannot be undone."
+msgstr "Это действие нельзя отменить."
+
+#: src/Form/OnlyofficeFormBulkDeleteConfirmForm.php:102
+msgid "This action cannot be undone. All @count forms will be deleted."
+msgstr "Это действие нельзя отменить. Будут удалены все формы: @count."
+
+#: src/Form/OnlyofficeFormBulkDeleteConfirmForm.php:127
+msgid "The following forms will be deleted:"
+msgstr "Будут удалены следующие формы:"
+
+#: src/Form/OnlyofficeFormBulkDeleteConfirmForm.php:155
+#: src/Form/OnlyofficeFormBulkForm.php:188
+msgid "1 form has been deleted."
+msgid_plural "@count forms have been deleted."
+msgstr[0] "Была удалена 1 форма."
+msgstr[1] ""
+msgstr[2] ""
+
+#: src/Form/OnlyofficeFormBulkForm.php:100
+msgid "Action"
+msgstr "Действие"
+
+#: src/Form/OnlyofficeFormBulkForm.php:103
+msgid "- Select operation -"
+msgstr "- Выберите операцию -"
+
+#: src/Form/OnlyofficeFormBulkForm.php:108
+msgid "Apply to selected items"
+msgstr "Применить к выбранным элементам"
+
+#: src/Form/OnlyofficeFormBulkForm.php:157
+msgid "No operation selected."
+msgstr "Операция не выбрана."
+
+#: src/Form/OnlyofficeFormBulkForm.php:162;174
+msgid "No items selected."
+msgstr "Элементы не выбраны."
+
+#: src/Form/OnlyofficeFormCreateForm.php:187
+msgid "Create form from"
+msgstr "Создать форму из"
+
+#: src/Form/OnlyofficeFormCreateForm.php:189
+msgid "Blank"
+msgstr "Пусто"
+
+#: src/Form/OnlyofficeFormCreateForm.php:190;232
+msgid "Upload"
+msgstr "Загрузить"
+
+#: src/Form/OnlyofficeFormCreateForm.php:204
+msgid "Name"
+msgstr "Имя"
+
+#: src/Form/OnlyofficeFormCreateForm.php:230
+msgid "Create"
+msgstr "Создать"
+
+#: src/Form/OnlyofficeFormCreateForm.php:247
+msgid "Processing..."
+msgstr "Обработка..."
+
+#: src/Form/OnlyofficeFormCreateForm.php:302
+msgid "The uploaded file must be a PDF."
+msgstr "Загруженный файл должен быть в формате PDF."
+
+#: src/Form/OnlyofficeFormCreateForm.php:312
+msgid "The uploaded file is not a valid ONLYOFFICE form."
+msgstr "Загруженный файл является недопустимой формой ONLYOFFICE."
+
+#: src/Form/OnlyofficeFormCreateForm.php:318;317
+msgid "Error validating PDF form: @error"
+msgstr "Ошибка проверки формы PDF: @error"
+
+#: src/Form/OnlyofficeFormCreateForm.php:405
+msgid "Blank PDF form has been created successfully."
+msgstr "Пустая PDF-форма была успешно создана"
+
+#: src/Form/OnlyofficeFormCreateForm.php:423
+msgid "Could not create the blank form."
+msgstr "Не удалось создать пустую форму."
+
+#: src/Form/OnlyofficeFormCreateForm.php:430
+msgid "An error occurred while creating the blank PDF form: @error"
+msgstr "При создании пустой PDF-формы произошла ошибка: @error"
+
+#: src/Form/OnlyofficeFormCreateForm.php:498
+msgid "PDF form has been uploaded successfully."
+msgstr "PDF-форма была успешно загружена."
+
+#: src/Form/OnlyofficeFormCreateForm.php:516
+msgid "Could not load the uploaded file."
+msgstr "Не удалось загрузить загруженный файл."
+
+#: src/Form/OnlyofficeFormCreateForm.php:523
+msgid "An error occurred while saving the PDF form: @error"
+msgstr "Произошла ошибка при сохранении PDF-формы: @error"
+
+#: src/Form/OnlyofficeFormCreateForm.php:301
+msgid "Uploaded file is not a PDF: @mime"
+msgstr "Загруженный файл не является PDF: @mime"
+
+#: src/Form/OnlyofficeFormCreateForm.php:311
+msgid "Uploaded file is not a valid ONLYOFFICE form"
+msgstr "Загруженный файл является недопустимой формой ONLYOFFICE"
+
+#: src/Form/OnlyofficeFormCreateForm.php:421
+msgid "Could not copy template file to @destination"
+msgstr "Не удалось скопировать файл шаблона в @destination"
+
+#: src/Form/OnlyofficeFormCreateForm.php:428
+msgid "Error creating blank PDF form: @message"
+msgstr "Ошибка создания пустой PDF-формы: @message"
+
+#: src/Form/OnlyofficeFormCreateForm.php:514
+msgid "Could not load file with ID: @fid"
+msgstr "Не удалось загрузить файл с идентификатором: @fid"
+
+#: src/Form/OnlyofficeFormCreateForm.php:521
+msgid "Error saving PDF form: @message"
+msgstr "Ошибка сохранения PDF-формы: @message"
+
+#: src/Form/OnlyofficeFormDeleteForm.php:37
+msgid "Are you sure you want to delete %name?"
+msgstr "Вы уверены, что хотите удалить %name?"
+
+#: src/Form/OnlyofficeFormDeleteForm.php:60
+msgid "The ONLYOFFICE form %name has been deleted."
+msgstr "Форма ONLYOFFICE %name была удалена."
+
+#: src/Form/OnlyofficeFormFilterForm.php:63
+msgid "Filter forms"
+msgstr "Фильтр форм"
+
+#: src/Form/OnlyofficeFormFilterForm.php:69
+#: src/Form/OnlyofficeFormSubmissionFilterForm.php:53
+msgid "Keyword"
+msgstr "Ключевое слово"
+
+#: src/Form/OnlyofficeFormFilterForm.php:71
+#: src/Form/OnlyofficeFormSubmissionFilterForm.php:55
+msgid "Filter by keyword"
+msgstr "Фильтр по ключевому слову"
+
+#: src/Form/OnlyofficeFormFilterForm.php:78
+#: src/Form/OnlyofficeFormSubmissionFilterForm.php:63
+msgid "Filter"
+msgstr "Фильтр"
+
+#: src/Form/OnlyofficeFormFilterForm.php:84
+#: src/Form/OnlyofficeFormSubmissionFilterForm.php:70
+msgid "Reset"
+msgstr "Сброс"
+
+#: src/Form/OnlyofficeFormSubmissionDeleteForm.php:103
+msgid "Are you sure you want to delete all submissions for %form?"
+msgstr "Вы уверены, что хотите удалить все отправленные данные для %form?"
+
+#: src/Form/OnlyofficeFormSubmissionDeleteForm.php:119
+msgid ""
+"This action cannot be undone. All submissions for this form will be "
+"permanently deleted."
+msgstr ""
+"Это действие нельзя отменить. Все отправленные данные для этой формы будут "
+"удалены навсегда."
+
+#: src/Form/OnlyofficeFormSubmissionDeleteForm.php:146
+msgid "Deleted @count submissions for %form."
+msgstr "Удалено @count отправок для %form."
+
+#: src/Form/OnlyofficeFormSubmissionDeleteForm.php:152
+msgid "No submissions found for %form."
+msgstr "Не найдено отправок для %form."
+
+#: src/Form/OnlyofficeFormSubmissionDeleteForm.php:158
+msgid "Error deleting submissions: @error"
+msgstr "Ошибка удаления отправок: @error"
+
+#: src/Form/OnlyofficeFormSubmissionDeleteSingleForm.php:88
+msgid "Are you sure you want to delete this submission?"
+msgstr "Вы уверены, что хотите удалить эту отправку?"
+
+#: src/Form/OnlyofficeFormSubmissionDeleteSingleForm.php:131
+msgid "The submission has been deleted."
+msgstr "Отправка удалена."
+
+#: src/Form/OnlyofficeFormSubmissionFilterForm.php:46
+msgid "Filter submissions"
+msgstr "Фильтр отправок"
+
+#: src/Plugin/Field/FieldFormatter/OnlyofficeFormFormatter.php:223
+msgid "Select “Yes” to store all the form submissions"
+msgstr "Выберите «Да», чтобы сохранить все отправки формы"
+
+#: src/Plugin/Field/FieldFormatter/OnlyofficeFormFormatter.php:225;235
+msgid "Yes"
+msgstr "Да"
+
+#: src/Plugin/Field/FieldFormatter/OnlyofficeFormFormatter.php:226;236
+msgid "No"
+msgstr "Нет"
+
+#: src/Plugin/Field/FieldFormatter/OnlyofficeFormFormatter.php:233
+msgid "Select “Yes” to hide the form fields after submitting"
+msgstr "Выберите «Да», чтобы скрыть поля формы после отправки"
+
+#: src/Plugin/Field/FieldFormatter/OnlyofficeFormFormatter.php:244;262
+msgid "Percents"
+msgstr "Проценты"
+
+#: src/Plugin/Field/FieldFormatter/OnlyofficeFormFormatter.php:245;263
+msgid "Pixels"
+msgstr "Пиксели"
+
+#: src/Plugin/Field/FieldFormatter/OnlyofficeFormFormatter.php:288
+msgid "Save submissions: Yes"
+msgstr "Сохранить отправки: Да"
+
+#: src/Plugin/Field/FieldFormatter/OnlyofficeFormFormatter.php:291
+msgid "Save submissions: No"
+msgstr "Сохранить отправки: Нет"
+
+#: src/Plugin/Field/FieldFormatter/OnlyofficeFormFormatter.php:295
+msgid "Hide after submission: Yes"
+msgstr "Скрыть после отправки: Да"
+
+#: src/Plugin/Field/FieldFormatter/OnlyofficeFormFormatter.php:298
+msgid "Hide after submission: No"
+msgstr "Скрыть после отправки: Нет"
+
+#: src/Plugin/Field/FieldFormatter/OnlyofficeFormFormatter.php:366;387
+msgid "You have already submitted this form."
+msgstr "Вы уже отправили эту форму."
+
+#: src/Plugin/Field/FieldFormatter/OnlyofficeFormFormatter.php:430;443
+msgid "ONLYOFFICE form preview unavailable"
+msgstr "Предварительный просмотр формы ONLYOFFICE недоступен"
+
+#: src/Plugin/Field/FieldFormatter/OnlyofficeFormFormatter.php:427
+msgid "Error generating editor config: @message"
+msgstr "Ошибка генерации конфигурации редактора: @message"
+
+#: src/Plugin/Field/FieldFormatter/OnlyofficeFormFormatter.php:440
+msgid "Error rendering ONLYOFFICE form: @message"
+msgstr "Ошибка отображения формы ONLYOFFICE: @message"
+
+#: src/Plugin/Field/FieldFormatter/OnlyofficeFormFormatter.php:557
+msgid "Error loading file for ONLYOFFICE form: @message"
+msgstr "Ошибка загрузки файла для формы ONLYOFFICE: @message"
+
+#: src/Plugin/Field/FieldType/OnlyofficeFormItem.php:109
+msgid "Enable description field"
+msgstr "Включить поле описания"
+
+#: src/Plugin/Field/FieldType/OnlyofficeFormItem.php:111
+msgid ""
+"The description field allows users to enter a description about the form."
+msgstr "Поле описания позволяет пользователям вводить описание формы."
+
+#: src/Plugin/Field/FieldType/OnlyofficeFormItem.php:50
+msgid "Media ID"
+msgstr "Идентификатор носителя"
+
+#: src/Plugin/Field/FieldType/OnlyofficeFormItem.php:51
+msgid "The ID of the ONLYOFFICE form media entity."
+msgstr "Идентификатор носителя формы ONLYOFFICE."
+
+#: src/Plugin/Field/FieldType/OnlyofficeFormItem.php:55
+#: src/Plugin/Field/FieldWidget/OnlyofficeFormWidget.php:136
+msgid "Description"
+msgstr "Описание"
+
+#: src/Plugin/Field/FieldType/OnlyofficeFormItem.php:56
+msgid "A description of the form."
+msgstr "Описание формы"
+
+#: src/Plugin/Field/FieldType/OnlyofficeFormItem.php:30
+msgid ""
+"This field stores a reference to an ONLYOFFICE form media entity with "
+"optional description."
+msgstr ""
+"В этом поле хранится ссылка на носитель формы ONLYOFFICE вместе с "
+"дополнительным описанием."
+
+#: src/Plugin/Field/FieldWidget/OnlyofficeFormWidget.php:110
+msgid "Select an existing ONLYOFFICE form or create a new one."
+msgstr "Выберите существующую форму ONLYOFFICE или создайте новую."
+
+#: src/Plugin/Field/FieldWidget/OnlyofficeFormWidget.php:138
+msgid "A brief description of this ONLYOFFICE form."
+msgstr "Краткое описание этой формы ONLYOFFICE."
+
+#: src/Plugin/media/Source/OnlyofficePdfForm.php:27
+msgid "ONLYOFFICE PDF Form"
+msgstr "PDF-форма ONLYOFFICE"
+
+#: src/Plugin/media/Source/OnlyofficePdfForm.php:27
+msgid "Use onlyoffice pdf forms for reusable media."
+msgstr ""
+"Используйте PDF-формы ONLYOFFICE для носителей, используемых повторно."

@@ -1,0 +1,22 @@
+field.formatter.settings.onlyoffice_form_formatter:
+  type: mapping
+  label: 'ONLYOFFICE form formatter settings'
+  mapping:
+    save_submissions:
+      type: string
+      label: 'Save all form submissions'
+    hide_after_submission:
+      type: string
+      label: 'Hide all forms after submitting'
+    width_unit:
+      type: string
+      label: 'Width units'
+    width:
+      type: integer
+      label: 'Width'
+    height_unit:
+      type: string
+      label: 'Height units'
+    height:
+      type: integer
+      label: 'Height'
