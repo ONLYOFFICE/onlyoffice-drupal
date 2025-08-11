@@ -32,10 +32,22 @@ jobs:
           cd ./onlyoffice-drupal
           rm -rf ./.github/
           rm -rf ./.git/
+          rm -rf ./licenses/
+          rm ./assets/document-templates/AUTHORS.md
+          rm ./assets/document-templates/LICENSE
+          rm ./assets/document-templates/README.md
+          rm ./.csscomb.json
+          rm ./.editorconfig
           rm ./.gitignore
+          rm ./.gitmodules
+          rm ./3rd-Party.license
+          rm ./captainhook.json
+          rm ./composer.lock
+          rm ./LICENSE
+          rm ./phpcs.xml.dist
           cd $cwd
       - name: Pack Artifact
-        run: zip -r onlyoffice-drupal-${{ steps.info.outputs.version }}.zip onlyoffice-drupal
+        run: zip -r onlyoffice-drupal-${{ steps.info.outputs.version }}.zip onlyoffice-drupal -x "onlyoffice-drupal/RELEASE.md"
       - name: Create Release
         uses: ncipollo/release-action@v1
         id: create_release
