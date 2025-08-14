@@ -159,9 +159,9 @@ The created/uploaded file will appear in the list on the Forms page and open in 
 
 **Publishing PDF forms on a Drupal page**
 
-To add a PDF form to a Drupal page, some initial setup is required. Navigate to *Manage → Structure → Content types*. For the desired content type, select *Manage fields*. On the next page, click *Create a new field*, choose *ONLYOFFICE form*, and set a field name. This will add a field of the ONLYOFFICE form type to the selected content type.
+To add a PDF form to a Drupal page, some initial setup is required. Navigate to *Manage –> Structure –> Content types*. For the desired content type, select *Manage fields*. On the next page, click *Create a new field*, choose *ONLYOFFICE form*, and set a field name. This will add a field of the ONLYOFFICE form type to the selected content type.
 
-To add a PDF form to a site page, navigate to *Manage → Content*. Click the *Add content* button and select the content type that includes the previously added ONLYOFFICE form field. In the form field, enter the name of the existing form. If the form hasn’t been created yet, click *Create new ONLYOFFICE form* to open the PDF Forms section, where you can upload or create a new PDF form. Finally, click the Save button to complete the page creation in Drupal.
+To add a PDF form to a site page, navigate to *Manage –> Content*. Click the *Add content* button and select the content type that includes the previously added ONLYOFFICE form field. In the form field, enter the name of the existing form. If the form hasn’t been created yet, click *Create new ONLYOFFICE form* to open the PDF Forms section, where you can upload or create a new PDF form. Finally, click the Save button to complete the page creation in Drupal.
 
 **Filling out PDF forms**
 
@@ -171,7 +171,7 @@ Once submitted, the completed form will be sent to the site. Visitors can also d
 
 **Working with the filled forms**
 
-In the *Manage → Content → ONLYOFFICE form → Submitted forms* section, Drupal users can view completed forms, organized by template name. To view all responses for a specific template, simply select the form's template name.
+In the *Manage –> Content –> ONLYOFFICE form –> Submitted forms* section, Drupal users can view completed forms, organized by template name. To view all responses for a specific template, simply select the form's template name.
 
 ## Installing ONLYOFFICE Docs
 
