@@ -80,9 +80,8 @@ msgid "ONLYOFFICE form"
 msgstr "ONLYOFFICE-Formular"
 
 #: onlyoffice_form.info.yml:0
-msgid "Allows users to create and manage ONLYOFFICE forms."
+msgid "Allows users to create and edit ONLYOFFICE forms directly in Drupal."
 msgstr ""
-"Ermöglicht Benutzern das Erstellen und Verwalten von ONLYOFFICE-Formularen."
 
 #: onlyoffice_form.info.yml:0
 #: src/Plugin/Field/FieldType/OnlyofficeFormItem.php:30
