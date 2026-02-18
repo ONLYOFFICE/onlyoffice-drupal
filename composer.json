@@ -20,7 +20,7 @@
     },
     "require": {
         "drupal/core": "^11",
-        "firebase/php-jwt": "^6.0"
+        "firebase/php-jwt": "^7.0"
     },
     "require-dev": {
         "drupal/coder": "^8.3",
