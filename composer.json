@@ -1,7 +1,7 @@
 {
     "name": "onlyoffice/onlyoffice-drupal",
     "type": "drupal-module",
-    "description": "The ONLYOFFICE module enables users to edit files in the Media module from Drupal using ONLYOFFICE Docs packaged as Document Server",
+    "description": "Allows in-browser document editing from the Drupal Media module with ONLYOFFICE Docs. Requires a separate installation of ONLYOFFICE Docs (Document Server).",
     "keywords": ["onlyoffice", "drupal"],
     "license": "GPL-2.0-or-later",
     "homepage": "https://www.onlyoffice.com",

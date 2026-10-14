@@ -3,7 +3,7 @@
 namespace Drupal\onlyoffice_form\Form;
 
 /**
- * Copyright (c) Ascensio System SIA 2025.
+ * Copyright (c) Ascensio System SIA 2026.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
