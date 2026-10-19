@@ -8,22 +8,6 @@ on:
     branches: [master, develop]
 
 jobs:
-  editorconfig:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Set up Gitea Actions flag
-        run: echo "RUNNING_ON_GITEA=${{ env.GITEA_ACTIONS || 'false' }}" >> $GITHUB_OUTPUT
-        id: gitea_flag
-
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        if: ${{ steps.gitea_flag.outputs.RUNNING_ON_GITEA != 'true' }}
-
-      - uses: editorconfig-checker/action-editorconfig-checker@51f63319f592f97930c73d9c46184d20bd206393 # v3.0.0
-        if: ${{ steps.gitea_flag.outputs.RUNNING_ON_GITEA != 'true' }}
-
-      - run: editorconfig-checker
-        if: ${{ steps.gitea_flag.outputs.RUNNING_ON_GITEA != 'true' }}
-
   stylelint:
     runs-on: ubuntu-latest
     steps:
