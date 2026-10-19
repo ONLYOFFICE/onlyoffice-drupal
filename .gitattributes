@@ -8,6 +8,7 @@
 /.stylelintignore export-ignore
 /.stylelintrc.json export-ignore
 /3rd-Party.license export-ignore
+/CLAUDE.md export-ignore
 /LICENSE export-ignore
 /captainhook.json export-ignore
 /composer.lock export-ignore
