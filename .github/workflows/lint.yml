@@ -26,7 +26,6 @@ jobs:
 
   stylelint:
     runs-on: ubuntu-latest
-    needs: editorconfig
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -39,7 +38,6 @@ jobs:
 
   eslint:
     runs-on: ubuntu-latest
-    needs: editorconfig
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -52,7 +50,6 @@ jobs:
 
   phpcs:
     runs-on: ubuntu-latest
-    needs: [stylelint, eslint]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
