@@ -6,6 +6,9 @@ on:
     types: [opened, reopened]
     branches: [main]
 
+permissions:
+  contents: read
+
 jobs:
   artifact:
     runs-on: ubuntu-latest
