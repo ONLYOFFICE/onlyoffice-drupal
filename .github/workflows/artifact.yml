@@ -29,14 +29,18 @@ jobs:
           rm ./assets/document-templates/AUTHORS.md
           rm ./assets/document-templates/LICENSE
           rm ./assets/document-templates/README.md
-          rm ./.csscomb.json
           rm ./.editorconfig
           rm ./.gitignore
           rm ./.gitmodules
+          rm ./.prettierrc.json
+          rm ./.stylelintignore
+          rm ./.stylelintrc.json
           rm ./3rd-Party.license
           rm ./captainhook.json
           rm ./composer.lock
           rm ./LICENSE
+          rm ./package-lock.json
+          rm ./package.json
           rm ./phpcs.xml.dist
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
