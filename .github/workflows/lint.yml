@@ -15,7 +15,7 @@ jobs:
         run: echo "RUNNING_ON_GITEA=${{ env.GITEA_ACTIONS || 'false' }}" >> $GITHUB_OUTPUT
         id: gitea_flag
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         if: ${{ steps.gitea_flag.outputs.RUNNING_ON_GITEA != 'true' }}
 
       - uses: editorconfig-checker/action-editorconfig-checker@main
@@ -27,7 +27,7 @@ jobs:
   stylelint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-node@v4
         with:
           node-version: '24.x'
@@ -39,7 +39,7 @@ jobs:
   eslint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-node@v4
         with:
           node-version: '24.x'
@@ -52,7 +52,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
