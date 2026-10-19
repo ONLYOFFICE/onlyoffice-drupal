@@ -8,7 +8,7 @@ on:
     branches: [master, develop]
 
 jobs:
-  stylelint:
+  lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -16,21 +16,11 @@ jobs:
         with:
           node-version: '24.x'
           cache: 'npm'
-      - run: |
-          npm ci
-          npm run lint:css
-
-  eslint:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
-        with:
-          node-version: '24.x'
-          cache: 'npm'
-      - run: |
-          npm ci
-          npm run lint:js
+      - id: install
+        run: npm ci
+      - run: npm run lint:css
+      - if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: npm run lint:js
 
   phpcs:
     runs-on: ubuntu-latest
