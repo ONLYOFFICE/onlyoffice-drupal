@@ -12,38 +12,17 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          submodules: recursive
       - name: Get Info
         run: |
           echo "version=$(grep -Eo '[0-9]+(\.[0-9]+)+' CHANGELOG.md | head -n 1)" >> $GITHUB_OUTPUT
         id: info
       - name: Build Artifact
         run: |
-          cd ${{ github.workspace }}
-          git submodule update --init --recursive
-          mkdir -p ./deploy/onlyoffice-drupal
-          rsync -av --exclude='deploy' ./ ./deploy/onlyoffice-drupal
-          cd ./deploy/onlyoffice-drupal
-          rm -rf ./.github/
-          rm -rf ./.git/
-          rm -rf ./licenses/
-          rm ./assets/document-templates/AUTHORS.md
-          rm ./assets/document-templates/LICENSE
-          rm ./assets/document-templates/README.md
-          rm ./.editorconfig
-          rm ./.gitignore
-          rm ./.gitmodules
-          rm ./.prettierignore
-          rm ./.prettierrc.json
-          rm ./.stylelintignore
-          rm ./.stylelintrc.json
-          rm ./3rd-Party.license
-          rm ./captainhook.json
-          rm ./composer.lock
-          rm ./eslint.config.mjs
-          rm ./LICENSE
-          rm ./package-lock.json
-          rm ./package.json
-          rm ./phpcs.xml.dist
+          mkdir -p ./deploy
+          git archive --prefix=onlyoffice-drupal/ HEAD | tar -x -C ./deploy
+          git -C assets/document-templates archive --prefix=onlyoffice-drupal/assets/document-templates/ HEAD -- . ':!AUTHORS.md' ':!LICENSE' ':!README.md' | tar -x -C ./deploy
       - name: Upload Artifact
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:

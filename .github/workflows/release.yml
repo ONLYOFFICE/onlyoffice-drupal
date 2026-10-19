@@ -14,8 +14,8 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - name: Install Zip
-        run: sudo apt-get install zip
+        with:
+          submodules: recursive
       - name: Get Info
         run: |
           echo "version=$(grep -Eo '[0-9]+(\.[0-9]+)+' CHANGELOG.md | head -n 1)" >> $GITHUB_OUTPUT
@@ -25,35 +25,10 @@ jobs:
           awk '/## [0-9]/{p++} p; /## [0-9]/{if (p > 1) exit}' CHANGELOG.md | awk 'NR>2 {print last} {last=$0}' > RELEASE.md
       - name: Build Artifact
         run: |
-          cd ${{ github.workspace }}
-          git submodule update --init --recursive
-          mkdir -p ./onlyoffice-drupal
-          rsync -av --exclude='onlyoffice-drupal' ./ ./onlyoffice-drupal
-          cd ./onlyoffice-drupal
-          rm -rf ./.github/
-          rm -rf ./.git/
-          rm -rf ./licenses/
-          rm ./assets/document-templates/AUTHORS.md
-          rm ./assets/document-templates/LICENSE
-          rm ./assets/document-templates/README.md
-          rm ./.editorconfig
-          rm ./.gitignore
-          rm ./.gitmodules
-          rm ./.prettierignore
-          rm ./.prettierrc.json
-          rm ./.stylelintignore
-          rm ./.stylelintrc.json
-          rm ./3rd-Party.license
-          rm ./captainhook.json
-          rm ./composer.lock
-          rm ./eslint.config.mjs
-          rm ./LICENSE
-          rm ./package-lock.json
-          rm ./package.json
-          rm ./phpcs.xml.dist
-          cd $cwd
+          git archive --prefix=onlyoffice-drupal/ HEAD | tar -x
+          git -C assets/document-templates archive --prefix=onlyoffice-drupal/assets/document-templates/ HEAD -- . ':!AUTHORS.md' ':!LICENSE' ':!README.md' | tar -x
       - name: Pack Artifact
-        run: zip -r onlyoffice-drupal-${{ steps.info.outputs.version }}.zip onlyoffice-drupal -x "onlyoffice-drupal/RELEASE.md"
+        run: zip -r onlyoffice-drupal-${{ steps.info.outputs.version }}.zip onlyoffice-drupal
       - name: Create Release
         uses: ncipollo/release-action@339a81892b84b4eeb0f6e744e4574d79d0d9b8dd # v1.21.0
         id: create_release
