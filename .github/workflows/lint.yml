@@ -61,21 +61,9 @@ jobs:
           coverage: none
           tools: composer, cs2pr
 
-      - name: Get Composer cache directory
-        id: composer-cache
-        run: |
-          echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
-          composer global config --no-plugins allow-plugins.dealerdirect/phpcodesniffer-composer-installer true
-
-      - name: Setup cache
-        uses: pat-s/always-upload-cache@v3.0.11
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: ${{ runner.os }}-composer-
-
       - name: Run phpcs
         run: |
+          composer global config --no-plugins allow-plugins.dealerdirect/phpcodesniffer-composer-installer true
           composer global require drupal/coder
           composer global show -P
           composer phpcs
