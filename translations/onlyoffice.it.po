@@ -84,5 +84,8 @@ msgstr "Indirizzo del server per le richieste interne da ONLYOFFICE Docs"
 msgid "Authorization header (leave blank to use default header)"
 msgstr "Intestazione di autorizzazione (lascia vuoto per utilizzare l'intestazione predefinita)"
 
+msgid "The address must not contain a query or a fragment."
+msgstr "L'indirizzo non deve contenere una query o un frammento."
+
 msgid "The header name may contain only letters, digits and the characters !#$%&'*+-.^_`|~."
 msgstr "Il nome dell'intestazione può contenere solo lettere, cifre e i caratteri !#$%&'*+-.^_`|~."

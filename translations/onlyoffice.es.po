@@ -84,5 +84,8 @@ msgstr "Dirección de servidor para solicitudes internas del ONLYOFFICE Docs"
 msgid "Authorization header (leave blank to use default header)"
 msgstr "Encabezado de autenticación (dejar en blanco para utilizar el encabezado predeterminado)"
 
+msgid "The address must not contain a query or a fragment."
+msgstr "La dirección no debe contener una consulta ni un fragmento."
+
 msgid "The header name may contain only letters, digits and the characters !#$%&'*+-.^_`|~."
 msgstr "El nombre del encabezado solo puede contener letras, dígitos y los caracteres !#$%&'*+-.^_`|~."

@@ -84,5 +84,8 @@ msgstr "ONLYOFFICE Docsから内部リクエストに利用されるサーバー
 msgid "Authorization header (leave blank to use default header)"
 msgstr "認証ヘッダー (デフォルトのヘッダーを使用したい場合は空白にしてください)"
 
+msgid "The address must not contain a query or a fragment."
+msgstr "アドレスにクエリやフラグメントを含めることはできません。"
+
 msgid "The header name may contain only letters, digits and the characters !#$%&'*+-.^_`|~."
 msgstr "ヘッダー名に使用できるのは、英字、数字、および文字 !#$%&'*+-.^_`|~ のみです。"
