@@ -80,3 +80,6 @@ msgstr "Indirizzo di ONLYOFFICE Docs per le richieste interne del server"
 
 msgid "Server address for internal requests from ONLYOFFICE Docs"
 msgstr "Indirizzo del server per le richieste interne da ONLYOFFICE Docs"
+
+msgid "Authorization header (leave blank to use default header)"
+msgstr "Intestazione di autorizzazione (lascia vuoto per utilizzare l'intestazione predefinita)"

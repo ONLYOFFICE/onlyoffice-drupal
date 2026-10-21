@@ -2,6 +2,7 @@
 
 ## Added
 - addresses for internal requests between Drupal and ONLYOFFICE Docs in the advanced server settings
+- authorization header setting
 
 ## 2.0.0
 ## Added

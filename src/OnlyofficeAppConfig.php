@@ -142,7 +142,13 @@ class OnlyofficeAppConfig {
    * Authorization header.
    */
   public static function getJwtHeader() {
-    return Settings::get('onlyoffice_jwt_header') ? Settings::get('onlyoffice_jwt_header') : "Authorization";
+    $header = \Drupal::config('onlyoffice.settings')->get('doc_server_jwt_header');
+
+    if (empty($header)) {
+      $header = Settings::get('onlyoffice_jwt_header');
+    }
+
+    return $header ? $header : "Authorization";
   }
 
 }

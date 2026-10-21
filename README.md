@@ -113,6 +113,11 @@ and **Server address for internal requests from ONLYOFFICE Docs** fields.
 
 Configuration settings include JWT, enabled by default to protect the editors from unauthorized access. If setting a custom **Secret key**, ensure it matches the one in the ONLYOFFICE Docs [config file](https://api.onlyoffice.com/docs/docs-api/additional-api/signature/) for proper validation.
 
+The **Authorization header** in the *Advanced server settings* sets the header
+used to pass the token between Drupal and ONLYOFFICE Docs. Leave it blank to use
+the default `Authorization` header. If you change it, set the same header in
+the ONLYOFFICE Docs config file.
+
 ### settings.php
 
 The settings can also be defined in the `settings.php` file of the site:
@@ -129,6 +134,7 @@ The settings page keeps showing the saved values.
 |---------------------------|-----------------------------------------------------------------|
 | `doc_server_url`          | Document Editing Service address                                |
 | `doc_server_jwt`          | Secret key                                                      |
+| `doc_server_jwt_header`   | Authorization header                                            |
 | `doc_server_internal_url` | ONLYOFFICE Docs address for internal requests from the server   |
 | `storage_url`             | Server address for internal requests from ONLYOFFICE Docs       |
 

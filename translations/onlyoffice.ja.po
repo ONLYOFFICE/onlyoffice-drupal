@@ -80,3 +80,6 @@ msgstr "サーバーから内部リクエストに利用されるONLYOFFICE Docs
 
 msgid "Server address for internal requests from ONLYOFFICE Docs"
 msgstr "ONLYOFFICE Docsから内部リクエストに利用されるサーバーアドレス"
+
+msgid "Authorization header (leave blank to use default header)"
+msgstr "認証ヘッダー (デフォルトのヘッダーを使用したい場合は空白にしてください)"
