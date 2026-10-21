@@ -56,10 +56,16 @@ class SettingsForm extends ConfigFormBase {
       '#required' => TRUE,
     ];
     $form['doc_server_jwt'] = [
-      '#type' => 'textfield',
+      '#type' => 'password',
       '#title' => $this->t('Secret key (leave blank to disable)'),
       '#default_value' => $this->config('onlyoffice.settings')->get('doc_server_jwt'),
+      '#attributes' => [
+        'autocomplete' => 'new-password',
+        'data-onlyoffice-secret' => '',
+      ],
+      '#after_build' => [[static::class, 'renderSecretValue']],
     ];
+    $form['#attached']['library'][] = 'onlyoffice/onlyoffice.settings';
 
     $advancedOpen = $this->config('onlyoffice.settings')->get('doc_server_jwt_header')
       || $this->config('onlyoffice.settings')->get('doc_server_internal_url')
@@ -87,6 +93,15 @@ class SettingsForm extends ConfigFormBase {
       '#default_value' => $this->config('onlyoffice.settings')->get('storage_url'),
     ];
     return parent::buildForm($form, $form_state);
+  }
+
+  /**
+   * Render the current secret into the password field, which core omits.
+   */
+  public static function renderSecretValue(array $element, FormStateInterface $form_state) {
+    $element['#attributes']['value'] = $element['#value'];
+
+    return $element;
   }
 
   /**

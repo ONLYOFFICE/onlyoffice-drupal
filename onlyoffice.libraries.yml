@@ -6,3 +6,13 @@ onlyoffice.editor:
       css/onlyoffice-preview.css: { }
   dependencies:
     - core/drupal
+
+onlyoffice.settings:
+  js:
+    js/onlyoffice-settings.js: {}
+  css:
+    component:
+      css/onlyoffice-settings.css: { }
+  dependencies:
+    - core/drupal
+    - core/once

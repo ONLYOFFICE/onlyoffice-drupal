@@ -1,0 +1,30 @@
+.onlyoffice-secret {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+}
+
+.onlyoffice-secret input {
+  box-sizing: border-box;
+  padding-right: 2.75rem;
+}
+
+.onlyoffice-secret__toggle {
+  position: absolute;
+  top: 50%;
+  right: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem;
+  border: 0;
+  border-radius: 2px;
+  background: transparent;
+  color: #545560;
+  cursor: pointer;
+  transform: translateY(-50%);
+}
+
+.onlyoffice-secret__toggle:hover {
+  color: #222330;
+}
