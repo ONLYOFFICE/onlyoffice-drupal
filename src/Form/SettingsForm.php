@@ -61,13 +61,20 @@ class SettingsForm extends ConfigFormBase {
       '#default_value' => $this->config('onlyoffice.settings')->get('doc_server_jwt'),
     ];
 
-    $advancedOpen = $this->config('onlyoffice.settings')->get('doc_server_internal_url')
+    $advancedOpen = $this->config('onlyoffice.settings')->get('doc_server_jwt_header')
+      || $this->config('onlyoffice.settings')->get('doc_server_internal_url')
       || $this->config('onlyoffice.settings')->get('storage_url');
 
     $form['advanced'] = [
       '#type' => 'details',
       '#title' => $this->t('Advanced server settings'),
       '#open' => $advancedOpen,
+    ];
+    $form['advanced']['doc_server_jwt_header'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Authorization header (leave blank to use default header)'),
+      '#default_value' => $this->config('onlyoffice.settings')->get('doc_server_jwt_header'),
+      '#placeholder' => 'Authorization',
     ];
     $form['advanced']['doc_server_internal_url'] = [
       '#type' => 'textfield',
@@ -101,6 +108,14 @@ class SettingsForm extends ConfigFormBase {
         $form_state->setErrorByName($name, implode("\n", $messages));
       }
     }
+
+    $header = trim((string) $form_state->getValue('doc_server_jwt_header'));
+    $form_state->setValue('doc_server_jwt_header', $header);
+
+    // Allow only header name token characters, as the HTTP client does.
+    if ($header !== '' && !preg_match('/^[a-zA-Z0-9\'`#$%&*+.^_|~!-]+$/D', $header)) {
+      $form_state->setErrorByName('doc_server_jwt_header', $this->t("The header name may contain only letters, digits and the characters !#$%&'*+-.^_`|~."));
+    }
   }
 
   /**
@@ -114,6 +129,7 @@ class SettingsForm extends ConfigFormBase {
     $this->config('onlyoffice.settings')
       ->set('doc_server_url', $docsUrl)
       ->set('doc_server_jwt', $form_state->getValue('doc_server_jwt'))
+      ->set('doc_server_jwt_header', $form_state->getValue('doc_server_jwt_header'))
       ->set('doc_server_internal_url', $docsInternalUrl)
       ->set('storage_url', $storageUrl)
       ->save();

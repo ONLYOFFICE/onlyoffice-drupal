@@ -80,3 +80,9 @@ msgstr "服务器内部请求 ONLYOFFICE Docs 的地址"
 
 msgid "Server address for internal requests from ONLYOFFICE Docs"
 msgstr "ONLYOFFICE Docs 内部请求服务器的地址"
+
+msgid "Authorization header (leave blank to use default header)"
+msgstr "授权标头 (留空以使用默认的标头)"
+
+msgid "The header name may contain only letters, digits and the characters !#$%&'*+-.^_`|~."
+msgstr "标头名称只能包含字母、数字和字符 !#$%&'*+-.^_`|~。"
