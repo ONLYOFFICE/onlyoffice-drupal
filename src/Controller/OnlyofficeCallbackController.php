@@ -33,6 +33,7 @@ use Drupal\file\FileInterface;
 use Drupal\media\Entity\Media;
 use Drupal\onlyoffice\OnlyofficeAppConfig;
 use Drupal\onlyoffice\OnlyofficeDocumentHelper;
+use Drupal\onlyoffice\OnlyofficeDocumentService;
 use Drupal\onlyoffice\OnlyofficeUrlHelper;
 use Drupal\user\Entity\User;
 use Drupal\user\UserStorageInterface;
@@ -96,6 +97,13 @@ class OnlyofficeCallbackController extends ControllerBase {
   protected $time;
 
   /**
+   * The document service.
+   *
+   * @var \Drupal\onlyoffice\OnlyofficeDocumentService
+   */
+  protected $documentService;
+
+  /**
    * Constructs a OnlyofficeCallbackController object.
    *
    * @param \Drupal\user\Entity\UserStorageInterface $user_storage
@@ -108,6 +116,8 @@ class OnlyofficeCallbackController extends ControllerBase {
    *   The stream wrapper manager.
    * @param \Drupal\Component\Datetime\TimeInterface $time
    *   The time service.
+   * @param \Drupal\onlyoffice\OnlyofficeDocumentService $document_service
+   *   The document service.
    */
   public function __construct(
     UserStorageInterface $user_storage,
@@ -115,12 +125,14 @@ class OnlyofficeCallbackController extends ControllerBase {
     FileSystemInterface $file_system,
     StreamWrapperManagerInterface $streamWrapperManager,
     TimeInterface $time,
+    OnlyofficeDocumentService $document_service,
   ) {
     $this->userStorage = $user_storage;
     $this->entityRepository = $entity_repository;
     $this->fileSystem = $file_system;
     $this->streamWrapperManager = $streamWrapperManager;
     $this->time = $time;
+    $this->documentService = $document_service;
   }
 
   /**
@@ -132,7 +144,8 @@ class OnlyofficeCallbackController extends ControllerBase {
           $container->get('entity.repository'),
           $container->get('file_system'),
           $container->get('stream_wrapper_manager'),
-          $container->get('datetime.time')
+          $container->get('datetime.time'),
+          $container->get('onlyoffice.document_service')
       );
   }
 
@@ -305,9 +318,14 @@ class OnlyofficeCallbackController extends ControllerBase {
     $separator = substr($directory, -1) == '/' ? '' : '/';
     $newDestination = $directory . $separator . $file->getFilename();
 
-    $download_url = OnlyofficeUrlHelper::replaceDocumentServerUrlToInternal($download_url);
+    try {
+      $new_data = $this->documentService->download($download_url);
+    }
+    catch (\RuntimeException $e) {
+      $new_data = NULL;
+    }
 
-    if ($new_data = file_get_contents($download_url)) {
+    if ($new_data) {
       $newFile = $this->writeData($new_data, $newDestination);
 
       $media->set(OnlyofficeDocumentHelper::getSourceFieldName($media), $newFile);
