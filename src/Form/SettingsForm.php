@@ -110,8 +110,14 @@ class SettingsForm extends ConfigFormBase {
   public function validateForm(array &$form, FormStateInterface $form_state) {
     $validator = Validation::createValidator();
 
+    // Allow single-level host names, such as Docker service names.
+    $constraint = property_exists(Url::class, 'requireTld') ? new Url(requireTld: FALSE) : new Url();
+
     foreach (['doc_server_url', 'doc_server_internal_url', 'storage_url'] as $name) {
-      $errors = $validator->validate($form_state->getValue($name), new Url());
+      $value = trim((string) $form_state->getValue($name));
+      $form_state->setValue($name, $value);
+
+      $errors = $validator->validate($value, $constraint);
 
       if (count($errors) > 0) {
         $messages = [];
@@ -121,6 +127,9 @@ class SettingsForm extends ConfigFormBase {
         }
 
         $form_state->setErrorByName($name, implode("\n", $messages));
+      }
+      elseif (strpbrk($value, '?#') !== FALSE) {
+        $form_state->setErrorByName($name, $this->t('The address must not contain a query or a fragment.'));
       }
     }
   }
