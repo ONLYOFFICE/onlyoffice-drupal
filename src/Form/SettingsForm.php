@@ -60,6 +60,25 @@ class SettingsForm extends ConfigFormBase {
       '#title' => $this->t('Secret key (leave blank to disable)'),
       '#default_value' => $this->config('onlyoffice.settings')->get('doc_server_jwt'),
     ];
+
+    $advancedOpen = $this->config('onlyoffice.settings')->get('doc_server_internal_url')
+      || $this->config('onlyoffice.settings')->get('storage_url');
+
+    $form['advanced'] = [
+      '#type' => 'details',
+      '#title' => $this->t('Advanced server settings'),
+      '#open' => $advancedOpen,
+    ];
+    $form['advanced']['doc_server_internal_url'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('ONLYOFFICE Docs address for internal requests from the server'),
+      '#default_value' => $this->config('onlyoffice.settings')->get('doc_server_internal_url'),
+    ];
+    $form['advanced']['storage_url'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Server address for internal requests from ONLYOFFICE Docs'),
+      '#default_value' => $this->config('onlyoffice.settings')->get('storage_url'),
+    ];
     return parent::buildForm($form, $form_state);
   }
 
@@ -67,19 +86,20 @@ class SettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    $url = $form_state->getValue('doc_server_url');
-
     $validator = Validation::createValidator();
-    $errors = $validator->validate($url, new Url());
 
-    if (count($errors) > 0) {
-      $messages = [];
+    foreach (['doc_server_url', 'doc_server_internal_url', 'storage_url'] as $name) {
+      $errors = $validator->validate($form_state->getValue($name), new Url());
 
-      foreach ($errors as $error) {
-        $messages[] = $error->getMessage();
+      if (count($errors) > 0) {
+        $messages = [];
+
+        foreach ($errors as $error) {
+          $messages[] = $error->getMessage();
+        }
+
+        $form_state->setErrorByName($name, implode("\n", $messages));
       }
-
-      $form_state->setErrorByName('doc_server_url', implode("\n", $messages));
     }
   }
 
@@ -88,10 +108,14 @@ class SettingsForm extends ConfigFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $docsUrl = rtrim($form_state->getValue('doc_server_url'), "/");
+    $docsInternalUrl = rtrim($form_state->getValue('doc_server_internal_url'), "/");
+    $storageUrl = rtrim($form_state->getValue('storage_url'), "/");
 
     $this->config('onlyoffice.settings')
       ->set('doc_server_url', $docsUrl)
       ->set('doc_server_jwt', $form_state->getValue('doc_server_jwt'))
+      ->set('doc_server_internal_url', $docsInternalUrl)
+      ->set('storage_url', $storageUrl)
       ->save();
     parent::submitForm($form, $form_state);
   }

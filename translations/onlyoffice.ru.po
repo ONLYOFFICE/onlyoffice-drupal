@@ -71,3 +71,12 @@ msgstr "Проценты"
 
 msgid "Pixels"
 msgstr "Пиксели"
+
+msgid "Advanced server settings"
+msgstr "Дополнительные настройки сервера"
+
+msgid "ONLYOFFICE Docs address for internal requests from the server"
+msgstr "Адрес ONLYOFFICE Docs для внутренних запросов сервера"
+
+msgid "Server address for internal requests from ONLYOFFICE Docs"
+msgstr "Адрес сервера для внутренних запросов ONLYOFFICE Docs"

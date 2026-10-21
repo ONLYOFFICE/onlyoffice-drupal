@@ -29,7 +29,6 @@ use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\PageCache\ResponsePolicy\KillSwitch;
-use Drupal\Core\Url;
 use Drupal\media\Entity\Media;
 use Drupal\file\Entity\File;
 use Drupal\onlyoffice\OnlyofficeDocumentHelper;
@@ -479,13 +478,7 @@ class OnlyofficeFormFormatter extends FormatterBase {
       }
     }
 
-    $linkParameters = [
-      $media->uuid(),
-    ];
-
-    $key = OnlyofficeUrlHelper::signLinkParameters($linkParameters);
-
-    $callbackurl = Url::fromRoute('onlyoffice_form.callback', ['key' => $key])->setAbsolute()->toString();
+    $callbackurl = OnlyofficeUrlHelper::getFormCallbackUrl($media);
 
     return OnlyofficeDocumentHelper::createEditorConfig(
       'embedded',

@@ -71,3 +71,12 @@ msgstr "パーセント"
 
 msgid "Pixels"
 msgstr "ピクセル"
+
+msgid "Advanced server settings"
+msgstr "サーバー詳細設定"
+
+msgid "ONLYOFFICE Docs address for internal requests from the server"
+msgstr "サーバーから内部リクエストに利用されるONLYOFFICE Docs アドレス"
+
+msgid "Server address for internal requests from ONLYOFFICE Docs"
+msgstr "ONLYOFFICE Docsから内部リクエストに利用されるサーバーアドレス"

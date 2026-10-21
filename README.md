@@ -103,7 +103,34 @@ The address must be accessible for the user browser and from the Drupal server.
 The Drupal server address must also be accessible from ONLYOFFICE 
 Document Server for correct work.
 
+Sometimes your network configuration might not allow the requests between
+Drupal and ONLYOFFICE Document Server using the public addresses.
+The *Advanced server settings* allow you to set the ONLYOFFICE Document Server
+address for internal requests from the Drupal server and the returning Drupal
+address for internal requests from ONLYOFFICE Document Server.
+Enter them in the **ONLYOFFICE Docs address for internal requests from the server**
+and **Server address for internal requests from ONLYOFFICE Docs** fields.
+
 Configuration settings include JWT, enabled by default to protect the editors from unauthorized access. If setting a custom **Secret key**, ensure it matches the one in the ONLYOFFICE Docs [config file](https://api.onlyoffice.com/docs/docs-api/additional-api/signature/) for proper validation.
+
+### settings.php
+
+The settings can also be defined in the `settings.php` file of the site:
+
+```php
+$config['onlyoffice.settings']['{setting_key}'] = '{setting_value}';
+```
+
+The values defined there take precedence over the values saved on the settings
+page and are not stored in the database, which is useful for the secret key.
+The settings page keeps showing the saved values.
+
+| Setting key               | Setting                                                         |
+|---------------------------|-----------------------------------------------------------------|
+| `doc_server_url`          | Document Editing Service address                                |
+| `doc_server_jwt`          | Secret key                                                      |
+| `doc_server_internal_url` | ONLYOFFICE Docs address for internal requests from the server   |
+| `storage_url`             | Server address for internal requests from ONLYOFFICE Docs       |
 
 ## Usage
 

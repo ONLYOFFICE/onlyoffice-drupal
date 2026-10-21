@@ -71,3 +71,12 @@ msgstr "Percentuali"
 
 msgid "Pixels"
 msgstr "Pixel"
+
+msgid "Advanced server settings"
+msgstr "Impostazioni avanzate del server"
+
+msgid "ONLYOFFICE Docs address for internal requests from the server"
+msgstr "Indirizzo di ONLYOFFICE Docs per le richieste interne del server"
+
+msgid "Server address for internal requests from ONLYOFFICE Docs"
+msgstr "Indirizzo del server per le richieste interne da ONLYOFFICE Docs"

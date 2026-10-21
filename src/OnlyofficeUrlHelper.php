@@ -66,7 +66,24 @@ class OnlyofficeUrlHelper {
 
     $key = static::signLinkParameters($linkParameters);
 
-    return Url::fromRoute('onlyoffice.callback', ['key' => $key])->setAbsolute()->toString();
+    $url = Url::fromRoute('onlyoffice.callback', ['key' => $key])->setAbsolute()->toString();
+
+    return static::replaceSiteUrlToStorage($url);
+  }
+
+  /**
+   * Return URL to callback for saving PDF form.
+   */
+  public static function getFormCallbackUrl(Media $media) {
+    $linkParameters = [
+      $media->uuid(),
+    ];
+
+    $key = static::signLinkParameters($linkParameters);
+
+    $url = Url::fromRoute('onlyoffice_form.callback', ['key' => $key])->setAbsolute()->toString();
+
+    return static::replaceSiteUrlToStorage($url);
   }
 
   /**
@@ -80,7 +97,63 @@ class OnlyofficeUrlHelper {
 
     $key = static::signLinkParameters($linkParameters);
 
-    return Url::fromRoute('onlyoffice.download', ['key' => $key])->setAbsolute()->toString();
+    $url = Url::fromRoute('onlyoffice.download', ['key' => $key])->setAbsolute()->toString();
+
+    return static::replaceSiteUrlToStorage($url);
+  }
+
+  /**
+   * Return Document Server address for internal requests from Drupal.
+   */
+  public static function getDocumentServerInternalUrl() {
+    $options = \Drupal::config('onlyoffice.settings');
+
+    return $options->get('doc_server_internal_url') ?: $options->get('doc_server_url');
+  }
+
+  /**
+   * Replace Document Server address in the URL with the internal address.
+   */
+  public static function replaceDocumentServerUrlToInternal(string $url) {
+    $from = rtrim((string) \Drupal::config('onlyoffice.settings')->get('doc_server_url'), '/');
+    $to = rtrim((string) static::getDocumentServerInternalUrl(), '/');
+
+    if ($from === '' || $from === $to) {
+      return $url;
+    }
+
+    if (strncasecmp($url, $from . '/', strlen($from) + 1) === 0) {
+      $url = $to . substr($url, strlen($from));
+    }
+
+    return $url;
+  }
+
+  /**
+   * Return Drupal address for internal requests from Document Server.
+   */
+  public static function getStorageUrl() {
+    return (string) \Drupal::config('onlyoffice.settings')->get('storage_url');
+  }
+
+  /**
+   * Replace Drupal address in the URL with the address for Document Server.
+   */
+  private static function replaceSiteUrlToStorage(string $url) {
+    $to = rtrim(static::getStorageUrl(), '/');
+
+    if ($to === '') {
+      return $url;
+    }
+
+    $request = \Drupal::request();
+    $from = rtrim($request->getSchemeAndHttpHost() . $request->getBasePath(), '/');
+
+    if (strncasecmp($url, $from . '/', strlen($from) + 1) === 0) {
+      $url = $to . substr($url, strlen($from));
+    }
+
+    return $url;
   }
 
   /**

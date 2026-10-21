@@ -305,6 +305,8 @@ class OnlyofficeCallbackController extends ControllerBase {
     $separator = substr($directory, -1) == '/' ? '' : '/';
     $newDestination = $directory . $separator . $file->getFilename();
 
+    $download_url = OnlyofficeUrlHelper::replaceDocumentServerUrlToInternal($download_url);
+
     if ($new_data = file_get_contents($download_url)) {
       $newFile = $this->writeData($new_data, $newDestination);
 

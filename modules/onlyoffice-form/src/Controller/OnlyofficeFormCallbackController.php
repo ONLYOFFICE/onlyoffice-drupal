@@ -305,6 +305,8 @@ class OnlyofficeFormCallbackController extends ControllerBase {
     $file_extension = pathinfo($file->getFilename(), PATHINFO_EXTENSION);
     $media_name = $media->label();
 
+    $download_url = OnlyofficeUrlHelper::replaceDocumentServerUrlToInternal($download_url);
+
     if ($new_data = file_get_contents($download_url)) {
       if ($isSubmitForm) {
         // Create a dedicated directory for this media's submissions.
