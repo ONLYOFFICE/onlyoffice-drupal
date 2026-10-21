@@ -23,6 +23,7 @@ namespace Drupal\onlyoffice\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Validator\Constraints\Url;
 use Symfony\Component\Validator\Validation;
 
@@ -30,6 +31,23 @@ use Symfony\Component\Validator\Validation;
  * Configure ONLYOFFICE Connector settings for this site.
  */
 class SettingsForm extends ConfigFormBase {
+
+  /**
+   * The document service.
+   *
+   * @var \Drupal\onlyoffice\OnlyofficeDocumentService
+   */
+  protected $documentService;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    $instance = parent::create($container);
+    $instance->documentService = $container->get('onlyoffice.document_service');
+
+    return $instance;
+  }
 
   /**
    * {@inheritdoc}
@@ -150,6 +168,16 @@ class SettingsForm extends ConfigFormBase {
       ->set('storage_url', $storageUrl)
       ->save();
     parent::submitForm($form, $form_state);
+
+    // The check result is informational only, the settings are saved anyway.
+    try {
+      $version = $this->documentService->checkConnection();
+      $this->messenger()->addStatus($this->t('ONLYOFFICE Docs connection check succeeded (version @version).', ['@version' => $version]));
+    }
+    catch (\RuntimeException $e) {
+      $this->logger('onlyoffice')->warning('Connection check failed: @error', ['@error' => $e->getMessage()]);
+      $this->messenger()->addWarning($this->t('ONLYOFFICE Docs connection check failed: @error', ['@error' => $e->getMessage()]));
+    }
   }
 
 }

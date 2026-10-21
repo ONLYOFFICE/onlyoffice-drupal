@@ -138,6 +138,15 @@ The settings page keeps showing the saved values.
 | `doc_server_internal_url` | ONLYOFFICE Docs address for internal requests from the server   |
 | `storage_url`             | Server address for internal requests from ONLYOFFICE Docs       |
 
+## Checking the connection
+
+When the settings are saved, the module checks the connection to ONLYOFFICE Docs:
+it requests the health status and the version of ONLYOFFICE Docs and converts a test
+document, which checks the addresses in both directions and the secret key.
+
+You will see a message either with the ONLYOFFICE Docs version or with the cause
+of the error. The settings are saved even if the check fails.
+
 ## Usage
 
 ### Edit files already uploaded to Drupal

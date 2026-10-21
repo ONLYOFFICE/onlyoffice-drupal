@@ -37,3 +37,12 @@ onlyoffice.download:
   requirements:
     # Don't use standard access restriction because document editor service use jwt authorization.
     _access: 'TRUE'
+
+onlyoffice.empty_file:
+  path: '/onlyoffice-empty-file/{key}'
+  defaults:
+    _controller: '\Drupal\onlyoffice\Controller\OnlyofficeDownloadController::emptyFile'
+  methods: [ GET ]
+  requirements:
+    # Don't use standard access restriction because document editor service use jwt authorization.
+    _access: 'TRUE'

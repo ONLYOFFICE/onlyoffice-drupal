@@ -1,3 +1,9 @@
 services:
   onlyoffice.document_helper:
     class: Drupal\onlyoffice\OnlyofficeDocumentHelper
+  onlyoffice.document_service:
+    class: Drupal\onlyoffice\OnlyofficeDocumentService
+    arguments: ['@http_client', '@config.factory', '@request_stack', '@logger.channel.onlyoffice']
+  logger.channel.onlyoffice:
+    parent: logger.channel_base
+    arguments: ['onlyoffice']

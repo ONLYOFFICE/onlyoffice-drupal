@@ -103,6 +103,22 @@ class OnlyofficeUrlHelper {
   }
 
   /**
+   * Return URL to download empty document for connection check.
+   */
+  public static function getEmptyFileUrl() {
+    $linkParameters = [
+      'empty',
+      \Drupal::time()->getRequestTime(),
+    ];
+
+    $key = static::signLinkParameters($linkParameters);
+
+    $url = Url::fromRoute('onlyoffice.empty_file', ['key' => $key])->setAbsolute()->toString();
+
+    return static::replaceSiteUrlToStorage($url);
+  }
+
+  /**
    * Return Document Server address for internal requests from Drupal.
    */
   public static function getDocumentServerInternalUrl() {
