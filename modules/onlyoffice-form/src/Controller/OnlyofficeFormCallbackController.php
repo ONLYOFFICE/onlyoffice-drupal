@@ -35,6 +35,7 @@ use Drupal\file\FileInterface;
 use Drupal\media\Entity\Media;
 use Drupal\onlyoffice\OnlyofficeAppConfig;
 use Drupal\onlyoffice\OnlyofficeDocumentHelper;
+use Drupal\onlyoffice\OnlyofficeDocumentService;
 use Drupal\onlyoffice\OnlyofficeUrlHelper;
 use Drupal\user\Entity\User;
 use Drupal\user\UserStorageInterface;
@@ -109,6 +110,13 @@ class OnlyofficeFormCallbackController extends ControllerBase {
   protected $tempstoreFactory;
 
   /**
+   * The document service.
+   *
+   * @var \Drupal\onlyoffice\OnlyofficeDocumentService
+   */
+  protected $documentService;
+
+  /**
    * Constructs a OnlyofficeCallbackController object.
    *
    * @param \Drupal\user\Entity\UserStorageInterface $user_storage
@@ -123,6 +131,8 @@ class OnlyofficeFormCallbackController extends ControllerBase {
    *   The time service.
    * @param \Drupal\Core\TempStore\SharedTempStoreFactory $tempstore_factory
    *   The tempstore factory.
+   * @param \Drupal\onlyoffice\OnlyofficeDocumentService $document_service
+   *   The document service.
    */
   public function __construct(
     UserStorageInterface $user_storage,
@@ -131,6 +141,7 @@ class OnlyofficeFormCallbackController extends ControllerBase {
     StreamWrapperManagerInterface $streamWrapperManager,
     TimeInterface $time,
     SharedTempStoreFactory $tempstore_factory,
+    OnlyofficeDocumentService $document_service,
   ) {
     $this->userStorage = $user_storage;
     $this->entityRepository = $entity_repository;
@@ -138,6 +149,7 @@ class OnlyofficeFormCallbackController extends ControllerBase {
     $this->streamWrapperManager = $streamWrapperManager;
     $this->time = $time;
     $this->tempstoreFactory = $tempstore_factory;
+    $this->documentService = $document_service;
     $this->account = $this->currentUser();
   }
 
@@ -151,7 +163,8 @@ class OnlyofficeFormCallbackController extends ControllerBase {
           $container->get('file_system'),
           $container->get('stream_wrapper_manager'),
           $container->get('datetime.time'),
-          $container->get('tempstore.shared')
+          $container->get('tempstore.shared'),
+          $container->get('onlyoffice.document_service')
       );
   }
 
@@ -306,9 +319,14 @@ class OnlyofficeFormCallbackController extends ControllerBase {
     $file_extension = pathinfo($file->getFilename(), PATHINFO_EXTENSION);
     $media_name = $media->label();
 
-    $download_url = OnlyofficeUrlHelper::replaceDocumentServerUrlToInternal($download_url);
+    try {
+      $new_data = $this->documentService->download($download_url);
+    }
+    catch (\RuntimeException $e) {
+      $new_data = NULL;
+    }
 
-    if ($new_data = file_get_contents($download_url)) {
+    if ($new_data) {
       if ($isSubmitForm) {
         // Create a dedicated directory for this media's submissions.
         $media_uuid = $media->uuid();
