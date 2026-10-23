@@ -1,7 +1,7 @@
 name: 'ONLYOFFICE Connector'
 type: module
 description: 'Allows in-browser document editing from the Drupal Media module with ONLYOFFICE Docs. Requires a separate installation of ONLYOFFICE Docs (Document Server).'
-core_version_requirement: ^10
+core_version_requirement: ^10.3
 package: ONLYOFFICE
 configure: onlyoffice.settings_form
 dependencies:
