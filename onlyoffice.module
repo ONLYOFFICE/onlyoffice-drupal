@@ -170,6 +170,18 @@ function onlyoffice_entity_operation(EntityInterface $entity) {
 }
 
 /**
+ * Implements hook_locale_translation_projects_alter().
+ */
+function onlyoffice_locale_translation_projects_alter(&$projects) {
+  if (!isset($projects['onlyoffice'])) {
+    return;
+  }
+
+  $path = \Drupal::service('extension.list.module')->getPath('onlyoffice');
+  $projects['onlyoffice']['info']['interface translation server pattern'] = $path . '/translations/onlyoffice.%language.po';
+}
+
+/**
  * Implements hook_library_info_build().
  */
 function onlyoffice_library_info_build() {
