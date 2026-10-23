@@ -26,7 +26,6 @@
 
 use Drupal\Core\Hook\Attribute\LegacyHook;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\file\FileInterface;
 use Drupal\onlyoffice_form\Hook\OnlyofficeFormHooks;
 
 /**
@@ -48,69 +47,17 @@ function onlyoffice_form_theme(): array {
 /**
  * Prepares variables for onlyoffice form file upload templates.
  *
- * Default template: onlyoffice-form-file-upload.html.twig.
+ * Drupal 11.3 and later call OnlyofficeFormHooks::preprocessFileUpload()
+ * through the 'initial preprocess' key of the theme hook instead.
  *
  * @param array $variables
  *   An associative array containing:
  *   - element: A render element representing the file.
+ *
+ * @see \Drupal\onlyoffice_form\Hook\OnlyofficeFormHooks::preprocessFileUpload()
  */
-function template_preprocess_onlyoffice_form_file_upload(array &$variables) {
-  $element = $variables['element'];
-
-  // Standard managed file preprocessing.
-  $variables['attributes'] = [];
-  if (isset($element['#id'])) {
-    $variables['attributes']['id'] = $element['#id'];
-  }
-  if (!empty($element['#attributes']['class'])) {
-    $variables['attributes']['class'] = (array) $element['#attributes']['class'];
-  }
-
-  // File ID and file object.
-  $fid = NULL;
-  if (isset($element['#value']) && !empty($element['#value'])) {
-    $fid = $element['#value'];
-  }
-
-  // Log the file ID for debugging.
-  \Drupal::logger('onlyoffice_form')->notice('File ID in preprocess: @fid', ['@fid' => print_r($fid, TRUE)]);
-
-  // If the file ID is an array, extract the actual ID.
-  if (is_array($fid)) {
-    // Check if it's in the format used by managed_file.
-    if (isset($fid['fids']) && is_array($fid['fids']) && !empty($fid['fids'])) {
-      $fid = reset($fid['fids']);
-    }
-    else {
-      $fid = reset($fid);
-    }
-  }
-
-  \Drupal::logger('onlyoffice_form')->notice('Extracted file ID: @fid', ['@fid' => $fid]);
-
-  $file = $fid ? \Drupal::entityTypeManager()->getStorage('file')->load($fid) : NULL;
-
-  // Prepare file information.
-  $variables['has_file'] = !empty($fid) && !empty($file);
-  $variables['file'] = NULL;
-
-  if ($file instanceof FileInterface) {
-    $variables['file'] = [
-      'id' => $file->id(),
-      'name' => $file->getFilename(),
-    ];
-  }
-
-  // Add the element description.
-  $variables['description'] = $element['#description'] ?? '';
-
-  // Pass the hidden elements to the template.
-  $variables['element'] = $element;
-
-  // Add module path for image URLs.
-  $resolver = \Drupal::service('extension.path.resolver');
-  $module_path = $resolver->getPath('module', 'onlyoffice_form');
-  $variables['module_path'] = base_path() . $module_path;
+function template_preprocess_onlyoffice_form_file_upload(array &$variables): void {
+  \Drupal::service(OnlyofficeFormHooks::class)->preprocessFileUpload($variables);
 }
 
 /**

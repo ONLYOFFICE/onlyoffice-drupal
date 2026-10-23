@@ -36,7 +36,7 @@ Notes:
 
 ### Hook implementations
 
-Hook logic lives in `src/Hook/OnlyofficeHooks.php` and `modules/onlyoffice-form/src/Hook/OnlyofficeFormHooks.php` as `#[Hook]` methods; both classes are autowired services named by their class in the `*.services.yml` files. For Drupal 10, `onlyoffice.module` and `onlyoffice_form.module` keep `#[LegacyHook]` procedural wrappers that only call `\Drupal::service(<class>::class)-><method>()`. A new hook needs both the method and the wrapper; put the logic in the method only.
+Hook logic lives in `src/Hook/OnlyofficeHooks.php` and `modules/onlyoffice-form/src/Hook/OnlyofficeFormHooks.php` as `#[Hook]` methods; both classes are autowired services named by their class in the `*.services.yml` files. For Drupal 10, `onlyoffice.module` and `onlyoffice_form.module` keep `#[LegacyHook]` procedural wrappers that only call `\Drupal::service(<class>::class)-><method>()`. A new hook needs both the method and the wrapper; put the logic in the method only. The same applies to the `onlyoffice_form_file_upload` preprocess: `OnlyofficeFormHooks::preprocessFileUpload()` is registered as the theme hook's `initial preprocess` (Drupal 11.3+), and `template_preprocess_onlyoffice_form_file_upload()` calls it on older versions.
 
 ### Formats and templates
 
