@@ -20,7 +20,7 @@ Lint a single file: `npx eslint path/to/file.js`, `npx stylelint path/to/file.cs
 
 Notes:
 - Commit messages follow Conventional Commits (`type: subject`, e.g. `ci:`, `chore:`, `style:`, `fix:`); `captainhook.json` enforces this on `commit-msg` and runs `composer phpcs` on `pre-commit`.
-- `.prettierignore` excludes `*.yml`, so YAML is checked by `eslint-plugin-yml` (2-space indent) rather than Prettier. phpcs also checks YAML/CSS/Markdown except `CHANGELOG.md` and `README.md`.
+- `.prettierignore` excludes `*.yml`, so YAML is checked by `eslint-plugin-yml` (2-space indent) rather than Prettier. phpcs also checks YAML/CSS/Markdown except `CHANGELOG.md`, `CLAUDE.md` and `README.md`.
 - ESLint runs with `eslint-plugin-no-jquery` (all rules) — write vanilla DOM code, not jQuery. `jsdoc/flat/recommended` reports missing or malformed JSDoc as warnings; use `@return`/`@prop` tag names.
 - PHP CI target is 8.1.
 
