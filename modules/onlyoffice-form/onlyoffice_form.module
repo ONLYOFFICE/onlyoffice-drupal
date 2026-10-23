@@ -24,32 +24,25 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+use Drupal\Core\Hook\Attribute\LegacyHook;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\file\FileInterface;
-use Drupal\Core\Field\FieldTypeCategoryManagerInterface;
+use Drupal\onlyoffice_form\Hook\OnlyofficeFormHooks;
 
 /**
  * Implements hook_help().
  */
-function onlyoffice_form_help($route_name, RouteMatchInterface $route_match) {
-  switch ($route_name) {
-    case 'help.page.onlyoffice_form':
-      $output = '';
-      $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The ONLYOFFICE form module provides integration with ONLYOFFICE forms.') . '</p>';
-      return $output;
-  }
+#[LegacyHook]
+function onlyoffice_form_help(string $route_name, RouteMatchInterface $route_match): ?string {
+  return \Drupal::service(OnlyofficeFormHooks::class)->help($route_name, $route_match);
 }
 
 /**
  * Implements hook_theme().
  */
-function onlyoffice_form_theme() {
-  return [
-    'onlyoffice_form_file_upload' => [
-      'render element' => 'element',
-    ],
-  ];
+#[LegacyHook]
+function onlyoffice_form_theme(): array {
+  return \Drupal::service(OnlyofficeFormHooks::class)->theme();
 }
 
 /**
@@ -123,8 +116,7 @@ function template_preprocess_onlyoffice_form_file_upload(array &$variables) {
 /**
  * Implements hook_field_type_category_info_alter().
  */
-function onlyoffice_form_field_type_category_info_alter(&$definitions) {
-  // The `onlyoffice_form` field type belongs in the `general` category, so the
-  // libraries need to be attached using an alter hook.
-  $definitions[FieldTypeCategoryManagerInterface::FALLBACK_CATEGORY]['libraries'][] = 'onlyoffice_form/onlyoffice_form.onlyoffice_form-icon';
+#[LegacyHook]
+function onlyoffice_form_field_type_category_info_alter(array &$definitions): void {
+  \Drupal::service(OnlyofficeFormHooks::class)->fieldTypeCategoryInfoAlter($definitions);
 }

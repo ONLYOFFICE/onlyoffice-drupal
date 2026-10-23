@@ -1,3 +1,11 @@
 services:
   onlyoffice.document_helper:
     class: Drupal\onlyoffice\OnlyofficeDocumentHelper
+
+  logger.channel.onlyoffice:
+    parent: logger.channel_base
+    arguments: ['onlyoffice']
+
+  Drupal\onlyoffice\Hook\OnlyofficeHooks:
+    class: Drupal\onlyoffice\Hook\OnlyofficeHooks
+    autowire: true
