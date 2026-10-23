@@ -374,7 +374,7 @@ class OnlyofficeFormCallbackController extends ControllerBase {
     $file->setOwnerId($this->currentUser()->getAccount()->id());
 
     if ($replace === FileExists::Rename && is_file($destination)) {
-      $file->setFilename($this->fileSystem->basename($destination));
+      $file->setFilename(basename($destination));
     }
 
     $file->setPermanent();

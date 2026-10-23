@@ -374,7 +374,7 @@ class OnlyofficeFormCreateForm extends FormBase {
         if (!str_ends_with(strtolower($filename), '.pdf')) {
           $filename .= '.pdf';
         }
-        $destination = $directory . $this->fileSystem->basename($filename);
+        $destination = $directory . basename($filename);
 
         // Copy the template file.
         $uri = $this->fileSystem->copy($template_path, $destination, FileExists::Rename);
@@ -383,7 +383,7 @@ class OnlyofficeFormCreateForm extends FormBase {
           // Create a file entity.
           $file = File::create([
             'uri' => $uri,
-            'filename' => $this->fileSystem->basename($uri),
+            'filename' => basename($uri),
             'filemime' => 'application/pdf',
             'status' => File::STATUS_PERMANENT,
             'uid' => $this->currentUser->id(),
