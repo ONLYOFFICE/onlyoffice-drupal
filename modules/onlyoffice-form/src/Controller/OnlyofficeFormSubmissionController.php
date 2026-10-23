@@ -24,6 +24,7 @@ namespace Drupal\onlyoffice_form\Controller;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -174,19 +175,20 @@ class OnlyofficeFormSubmissionController extends ControllerBase {
       throw new NotFoundHttpException('File not found');
     }
 
-    // Get the file URI.
-    $uri = $file->getFileUri();
-
-    // Check if the file exists.
-    if (!file_exists($uri)) {
-      throw new NotFoundHttpException('File not found');
-    }
-
     // Get the file name for download.
     $filename = $file->getFilename();
 
     // Create a binary file response.
-    $response = new BinaryFileResponse($uri);
+    try {
+      $response = new BinaryFileResponse($file->getFileUri());
+    }
+    catch (FileNotFoundException $e) {
+      $this->loggerFactory->get('onlyoffice_form')->error(
+        'The file for submission @id is not available: @message',
+        ['@id' => $onlyoffice_form_submission->id(), '@message' => $e->getMessage()]
+      );
+      throw new NotFoundHttpException('File not found', $e);
+    }
 
     // Set the content disposition to force download.
     $response->setContentDisposition(

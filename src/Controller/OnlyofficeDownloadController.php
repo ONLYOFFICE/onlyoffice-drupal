@@ -31,6 +31,7 @@ use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -160,7 +161,22 @@ class OnlyofficeDownloadController extends ControllerBase {
       );
     }
 
-    return new BinaryFileResponse($file->getFileUri(), 200);
+    try {
+      return new BinaryFileResponse($file->getFileUri(), 200);
+    }
+    catch (FileNotFoundException $e) {
+      $this->getLogger('onlyoffice')->error(
+        'The file for resource with UUID @uuid is not available: @message',
+        ['@uuid' => $uuid, '@message' => $e->getMessage()]
+      );
+      return new JsonResponse(
+        [
+          'error' => 1,
+          'message' => 'The file for resource with UUID ' . $uuid . ' is not available.',
+        ],
+        404
+      );
+    }
   }
 
 }
