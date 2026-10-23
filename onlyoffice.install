@@ -24,7 +24,9 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+use Drupal\Component\Utility\DeprecationHelper;
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Extension\Requirement\RequirementSeverity;
 
 /**
  * Implements hook_install().
@@ -50,7 +52,12 @@ function onlyoffice_requirements($phase) {
     if (!class_exists('\Firebase\JWT\JWT')) {
       $requirements['jwt_library'] = [
         'description' => t('ONLYOFFICE Connector requires the firebase/php-jwt library.'),
-        'severity' => REQUIREMENT_ERROR,
+        'severity' => DeprecationHelper::backwardsCompatibleCall(
+          \Drupal::VERSION,
+          '11.2.0',
+          fn() => RequirementSeverity::Error,
+          fn() => REQUIREMENT_ERROR,
+        ),
       ];
     }
   }
