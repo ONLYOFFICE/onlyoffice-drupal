@@ -26,6 +26,7 @@ use Drupal\Component\Uuid\Uuid;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\File\Exception\InvalidStreamWrapperException;
+use Drupal\Core\File\FileExists;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
 use Drupal\file\Entity\File;
@@ -330,7 +331,7 @@ class OnlyofficeCallbackController extends ControllerBase {
   /**
    * Writing data to file.
    */
-  private function writeData(string $data, string $destination, int $replace = FileSystemInterface::EXISTS_RENAME): FileInterface {
+  private function writeData(string $data, string $destination, FileExists $replace = FileExists::Rename): FileInterface {
     if (!$this->streamWrapperManager->isValidUri($destination)) {
       throw new InvalidStreamWrapperException(sprintf('Invalid stream wrapper: %destination', ['%destination' => $destination]));
     }
@@ -339,7 +340,7 @@ class OnlyofficeCallbackController extends ControllerBase {
     $file = File::create(['uri' => $uri]);
     $file->setOwnerId($this->currentUser()->getAccount()->id());
 
-    if ($replace === FileSystemInterface::EXISTS_RENAME && is_file($destination)) {
+    if ($replace === FileExists::Rename && is_file($destination)) {
       $file->setFilename($this->fileSystem->basename($destination));
     }
 
