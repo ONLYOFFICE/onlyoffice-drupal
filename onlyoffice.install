@@ -27,6 +27,7 @@
 use Drupal\Component\Utility\DeprecationHelper;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Extension\Requirement\RequirementSeverity;
+use Drupal\Core\Hook\Attribute\LegacyRequirementsHook;
 
 /**
  * Implements hook_install().
@@ -44,7 +45,11 @@ function onlyoffice_uninstall() {
 
 /**
  * Implements hook_requirements().
+ *
+ * Drupal 11.3 and later skip this function and use
+ * \Drupal\onlyoffice\Install\Requirements\OnlyofficeRequirements instead.
  */
+#[LegacyRequirementsHook]
 function onlyoffice_requirements($phase) {
   $requirements = [];
 
