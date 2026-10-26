@@ -21,6 +21,8 @@ namespace Drupal\onlyoffice_form\Plugin\media\Source;
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\media\Attribute\MediaSource;
 use Drupal\media\MediaTypeInterface;
 use Drupal\media\Plugin\media\Source\File;
 
@@ -28,18 +30,17 @@ use Drupal\media\Plugin\media\Source\File;
  * Onlyoffice PDF Form entity media source.
  *
  * @see \Drupal\file\FileInterface
- *
- * @MediaSource(
- *   id = "onlyoffice_pdf_form",
- *   label = @Translation("ONLYOFFICE PDF Form"),
- *   description = @Translation("Use onlyoffice pdf forms for reusable media."),
- *   allowed_field_types = {"file"},
- *   default_thumbnail_filename = "pdf.svg",
- *   forms = {
- *     "media_library_add" = "\Drupal\media_library\Form\FileUploadForm",
- *   },
- * )
  */
+#[MediaSource(
+  id: "onlyoffice_pdf_form",
+  label: new TranslatableMarkup("ONLYOFFICE PDF Form"),
+  description: new TranslatableMarkup("Use onlyoffice pdf forms for reusable media."),
+  allowed_field_types: ["file"],
+  forms: [
+    "media_library_add" => "\Drupal\media_library\Form\FileUploadForm",
+  ],
+  default_thumbnail_filename: "pdf.svg",
+)]
 class OnlyofficePdfForm extends File {
 
   /**
