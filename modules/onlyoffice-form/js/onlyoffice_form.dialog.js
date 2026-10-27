@@ -97,28 +97,37 @@
             // Add the file to the form data - use the correct name format for managed_file
             formData.append('files[upload_file]', file);
 
-            // Get the CSRF token
-            var token = '';
-            if (drupalSettings.ajax && drupalSettings.ajax.ajaxPageState) {
-              token = drupalSettings.ajax.ajaxPageState.token;
-            } else if (drupalSettings.ajaxPageState) {
-              token = drupalSettings.ajaxPageState.token;
-            }
-
             // Use our custom endpoint for file uploads
-            var ajaxUrl = Drupal.url('onlyoffice-form/file-upload');
+            const uploadUrl = Drupal.url('onlyoffice-form/file-upload');
 
-            // Make the AJAX request to our custom file upload endpoint
-            $.ajax({
-              url: ajaxUrl,
-              type: 'POST',
-              data: formData,
-              processData: false,
-              contentType: false,
-              headers: {
-                'X-CSRF-Token': token,
-              },
-              success: function (response) {
+            // Get the CSRF token, then upload the file with it
+            fetch(Drupal.url('session/token'))
+              .then(function (tokenResponse) {
+                if (!tokenResponse.ok) {
+                  throw new Error('Could not get the CSRF token');
+                }
+                return tokenResponse.text();
+              })
+              .then(function (token) {
+                // Send the file to our custom file upload endpoint
+                return fetch(uploadUrl, {
+                  method: 'POST',
+                  body: formData,
+                  headers: {
+                    'X-CSRF-Token': token,
+                  },
+                });
+              })
+              .then(function (uploadResponse) {
+                return uploadResponse.json().catch(function () {
+                  throw new Error(
+                    'Could not parse the upload response (status ' +
+                      uploadResponse.status +
+                      ')',
+                  );
+                });
+              })
+              .then(function (response) {
                 // Log the response for debugging
                 console.log('File upload response:', response);
 
@@ -145,23 +154,11 @@
 
                   removeSelectedFile($wrapper);
                 }
-              },
-              error: function (xhr) {
-                console.error('File upload error:', xhr.responseText);
-
-                // Try to parse the error response to get a more specific message for console
-                try {
-                  var errorResponse = JSON.parse(xhr.responseText);
-                  if (errorResponse && errorResponse.message) {
-                    console.error('Error message:', errorResponse.message);
-                  }
-                } catch {
-                  console.error('Could not parse error response');
-                }
-
+              })
+              .catch(function (error) {
+                console.error('File upload error:', error);
                 removeSelectedFile($wrapper);
-              },
-            });
+              });
           } else {
             // If no file was selected (user canceled the file dialog)
             console.log('No file selected');
@@ -235,7 +232,7 @@
         <div class="onlyoffice-form-file-preview">
           <img src="${drupalSettings.myModule.modulePath}/images/pdf.svg" alt="PDF File" width="96" height="96">
           <div class="onlyoffice-form-file-info">
-            <div class="onlyoffice-form-file-title"><span>Title</span>: ${file.name}</div>
+            <div class="onlyoffice-form-file-title"><span>Title</span>: ${Drupal.checkPlain(file.name)}</div>
           </div>
         </div>
         <button type="button" class="onlyoffice-form-remove-button button">Remove</button>
