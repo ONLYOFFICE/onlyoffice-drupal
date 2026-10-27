@@ -176,6 +176,21 @@ msgstr "Hauteur"
 msgid "Uploading..."
 msgstr "Chargement..."
 
+#: js/onlyoffice_form.dialog.js:0
+#: templates/onlyoffice-form-file-upload.html.twig:0
+msgid "PDF File"
+msgstr "Fichier PDF"
+
+#: js/onlyoffice_form.dialog.js:0
+#: templates/onlyoffice-form-file-upload.html.twig:0
+msgid "Remove"
+msgstr "Retirer"
+
+#: js/onlyoffice_form.dialog.js:0
+#: templates/onlyoffice-form-file-upload.html.twig:0
+msgid "Select file"
+msgstr "Sélectionner un fichier"
+
 #: src/OnlyofficeFormListBuilder.php:139
 #: src/OnlyofficeFormSubmissionListBuilder.php:198
 msgid "Title"

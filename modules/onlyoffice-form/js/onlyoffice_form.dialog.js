@@ -46,18 +46,6 @@
         },
       );
 
-      // Add special handling for the source dropdown
-      $(once('onlyoffice-form-source', 'select[name="source"]', context)).on(
-        'change',
-        function () {
-          var source = $(this).val();
-          var $dialog = $(this).closest('.ui-dialog-content');
-
-          // Update submit button text
-          updateSubmitButtonText($dialog, source);
-        },
-      );
-
       // Custom file upload handling
       $(
         once(
@@ -198,27 +186,6 @@
       }
 
       /**
-       * Updates the submit button text based on the selected source.
-       *
-       * @param {jQuery} $dialog
-       *   The dialog jQuery object.
-       * @param {string} source
-       *   The selected source value.
-       */
-      function updateSubmitButtonText($dialog, source) {
-        var buttonText = 'Create';
-
-        if (source === 'upload') {
-          buttonText = 'Upload';
-        }
-
-        // Find the submit button and update its text
-        if ($dialog.length) {
-          $dialog.find('input[type="submit"]').val(buttonText);
-        }
-      }
-
-      /**
        * Shows the selected file in the UI.
        *
        * @param {jQuery} $wrapper
@@ -230,12 +197,12 @@
         // Create the file preview HTML
         var filePreviewHtml = `<div class="onlyoffice-form-uploaded-file">
         <div class="onlyoffice-form-file-preview">
-          <img src="${drupalSettings.myModule.modulePath}/images/pdf.svg" alt="PDF File" width="96" height="96">
+          <img src="${drupalSettings.myModule.modulePath}/images/pdf.svg" alt="${Drupal.t('PDF File')}" width="96" height="96">
           <div class="onlyoffice-form-file-info">
-            <div class="onlyoffice-form-file-title"><span>Title</span>: ${Drupal.checkPlain(file.name)}</div>
+            <div class="onlyoffice-form-file-title"><span>${Drupal.t('Title')}</span>: ${Drupal.checkPlain(file.name)}</div>
           </div>
         </div>
-        <button type="button" class="onlyoffice-form-remove-button button">Remove</button>
+        <button type="button" class="onlyoffice-form-remove-button button">${Drupal.t('Remove')}</button>
       </div>`;
 
         // Replace the upload container or loading indicator with the file preview
@@ -263,7 +230,9 @@
         var uploadButtonHtml =
           '<div class="onlyoffice-form-upload-container">' +
           '<div class="onlyoffice-form-upload-button-wrapper">' +
-          '<button type="button" class="onlyoffice-form-upload-button button">Select file</button>' +
+          '<button type="button" class="onlyoffice-form-upload-button button">' +
+          Drupal.t('Select file') +
+          '</button>' +
           '</div>' +
           '</div>';
 
