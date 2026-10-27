@@ -123,9 +123,6 @@ class OnlyofficeDownloadController extends ControllerBase {
     $uuid = $linkParameters[0];
     $userId = $linkParameters[1];
 
-    $account = $this->userStorage->load($userId);
-    $this->currentUser()->setAccount($account);
-
     if (!$uuid || !Uuid::isValid($uuid)) {
       $this->getLogger('onlyoffice')->error('Invalid parameter UUID: @uuid.', ['@uuid' => $uuid]);
       return new JsonResponse(
@@ -133,6 +130,10 @@ class OnlyofficeDownloadController extends ControllerBase {
         400
       );
     }
+
+    $account = $this->userStorage->load($userId);
+    $this->currentUser()->setAccount($account);
+
     /** @var \Drupal\file\Entity\File $file */
     $file = $this->entityRepository->loadEntityByUuid('file', $uuid);
 

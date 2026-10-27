@@ -123,7 +123,7 @@ class OnlyofficeUrlHelper {
       $hash = $segments[0];
       $parameters = array_slice($segments, 1);
 
-      if ($hash == JWT::urlsafeB64Encode(JWT::sign(\implode('?', $parameters), Settings::getHashSalt() . \Drupal::service('private_key')->get(), 'HS256'))) {
+      if (hash_equals(JWT::urlsafeB64Encode(JWT::sign(\implode('?', $parameters), Settings::getHashSalt() . \Drupal::service('private_key')->get(), 'HS256')), $hash)) {
         return $parameters;
       }
     }
