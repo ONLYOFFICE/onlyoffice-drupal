@@ -21,13 +21,17 @@ namespace Drupal\onlyoffice_form\Hook;
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ExtensionPathResolver;
 use Drupal\Core\Field\FieldTypeCategoryManagerInterface;
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\file\FileInterface;
+use Drupal\media\MediaInterface;
 
 /**
  * Hook implementations for the ONLYOFFICE form module.
@@ -133,6 +137,20 @@ class OnlyofficeFormHooks {
     // Add module path for image URLs.
     $module_path = $this->extensionPathResolver->getPath('module', 'onlyoffice_form');
     $variables['module_path'] = base_path() . $module_path;
+  }
+
+  /**
+   * Implements hook_ENTITY_TYPE_access() for media entities.
+   *
+   * Lets form administrators delete forms through core's delete form.
+   */
+  #[Hook('media_access')]
+  public function mediaAccess(MediaInterface $media, string $operation, AccountInterface $account): AccessResultInterface {
+    if ($operation === 'delete' && $media->bundle() === 'onlyoffice_pdf_form') {
+      return AccessResult::allowedIfHasPermission($account, 'administer onlyoffice forms');
+    }
+
+    return AccessResult::neutral();
   }
 
   /**

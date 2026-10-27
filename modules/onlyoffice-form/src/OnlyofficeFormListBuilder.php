@@ -386,7 +386,7 @@ class OnlyofficeFormListBuilder extends ControllerBase {
           ];
           $operations['delete'] = [
             'title' => $this->t('Delete'),
-            'url' => Url::fromRoute('entity.media.delete_form', ['media' => $media_id]),
+            'url' => Url::fromRoute('entity.media.delete_form', ['media' => $media_id], ['query' => $this->getDestinationArray()]),
           ];
 
           $row['operations']['data'] = [

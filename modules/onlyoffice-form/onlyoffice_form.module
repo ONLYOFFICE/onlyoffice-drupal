@@ -24,8 +24,11 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Hook\Attribute\LegacyHook;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\media\MediaInterface;
 use Drupal\onlyoffice_form\Hook\OnlyofficeFormHooks;
 
 /**
@@ -58,6 +61,14 @@ function onlyoffice_form_theme(): array {
  */
 function template_preprocess_onlyoffice_form_file_upload(array &$variables): void {
   \Drupal::service(OnlyofficeFormHooks::class)->preprocessFileUpload($variables);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_access() for media entities.
+ */
+#[LegacyHook]
+function onlyoffice_form_media_access(MediaInterface $media, string $operation, AccountInterface $account): AccessResultInterface {
+  return \Drupal::service(OnlyofficeFormHooks::class)->mediaAccess($media, $operation, $account);
 }
 
 /**
