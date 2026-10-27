@@ -233,7 +233,7 @@ class OnlyofficeFormCreateForm extends FormBase {
       '#type' => 'managed_file',
       '#upload_location' => 'public://onlyoffice_forms/',
       '#upload_validators' => [
-        'file_validate_extensions' => ['pdf'],
+        'FileExtension' => ['extensions' => 'pdf'],
       ],
       '#required' => $source == 'upload',
       '#access' => $source == 'upload',
