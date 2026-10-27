@@ -121,14 +121,3 @@ onlyoffice_form.callback:
   requirements:
     # Don't use standard access restriction because document editor service use jwt authorization.
     _access: 'TRUE'
-
-# Bulk delete confirmation form
-onlyoffice_form.bulk_delete_confirm:
-  path: '/admin/content/onlyoffice-form/delete/{ids}'
-  defaults:
-    _form: '\Drupal\onlyoffice_form\Form\OnlyofficeFormBulkDeleteConfirmForm'
-    _title: 'Delete forms'
-  requirements:
-    _permission: 'administer onlyoffice forms'
-  options:
-    _admin_route: TRUE

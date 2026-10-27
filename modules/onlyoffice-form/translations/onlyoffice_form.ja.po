@@ -125,10 +125,6 @@ msgstr "ファイルをアップロード"
 msgid "Create new ONLYOFFICE form"
 msgstr "新しいONLYOFFICEフォームを作成"
 
-#: onlyoffice_form.routing.yml:0
-msgid "Delete forms"
-msgstr "フォームを削除"
-
 #: config/schema/onlyoffice_form.schema.yml:0
 msgid "ONLYOFFICE form formatter settings"
 msgstr "ONLYOFFICEフォームのフォーマッター設定"
@@ -412,32 +408,10 @@ msgstr "ONLYOFFICEフォームの提出"
 msgid "ONLYOFFICE form submissions"
 msgstr "ONLYOFFICEフォームの提出"
 
-#: src/Form/OnlyofficeFormBulkDeleteConfirmForm.php:82
-msgid "Are you sure you want to delete this form?"
-msgstr "このフォームを削除してもよろしいですか？"
-
-#: src/Form/OnlyofficeFormBulkDeleteConfirmForm.php:84
-msgid "Are you sure you want to delete these @count forms?"
-msgstr "これらの @count フォームを削除してもよろしいですか？"
-
 #: src/Form/OnlyofficeFormBulkDeleteConfirmForm.php:100
 #: src/Form/OnlyofficeFormSubmissionDeleteSingleForm.php:111
 msgid "This action cannot be undone."
 msgstr "この操作は元に戻せません。"
-
-#: src/Form/OnlyofficeFormBulkDeleteConfirmForm.php:102
-msgid "This action cannot be undone. All @count forms will be deleted."
-msgstr "この操作は元に戻せません。@count 件のフォームがすべて削除されます。"
-
-#: src/Form/OnlyofficeFormBulkDeleteConfirmForm.php:127
-msgid "The following forms will be deleted:"
-msgstr "次のフォームが削除されます："
-
-#: src/Form/OnlyofficeFormBulkDeleteConfirmForm.php:155
-#: src/Form/OnlyofficeFormBulkForm.php:188
-msgid "1 form has been deleted."
-msgid_plural "@count forms have been deleted."
-msgstr[0] "1つのフォームが削除されました。"
 
 #: src/Form/OnlyofficeFormBulkForm.php:100
 msgid "Action"

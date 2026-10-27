@@ -126,10 +126,6 @@ msgstr "Datei hochladen"
 msgid "Create new ONLYOFFICE form"
 msgstr "Neues ONLYOFFICE-Formular erstellen"
 
-#: onlyoffice_form.routing.yml:0
-msgid "Delete forms"
-msgstr "Formulare löschen"
-
 #: config/schema/onlyoffice_form.schema.yml:0
 msgid "ONLYOFFICE form formatter settings"
 msgstr "Einstellungen für ONLYOFFICE-Formularformatierung"
@@ -421,35 +417,10 @@ msgstr "ONLYOFFICE Formular-Einsendung"
 msgid "ONLYOFFICE form submissions"
 msgstr "ONLYOFFICE Formular-Einsendungen"
 
-#: src/Form/OnlyofficeFormBulkDeleteConfirmForm.php:82
-msgid "Are you sure you want to delete this form?"
-msgstr "Möchten Sie dieses Formular wirklich löschen?"
-
-#: src/Form/OnlyofficeFormBulkDeleteConfirmForm.php:84
-msgid "Are you sure you want to delete these @count forms?"
-msgstr "Möchten Sie diese @count-Formulare wirklich löschen?"
-
 #: src/Form/OnlyofficeFormBulkDeleteConfirmForm.php:100
 #: src/Form/OnlyofficeFormSubmissionDeleteSingleForm.php:111
 msgid "This action cannot be undone."
 msgstr "Diese Aktion kann nicht rückgängig gemacht werden."
-
-#: src/Form/OnlyofficeFormBulkDeleteConfirmForm.php:102
-msgid "This action cannot be undone. All @count forms will be deleted."
-msgstr ""
-"Diese Aktion kann nicht rückgängig gemacht werden. Alle @count-Formulare "
-"werden gelöscht."
-
-#: src/Form/OnlyofficeFormBulkDeleteConfirmForm.php:127
-msgid "The following forms will be deleted:"
-msgstr "Die folgenden Formulare werden gelöscht:"
-
-#: src/Form/OnlyofficeFormBulkDeleteConfirmForm.php:155
-#: src/Form/OnlyofficeFormBulkForm.php:188
-msgid "1 form has been deleted."
-msgid_plural "@count forms have been deleted."
-msgstr[0] "1 Formular wurde gelöscht."
-msgstr[1] ""
 
 #: src/Form/OnlyofficeFormBulkForm.php:100
 msgid "Action"

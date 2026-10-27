@@ -21,10 +21,12 @@ namespace Drupal\onlyoffice_form\Form;
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+use Drupal\Core\Action\ActionManager;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Messenger\MessengerTrait;
 
@@ -50,19 +52,30 @@ class OnlyofficeFormBulkForm extends FormBase {
   protected $entityTypeManager;
 
   /**
+   * The action plugin manager.
+   *
+   * @var \Drupal\Core\Action\ActionManager
+   */
+  protected $actionManager;
+
+  /**
    * Constructs a new OnlyofficeFormBulkForm.
    *
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current user.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
+   * @param \Drupal\Core\Action\ActionManager $action_manager
+   *   The action plugin manager.
    */
   public function __construct(
     AccountInterface $current_user,
     EntityTypeManagerInterface $entity_type_manager,
+    ActionManager $action_manager,
   ) {
     $this->currentUser = $current_user;
     $this->entityTypeManager = $entity_type_manager;
+    $this->actionManager = $action_manager;
   }
 
   /**
@@ -71,7 +84,8 @@ class OnlyofficeFormBulkForm extends FormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('current_user'),
-      $container->get('entity_type.manager')
+      $container->get('entity_type.manager'),
+      $container->get('plugin.manager.action'),
     );
   }
 
@@ -176,24 +190,11 @@ class OnlyofficeFormBulkForm extends FormBase {
     }
 
     if ($action === 'delete') {
-      // Load and delete the selected media entities.
-      $media_ids = array_keys($selected);
-      $media_storage = $this->entityTypeManager->getStorage('media');
-      $media_entities = $media_storage->loadMultiple($media_ids);
-
-      if (!empty($media_entities)) {
-        $count = count($media_entities);
-        $media_storage->delete($media_entities);
-
-        $this->messenger()->addStatus($this->formatPlural(
-          $count,
-          '1 form has been deleted.',
-          '@count forms have been deleted.'
-        ));
-      }
-
-      // Redirect back to the forms page.
-      $form_state->setRedirect('entity.onlyoffice_form.collection');
+      $media = $this->entityTypeManager->getStorage('media')->loadMultiple(array_keys($selected));
+      $this->actionManager->createInstance('entity:delete_action:media')->executeMultiple($media);
+      $form_state->setRedirect('entity.media.delete_multiple_form', [], [
+        'query' => ['destination' => Url::fromRoute('entity.onlyoffice_form.collection')->toString()],
+      ]);
       return;
     }
 

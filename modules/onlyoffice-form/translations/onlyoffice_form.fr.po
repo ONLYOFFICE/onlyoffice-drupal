@@ -126,10 +126,6 @@ msgstr "Télécharger le fichier"
 msgid "Create new ONLYOFFICE form"
 msgstr "Créer un nouveau formulaire ONLYOFFICE"
 
-#: onlyoffice_form.routing.yml:0
-msgid "Delete forms"
-msgstr "Supprimer les formulaires"
-
 #: config/schema/onlyoffice_form.schema.yml:0
 msgid "ONLYOFFICE form formatter settings"
 msgstr "Paramètres du formateur de formulaires ONLYOFFICE"
@@ -418,35 +414,10 @@ msgstr "Soumission du formulaire ONLYOFFICE"
 msgid "ONLYOFFICE form submissions"
 msgstr "Soumission de formulaires ONLYOFFICE"
 
-#: src/Form/OnlyofficeFormBulkDeleteConfirmForm.php:82
-msgid "Are you sure you want to delete this form?"
-msgstr "Êtes-vous sûr de vouloir supprimer ce formulaire ?"
-
-#: src/Form/OnlyofficeFormBulkDeleteConfirmForm.php:84
-msgid "Are you sure you want to delete these @count forms?"
-msgstr "Êtes-vous sûr de vouloir supprimer ces formulaires @count ?"
-
 #: src/Form/OnlyofficeFormBulkDeleteConfirmForm.php:100
 #: src/Form/OnlyofficeFormSubmissionDeleteSingleForm.php:111
 msgid "This action cannot be undone."
 msgstr "Cette action ne peut être annulée."
-
-#: src/Form/OnlyofficeFormBulkDeleteConfirmForm.php:102
-msgid "This action cannot be undone. All @count forms will be deleted."
-msgstr ""
-"Cette action ne peut être annulée. Tous les @count formulaires seront "
-"supprimés."
-
-#: src/Form/OnlyofficeFormBulkDeleteConfirmForm.php:127
-msgid "The following forms will be deleted:"
-msgstr "Les formulaires suivants seront supprimés :"
-
-#: src/Form/OnlyofficeFormBulkDeleteConfirmForm.php:155
-#: src/Form/OnlyofficeFormBulkForm.php:188
-msgid "1 form has been deleted."
-msgid_plural "@count forms have been deleted."
-msgstr[0] "1 formulaire a été supprimé."
-msgstr[1] ""
 
 #: src/Form/OnlyofficeFormBulkForm.php:100
 msgid "Action"
