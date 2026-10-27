@@ -67,3 +67,11 @@ function template_preprocess_onlyoffice_form_file_upload(array &$variables): voi
 function onlyoffice_form_field_type_category_info_alter(array &$definitions): void {
   \Drupal::service(OnlyofficeFormHooks::class)->fieldTypeCategoryInfoAlter($definitions);
 }
+
+/**
+ * Implements hook_locale_translation_projects_alter().
+ */
+#[LegacyHook]
+function onlyoffice_form_locale_translation_projects_alter(array &$projects): void {
+  \Drupal::service(OnlyofficeFormHooks::class)->localeTranslationProjectsAlter($projects);
+}

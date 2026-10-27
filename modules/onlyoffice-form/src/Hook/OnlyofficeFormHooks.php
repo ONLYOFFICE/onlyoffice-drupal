@@ -145,4 +145,17 @@ class OnlyofficeFormHooks {
     $definitions[FieldTypeCategoryManagerInterface::FALLBACK_CATEGORY]['libraries'][] = 'onlyoffice_form/onlyoffice_form.onlyoffice_form-icon';
   }
 
+  /**
+   * Implements hook_locale_translation_projects_alter().
+   */
+  #[Hook('locale_translation_projects_alter')]
+  public function localeTranslationProjectsAlter(array &$projects): void {
+    if (!isset($projects['onlyoffice_form'])) {
+      return;
+    }
+
+    $path = $this->extensionPathResolver->getPath('module', 'onlyoffice_form');
+    $projects['onlyoffice_form']['info']['interface translation server pattern'] = $path . '/translations/onlyoffice_form.%language.po';
+  }
+
 }

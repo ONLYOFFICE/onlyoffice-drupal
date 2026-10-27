@@ -6,3 +6,5 @@ core_version_requirement: ^10.3
 configure: entity.onlyoffice_form.collection
 dependencies:
   - 'onlyoffice:onlyoffice'
+
+'interface translation project': onlyoffice_form

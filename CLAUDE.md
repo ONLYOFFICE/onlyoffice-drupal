@@ -48,7 +48,7 @@ Depends on `onlyoffice` and reuses its helpers, settings (`onlyoffice.settings`)
 
 ### Translations
 
-`translations/*.po` are shipped with compiled `.mo` files next to them; both are committed. `onlyoffice.info.yml` points Drupal's interface-translation server pattern at these `.po` files.
+`.po` files are shipped with compiled `.mo` files next to them; both are committed. Each module is its own interface-translation project with its own files: `onlyoffice` uses `translations/onlyoffice.<langcode>.po`, and `onlyoffice_form` uses `modules/onlyoffice-form/translations/onlyoffice_form.<langcode>.po`. Each module's `localeTranslationProjectsAlter()` hook points Drupal's server pattern at its own folder, wherever the module is installed. File names use Drupal langcodes (`zh-hans`, not `zh_CN`).
 
 ## Release packaging
 
