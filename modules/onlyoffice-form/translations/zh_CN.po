@@ -53,14 +53,6 @@ msgstr "关于"
 msgid "The ONLYOFFICE form module provides integration with ONLYOFFICE forms."
 msgstr "ONLYOFFICE 表单模块提供与 ONLYOFFICE 表单的集成。"
 
-#: onlyoffice_form.module:83
-msgid "File ID in preprocess: @fid"
-msgstr "预处理中的文件 ID：@fid"
-
-#: onlyoffice_form.module:96 src/Form/OnlyofficeFormCreateForm.php:452
-msgid "Extracted file ID: @fid"
-msgstr "提取的文件 ID：@fid"
-
 #: onlyoffice_form.install:216
 msgid "Created the ONLYOFFICE PDF form media type."
 msgstr "已创建 ONLYOFFICE PDF 表单媒体类型。"

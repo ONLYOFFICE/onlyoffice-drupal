@@ -54,14 +54,6 @@ msgstr "О программе"
 msgid "The ONLYOFFICE form module provides integration with ONLYOFFICE forms."
 msgstr "Модуль формы ONLYOFFICE обеспечивает интеграцию с формами ONLYOFFICE"
 
-#: onlyoffice_form.module:83
-msgid "File ID in preprocess: @fid"
-msgstr "Идентификатор файла в процессе предварительной обработки: @fid"
-
-#: onlyoffice_form.module:96 src/Form/OnlyofficeFormCreateForm.php:452
-msgid "Extracted file ID: @fid"
-msgstr "Извлеченный идентификатор файла: @fid"
-
 #: onlyoffice_form.install:216
 msgid "Created the ONLYOFFICE PDF form media type."
 msgstr "Создан тип носителя PDF-формы ONLYOFFICE."

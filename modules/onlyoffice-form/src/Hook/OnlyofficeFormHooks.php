@@ -28,8 +28,6 @@ use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\file\FileInterface;
-use Psr\Log\LoggerInterface;
-use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
  * Hook implementations for the ONLYOFFICE form module.
@@ -43,15 +41,11 @@ class OnlyofficeFormHooks {
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
-   * @param \Psr\Log\LoggerInterface $logger
-   *   The onlyoffice_form logger channel.
    * @param \Drupal\Core\Extension\ExtensionPathResolver $extensionPathResolver
    *   The extension path resolver.
    */
   public function __construct(
     protected readonly EntityTypeManagerInterface $entityTypeManager,
-    #[Autowire(service: 'logger.channel.onlyoffice_form')]
-    protected readonly LoggerInterface $logger,
     protected readonly ExtensionPathResolver $extensionPathResolver,
   ) {}
 
@@ -109,8 +103,6 @@ class OnlyofficeFormHooks {
       $fid = $element['#value'];
     }
 
-    $this->logger->notice('File ID in preprocess: @fid', ['@fid' => print_r($fid, TRUE)]);
-
     if (is_array($fid)) {
       // Check if it's in the format used by managed_file.
       if (isset($fid['fids']) && is_array($fid['fids']) && !empty($fid['fids'])) {
@@ -120,8 +112,6 @@ class OnlyofficeFormHooks {
         $fid = reset($fid);
       }
     }
-
-    $this->logger->notice('Extracted file ID: @fid', ['@fid' => $fid]);
 
     $file = $fid ? $this->entityTypeManager->getStorage('file')->load($fid) : NULL;
 

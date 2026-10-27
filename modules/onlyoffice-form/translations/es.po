@@ -55,14 +55,6 @@ msgstr ""
 "El módulo de formularios de ONLYOFFICE proporciona integración con los "
 "formularios de ONLYOFFICE."
 
-#: onlyoffice_form.module:83
-msgid "File ID in preprocess: @fid"
-msgstr "ID de archivo en preprocesamiento: @fid"
-
-#: onlyoffice_form.module:96 src/Form/OnlyofficeFormCreateForm.php:452
-msgid "Extracted file ID: @fid"
-msgstr "ID de archivo extraído: @fid"
-
 #: onlyoffice_form.install:216
 msgid "Created the ONLYOFFICE PDF form media type."
 msgstr "Creado el tipo multimedia de formulario PDF de ONLYOFFICE."

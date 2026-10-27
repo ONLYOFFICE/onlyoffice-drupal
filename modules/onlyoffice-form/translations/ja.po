@@ -54,14 +54,6 @@ msgid "The ONLYOFFICE form module provides integration with ONLYOFFICE forms."
 msgstr ""
 "ONLYOFFICEフォームモジュールは、ONLYOFFICEフォームとの統合を提供します。"
 
-#: onlyoffice_form.module:83
-msgid "File ID in preprocess: @fid"
-msgstr "前処理でのファイルID：@fid"
-
-#: onlyoffice_form.module:96 src/Form/OnlyofficeFormCreateForm.php:452
-msgid "Extracted file ID: @fid"
-msgstr "抽出されたファイルID：@fid"
-
 #: onlyoffice_form.install:216
 msgid "Created the ONLYOFFICE PDF form media type."
 msgstr "ONLYOFFICEのPDFフォームメディアタイプを作成しました。"

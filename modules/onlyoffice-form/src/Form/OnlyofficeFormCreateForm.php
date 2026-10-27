@@ -468,8 +468,6 @@ class OnlyofficeFormCreateForm extends FormBase {
         }
       }
 
-      $this->loggerFactory->get('onlyoffice_form')->notice('Extracted file ID: @fid', ['@fid' => $fid]);
-
       try {
         // Load the file entity.
         $file = $this->entityTypeManager->getStorage('file')->load($fid);

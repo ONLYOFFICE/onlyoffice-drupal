@@ -2,10 +2,6 @@ services:
   onlyoffice_form.document_helper:
     class: Drupal\onlyoffice_form\OnlyofficeFormDocumentHelper
 
-  logger.channel.onlyoffice_form:
-    parent: logger.channel_base
-    arguments: ['onlyoffice_form']
-
   Drupal\onlyoffice_form\Hook\OnlyofficeFormHooks:
     class: Drupal\onlyoffice_form\Hook\OnlyofficeFormHooks
     autowire: true
