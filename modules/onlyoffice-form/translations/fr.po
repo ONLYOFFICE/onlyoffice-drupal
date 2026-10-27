@@ -505,12 +505,6 @@ msgstr "Le formulaire PDF vide a été créé avec succès."
 msgid "Could not create the blank form."
 msgstr "Impossible de créer le formulaire vide."
 
-#: src/Form/OnlyofficeFormCreateForm.php:430
-msgid "An error occurred while creating the blank PDF form: @error"
-msgstr ""
-"Une erreur s'est produite lors de la création du formulaire PDF vide : "
-"@error"
-
 #: src/Form/OnlyofficeFormCreateForm.php:498
 msgid "PDF form has been uploaded successfully."
 msgstr "Le formulaire PDF a été téléchargé avec succès."
@@ -518,12 +512,6 @@ msgstr "Le formulaire PDF a été téléchargé avec succès."
 #: src/Form/OnlyofficeFormCreateForm.php:516
 msgid "Could not load the uploaded file."
 msgstr "Impossible de charger le fichier téléchargé."
-
-#: src/Form/OnlyofficeFormCreateForm.php:523
-msgid "An error occurred while saving the PDF form: @error"
-msgstr ""
-"Une erreur s'est produite lors de l'enregistrement du formulaire PDF : "
-"@error"
 
 #: src/Form/OnlyofficeFormCreateForm.php:301
 msgid "Uploaded file is not a PDF: @mime"

@@ -64,18 +64,47 @@ class OnlyofficeDocumentHelper {
   /**
    * Returns a file path to a new document template.
    */
-  public static function getNewTemplatePath($ext, $language = 'en') {
+  public static function getNewTemplatePath(string $ext, string $language = 'en'): string {
     if (!in_array($ext, ['docx', 'xlsx', 'pptx', 'pdf'])) {
       throw new \Exception("Unsupported file type: " . $ext);
     }
 
-    $path = \Drupal::service('extension.list.module')->getPath('onlyoffice') . "/assets/document-templates/" . $language . "/new." . $ext;
+    $templates = \Drupal::service('extension.list.module')->getPath('onlyoffice') . "/assets/document-templates";
+    $path = $templates . "/" . static::getTemplateFolder($templates, $language) . "/new." . $ext;
 
     if (!file_exists($path)) {
       throw new \Exception("Template file not found: " . $path);
     }
 
     return $path;
+  }
+
+  /**
+   * Returns the template folder for a Drupal language code.
+   *
+   * Folder names follow ONLYOFFICE's casing (en-GB, pt-BR, zh-TW), while
+   * Drupal language codes are lowercase (en-gb, pt-br, zh-hant).
+   */
+  private static function getTemplateFolder(string $templates, string $language): string {
+    $aliases = [
+      'zh-hans' => 'zh',
+      'zh-hant' => 'zh-tw',
+      'nb' => 'no',
+      'nn' => 'no',
+      // Drupal's Serbian is Cyrillic; the "sr" templates are Latin.
+      'sr' => 'sr-cyrl-rs',
+      'sr-cyrl' => 'sr-cyrl-rs',
+    ];
+
+    $folders = [];
+    foreach (glob($templates . '/*', GLOB_ONLYDIR) ?: [] as $folder) {
+      $folders[strtolower(basename($folder))] = basename($folder);
+    }
+
+    $language = strtolower($language);
+    $language = $aliases[$language] ?? $language;
+
+    return $folders[$language] ?? $folders[explode('-', $language)[0]] ?? 'default';
   }
 
   /**

@@ -500,10 +500,6 @@ msgstr "Modulo PDF vuoto creato con successo."
 msgid "Could not create the blank form."
 msgstr "Impossibile creare il modulo vuoto."
 
-#: src/Form/OnlyofficeFormCreateForm.php:430
-msgid "An error occurred while creating the blank PDF form: @error"
-msgstr "Errore durante la creazione del modulo PDF vuoto: @error"
-
 #: src/Form/OnlyofficeFormCreateForm.php:498
 msgid "PDF form has been uploaded successfully."
 msgstr "Modulo PDF caricato con successo."
@@ -511,10 +507,6 @@ msgstr "Modulo PDF caricato con successo."
 #: src/Form/OnlyofficeFormCreateForm.php:516
 msgid "Could not load the uploaded file."
 msgstr "Impossibile caricare il file caricato."
-
-#: src/Form/OnlyofficeFormCreateForm.php:523
-msgid "An error occurred while saving the PDF form: @error"
-msgstr "Errore durante il salvataggio del modulo PDF: @error"
 
 #: src/Form/OnlyofficeFormCreateForm.php:301
 msgid "Uploaded file is not a PDF: @mime"

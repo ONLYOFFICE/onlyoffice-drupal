@@ -502,10 +502,6 @@ msgstr "Пустая PDF-форма была успешно создана"
 msgid "Could not create the blank form."
 msgstr "Не удалось создать пустую форму."
 
-#: src/Form/OnlyofficeFormCreateForm.php:430
-msgid "An error occurred while creating the blank PDF form: @error"
-msgstr "При создании пустой PDF-формы произошла ошибка: @error"
-
 #: src/Form/OnlyofficeFormCreateForm.php:498
 msgid "PDF form has been uploaded successfully."
 msgstr "PDF-форма была успешно загружена."
@@ -513,10 +509,6 @@ msgstr "PDF-форма была успешно загружена."
 #: src/Form/OnlyofficeFormCreateForm.php:516
 msgid "Could not load the uploaded file."
 msgstr "Не удалось загрузить загруженный файл."
-
-#: src/Form/OnlyofficeFormCreateForm.php:523
-msgid "An error occurred while saving the PDF form: @error"
-msgstr "Произошла ошибка при сохранении PDF-формы: @error"
 
 #: src/Form/OnlyofficeFormCreateForm.php:301
 msgid "Uploaded file is not a PDF: @mime"

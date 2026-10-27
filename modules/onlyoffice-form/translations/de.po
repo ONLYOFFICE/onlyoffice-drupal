@@ -508,11 +508,6 @@ msgstr "Leeres PDF-Formular wurde erfolgreich erstellt."
 msgid "Could not create the blank form."
 msgstr "Das leere Formular konnte nicht erstellt werden."
 
-#: src/Form/OnlyofficeFormCreateForm.php:430
-msgid "An error occurred while creating the blank PDF form: @error"
-msgstr ""
-"Beim Erstellen des leeren PDF-Formulars ist ein Fehler aufgetreten: @error"
-
 #: src/Form/OnlyofficeFormCreateForm.php:498
 msgid "PDF form has been uploaded successfully."
 msgstr "PDF-Formular wurde erfolgreich hochgeladen."
@@ -520,10 +515,6 @@ msgstr "PDF-Formular wurde erfolgreich hochgeladen."
 #: src/Form/OnlyofficeFormCreateForm.php:516
 msgid "Could not load the uploaded file."
 msgstr "Die hochgeladene Datei konnte nicht geladen werden."
-
-#: src/Form/OnlyofficeFormCreateForm.php:523
-msgid "An error occurred while saving the PDF form: @error"
-msgstr "Beim Speichern des PDF-Formulars ist ein Fehler aufgetreten: @error"
 
 #: src/Form/OnlyofficeFormCreateForm.php:301
 msgid "Uploaded file is not a PDF: @mime"

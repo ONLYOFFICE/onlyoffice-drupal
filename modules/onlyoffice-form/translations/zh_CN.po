@@ -489,10 +489,6 @@ msgstr "已成功创建空白 PDF 表单。"
 msgid "Could not create the blank form."
 msgstr "无法创建空白表单。"
 
-#: src/Form/OnlyofficeFormCreateForm.php:430
-msgid "An error occurred while creating the blank PDF form: @error"
-msgstr "创建空白 PDF 表单时出错：@error"
-
 #: src/Form/OnlyofficeFormCreateForm.php:498
 msgid "PDF form has been uploaded successfully."
 msgstr "PDF 表单已成功上传。"
@@ -500,10 +496,6 @@ msgstr "PDF 表单已成功上传。"
 #: src/Form/OnlyofficeFormCreateForm.php:516
 msgid "Could not load the uploaded file."
 msgstr "无法加载已上传的文件。"
-
-#: src/Form/OnlyofficeFormCreateForm.php:523
-msgid "An error occurred while saving the PDF form: @error"
-msgstr "保存 PDF 表单时出错：@error"
 
 #: src/Form/OnlyofficeFormCreateForm.php:301
 msgid "Uploaded file is not a PDF: @mime"
