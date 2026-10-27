@@ -34,6 +34,8 @@ use Drupal\file\Entity\File;
 use Drupal\file\FileInterface;
 use Drupal\media\Entity\Media;
 use Drupal\onlyoffice\OnlyofficeAppConfig;
+use Drupal\onlyoffice\OnlyofficeCallbackStatus;
+use Drupal\onlyoffice\OnlyofficeCallbackTrait;
 use Drupal\onlyoffice\OnlyofficeDocumentHelper;
 use Drupal\onlyoffice\OnlyofficeUrlHelper;
 use Drupal\user\Entity\User;
@@ -49,22 +51,14 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class OnlyofficeFormCallbackController extends ControllerBase {
 
+  use OnlyofficeCallbackTrait;
+
   /**
    * The user account for the current operation.
    *
    * @var \Drupal\user\UserInterface
    */
   protected $account;
-
-  /**
-   * Defines the status of the document from document editing service.
-   */
-  const CALLBACK_STATUS = [
-    0 => 'NotFound',
-    1 => 'Editing',
-    6 => 'MustForceSave',
-    7 => 'CorruptedForceSave',
-  ];
 
   /**
    * The user storage.
@@ -250,9 +244,9 @@ class OnlyofficeFormCallbackController extends ControllerBase {
       'link' => OnlyofficeUrlHelper::getEditorLink($media)->toString(),
     ];
 
-    $userId = isset($body->actions) ? $body->actions[0]->userid : NULL;
+    $userId = $body->actions[0]->userid ?? NULL;
 
-    $account = $this->userStorage->load($userId);
+    $account = $userId !== NULL ? $this->userStorage->load($userId) : NULL;
 
     // We can't directly set the account on the current user service
     // Instead, we'll use the account for operations but keep track of it.
@@ -263,27 +257,16 @@ class OnlyofficeFormCallbackController extends ControllerBase {
     // Store the account for later use.
     $this->account = $account;
 
-    $status = self::CALLBACK_STATUS[$body->status];
-
-    switch ($status) {
-      case "Editing":
-        switch ($body->actions[0]->type) {
-          case 0:
-            $this->getLogger('onlyoffice')->notice('Disconnected from the media @type %label co-editing.', $context);
-            break;
-
-          case 1:
-            $this->getLogger('onlyoffice')->notice('Connected to the media @type %label co-editing.', $context);
-            break;
-        }
-        return new JsonResponse(['error' => 0], 200);
-
-      case "MustForceSave":
-      case "CorruptedForceSave":
-        return $this->proccessForceSave($body, $media, $context);
-    }
-
-    return new JsonResponse(['error' => 1, 'message' => 'Unknown status: ' . $body->status], 400);
+    return match (OnlyofficeCallbackStatus::fromCallback($body->status ?? NULL)) {
+      OnlyofficeCallbackStatus::Editing => $this->processEditing($body, $context),
+      OnlyofficeCallbackStatus::NotFound,
+      OnlyofficeCallbackStatus::MustSave,
+      OnlyofficeCallbackStatus::Corrupted,
+      OnlyofficeCallbackStatus::Closed => new JsonResponse(['error' => 0], 200),
+      OnlyofficeCallbackStatus::MustForceSave,
+      OnlyofficeCallbackStatus::CorruptedForceSave => $this->proccessForceSave($body, $media, $context),
+      default => new JsonResponse(['error' => 1, 'message' => 'Unknown status: ' . json_encode($body->status ?? NULL)], 400),
+    };
   }
 
   /**
