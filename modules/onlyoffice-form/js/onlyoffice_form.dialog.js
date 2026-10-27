@@ -76,6 +76,8 @@
           if (this.files && this.files.length > 0) {
             var file = this.files[0];
 
+            getUploadMessages($wrapper).clear();
+
             // Show loading state
             showLoadingState($wrapper);
 
@@ -135,17 +137,14 @@
                 } else {
                   console.error('File upload failed:', response);
 
-                  // Only log errors to console
-                  if (response && response.message) {
-                    console.error('Error message:', response.message);
-                  }
-
                   removeSelectedFile($wrapper);
+                  showUploadError($wrapper, response && response.message);
                 }
               })
               .catch(function (error) {
                 console.error('File upload error:', error);
                 removeSelectedFile($wrapper);
+                showUploadError($wrapper);
               });
           } else {
             // If no file was selected (user canceled the file dialog)
@@ -160,6 +159,44 @@
           return false;
         });
       });
+
+      /**
+       * Returns the messages area above the file picker.
+       *
+       * @param {jQuery} $wrapper
+       *   The file upload wrapper jQuery object.
+       *
+       * @return {Drupal.Message}
+       *   The messages object for the upload field.
+       */
+      function getUploadMessages($wrapper) {
+        const wrapper = $wrapper[0];
+        let messageWrapper = wrapper.querySelector(
+          '.onlyoffice-form-upload-messages',
+        );
+        if (!messageWrapper) {
+          messageWrapper = document.createElement('div');
+          messageWrapper.className = 'onlyoffice-form-upload-messages';
+          wrapper.prepend(messageWrapper);
+        }
+        return new Drupal.Message(messageWrapper);
+      }
+
+      /**
+       * Shows why an upload failed above the file picker.
+       *
+       * @param {jQuery} $wrapper
+       *   The file upload wrapper jQuery object.
+       * @param {string} [message]
+       *   The server's error message, already translated and escaped.
+       */
+      function showUploadError($wrapper, message) {
+        getUploadMessages($wrapper).add(
+          message ||
+            Drupal.t('The file could not be uploaded. Please try again.'),
+          { type: 'error' },
+        );
+      }
 
       /**
        * Shows a loading state in the UI.

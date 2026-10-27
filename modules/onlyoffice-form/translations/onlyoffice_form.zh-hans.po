@@ -181,6 +181,10 @@ msgstr "移除"
 msgid "Select file"
 msgstr "选择文件"
 
+#: js/onlyoffice_form.dialog.js:0
+msgid "The file could not be uploaded. Please try again."
+msgstr "上传文件失败，请重试。"
+
 #: src/OnlyofficeFormListBuilder.php:139
 #: src/OnlyofficeFormSubmissionListBuilder.php:198
 msgid "Title"
@@ -354,10 +358,6 @@ msgstr "从 @url 下载文件时出错。"
 #: src/Controller/OnlyofficeFormFileController.php:132
 msgid "No file uploaded."
 msgstr "未上传文件。"
-
-#: src/Controller/OnlyofficeFormFileController.php:142
-msgid "Invalid file upload."
-msgstr "文件上传无效。"
 
 #: src/Controller/OnlyofficeFormFileController.php:182
 msgid "Failed to save the file. Please try again."

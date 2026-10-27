@@ -182,6 +182,10 @@ msgstr "削除"
 msgid "Select file"
 msgstr "ファイルを選択"
 
+#: js/onlyoffice_form.dialog.js:0
+msgid "The file could not be uploaded. Please try again."
+msgstr "ファイルのアップロードに失敗しました。もう一度お試しください。"
+
 #: src/OnlyofficeFormListBuilder.php:139
 #: src/OnlyofficeFormSubmissionListBuilder.php:198
 msgid "Title"
@@ -358,10 +362,6 @@ msgstr "@url からファイルのダウンロードに失敗しました。"
 #: src/Controller/OnlyofficeFormFileController.php:132
 msgid "No file uploaded."
 msgstr "ファイルがアップロードされていません。"
-
-#: src/Controller/OnlyofficeFormFileController.php:142
-msgid "Invalid file upload."
-msgstr "ファイルのアップロードが無効です。"
 
 #: src/Controller/OnlyofficeFormFileController.php:182
 msgid "Failed to save the file. Please try again."

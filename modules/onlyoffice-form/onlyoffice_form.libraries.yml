@@ -15,6 +15,7 @@ onlyoffice_form.dialog:
     - core/jquery
     - core/drupal
     - core/drupal.dialog.ajax
+    - core/drupal.message
     - core/once
 
 form_config_widget:

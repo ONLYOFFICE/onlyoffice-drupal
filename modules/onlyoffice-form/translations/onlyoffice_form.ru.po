@@ -182,6 +182,10 @@ msgstr "Удалить"
 msgid "Select file"
 msgstr "Выбрать файл"
 
+#: js/onlyoffice_form.dialog.js:0
+msgid "The file could not be uploaded. Please try again."
+msgstr "Не удалось загрузить файл. Повторите попытку."
+
 #: src/OnlyofficeFormListBuilder.php:139
 #: src/OnlyofficeFormSubmissionListBuilder.php:198
 msgid "Title"
@@ -363,10 +367,6 @@ msgstr "Ошибка загрузки файла с @url"
 #: src/Controller/OnlyofficeFormFileController.php:132
 msgid "No file uploaded."
 msgstr "Файл не загружен"
-
-#: src/Controller/OnlyofficeFormFileController.php:142
-msgid "Invalid file upload."
-msgstr "Недопустимая загрузка файла"
 
 #: src/Controller/OnlyofficeFormFileController.php:182
 msgid "Failed to save the file. Please try again."

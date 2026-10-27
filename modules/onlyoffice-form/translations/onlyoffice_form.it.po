@@ -182,6 +182,10 @@ msgstr "Rimuovi"
 msgid "Select file"
 msgstr "Seleziona file"
 
+#: js/onlyoffice_form.dialog.js:0
+msgid "The file could not be uploaded. Please try again."
+msgstr "Caricamento file non riuscito. Riprova."
+
 #: src/OnlyofficeFormListBuilder.php:139
 #: src/OnlyofficeFormSubmissionListBuilder.php:198
 msgid "Title"
@@ -360,10 +364,6 @@ msgstr "Errore download file da @url."
 #: src/Controller/OnlyofficeFormFileController.php:132
 msgid "No file uploaded."
 msgstr "Nessun file caricato."
-
-#: src/Controller/OnlyofficeFormFileController.php:142
-msgid "Invalid file upload."
-msgstr "Caricamento file non valido."
 
 #: src/Controller/OnlyofficeFormFileController.php:182
 msgid "Failed to save the file. Please try again."
