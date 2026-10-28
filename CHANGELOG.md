@@ -1,5 +1,8 @@
 # Change Log
 
+## Changed
+- minimum supported drupal version is 10.3
+
 ## 2.0.0
 ## Added
 - new ONLYOFFICE Form submodule

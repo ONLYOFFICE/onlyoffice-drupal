@@ -22,6 +22,7 @@ namespace Drupal\onlyoffice_form\Form;
  */
 
 use Drupal\Core\Ajax\HtmlCommand;
+use Drupal\Core\File\FileExists;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -373,16 +374,16 @@ class OnlyofficeFormCreateForm extends FormBase {
         if (!str_ends_with(strtolower($filename), '.pdf')) {
           $filename .= '.pdf';
         }
-        $destination = $directory . $this->fileSystem->basename($filename);
+        $destination = $directory . basename($filename);
 
         // Copy the template file.
-        $uri = $this->fileSystem->copy($template_path, $destination, FileSystemInterface::EXISTS_RENAME);
+        $uri = $this->fileSystem->copy($template_path, $destination, FileExists::Rename);
 
         if ($uri) {
           // Create a file entity.
           $file = File::create([
             'uri' => $uri,
-            'filename' => $this->fileSystem->basename($uri),
+            'filename' => basename($uri),
             'filemime' => 'application/pdf',
             'status' => File::STATUS_PERMANENT,
             'uid' => $this->currentUser->id(),

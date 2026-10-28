@@ -40,18 +40,19 @@ use Drupal\Core\TempStore\SharedTempStoreFactory;
 use Psr\Log\LoggerInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Drupal\Core\Field\Attribute\FieldFormatter;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Plugin implementation of the 'onlyoffice_form_formatter' formatter.
- *
- * @FieldFormatter(
- *   id = "onlyoffice_form_formatter",
- *   label = @Translation("ONLYOFFICE form"),
- *   field_types = {
- *     "onlyoffice_form"
- *   }
- * )
  */
+#[FieldFormatter(
+  id: "onlyoffice_form_formatter",
+  label: new TranslatableMarkup("ONLYOFFICE form"),
+  field_types: [
+    "onlyoffice_form",
+  ]
+)]
 class OnlyofficeFormFormatter extends FormatterBase {
 
   /**
