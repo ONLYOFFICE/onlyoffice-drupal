@@ -107,6 +107,7 @@ onlyoffice_form.file_upload:
     _title: 'Upload File'
   requirements:
     _permission: 'administer onlyoffice forms'
+    _csrf_request_header_token: 'TRUE'
   options:
     _admin_route: TRUE
 
