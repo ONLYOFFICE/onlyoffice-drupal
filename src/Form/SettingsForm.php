@@ -23,6 +23,7 @@ namespace Drupal\onlyoffice\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Validator\Constraints\Url;
 use Symfony\Component\Validator\Validation;
 
@@ -30,6 +31,23 @@ use Symfony\Component\Validator\Validation;
  * Configure ONLYOFFICE Connector settings for this site.
  */
 class SettingsForm extends ConfigFormBase {
+
+  /**
+   * The document service.
+   *
+   * @var \Drupal\onlyoffice\OnlyofficeDocumentService
+   */
+  protected $documentService;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    $instance = parent::create($container);
+    $instance->documentService = $container->get('onlyoffice.document_service');
+
+    return $instance;
+  }
 
   /**
    * {@inheritdoc}
@@ -56,30 +74,89 @@ class SettingsForm extends ConfigFormBase {
       '#required' => TRUE,
     ];
     $form['doc_server_jwt'] = [
-      '#type' => 'textfield',
+      '#type' => 'password',
       '#title' => $this->t('Secret key (leave blank to disable)'),
       '#default_value' => $this->config('onlyoffice.settings')->get('doc_server_jwt'),
+      '#attributes' => [
+        'autocomplete' => 'new-password',
+        'data-onlyoffice-secret' => '',
+      ],
+      '#after_build' => [[static::class, 'renderSecretValue']],
+    ];
+    $form['#attached']['library'][] = 'onlyoffice/onlyoffice.settings';
+
+    $advancedOpen = $this->config('onlyoffice.settings')->get('doc_server_jwt_header')
+      || $this->config('onlyoffice.settings')->get('doc_server_internal_url')
+      || $this->config('onlyoffice.settings')->get('storage_url');
+
+    $form['advanced'] = [
+      '#type' => 'details',
+      '#title' => $this->t('Advanced server settings'),
+      '#open' => $advancedOpen,
+    ];
+    $form['advanced']['doc_server_jwt_header'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Authorization header (leave blank to use default header)'),
+      '#default_value' => $this->config('onlyoffice.settings')->get('doc_server_jwt_header'),
+      '#placeholder' => 'Authorization',
+    ];
+    $form['advanced']['doc_server_internal_url'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('ONLYOFFICE Docs address for internal requests from the server'),
+      '#default_value' => $this->config('onlyoffice.settings')->get('doc_server_internal_url'),
+    ];
+    $form['advanced']['storage_url'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Server address for internal requests from ONLYOFFICE Docs'),
+      '#default_value' => $this->config('onlyoffice.settings')->get('storage_url'),
     ];
     return parent::buildForm($form, $form_state);
+  }
+
+  /**
+   * Render the current secret into the password field, which core omits.
+   */
+  public static function renderSecretValue(array $element, FormStateInterface $form_state) {
+    $element['#attributes']['value'] = $element['#value'];
+
+    return $element;
   }
 
   /**
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    $url = $form_state->getValue('doc_server_url');
-
     $validator = Validation::createValidator();
-    $errors = $validator->validate($url, new Url());
 
-    if (count($errors) > 0) {
-      $messages = [];
+    // Allow single-level host names, such as Docker service names.
+    $constraint = property_exists(Url::class, 'requireTld') ? new Url(requireTld: FALSE) : new Url();
 
-      foreach ($errors as $error) {
-        $messages[] = $error->getMessage();
+    foreach (['doc_server_url', 'doc_server_internal_url', 'storage_url'] as $name) {
+      $value = trim((string) $form_state->getValue($name));
+      $form_state->setValue($name, $value);
+
+      $errors = $validator->validate($value, $constraint);
+
+      if (count($errors) > 0) {
+        $messages = [];
+
+        foreach ($errors as $error) {
+          $messages[] = $error->getMessage();
+        }
+
+        $form_state->setErrorByName($name, implode("\n", $messages));
       }
+      elseif (strpbrk($value, '?#') !== FALSE) {
+        $form_state->setErrorByName($name, $this->t('The address must not contain a query or a fragment.'));
+      }
+    }
 
-      $form_state->setErrorByName('doc_server_url', implode("\n", $messages));
+    $header = trim((string) $form_state->getValue('doc_server_jwt_header'));
+    $form_state->setValue('doc_server_jwt_header', $header);
+
+    // Allow only header name token characters, as the HTTP client does.
+    if ($header !== '' && !preg_match('/^[a-zA-Z0-9\'`#$%&*+.^_|~!-]+$/D', $header)) {
+      $form_state->setErrorByName('doc_server_jwt_header', $this->t("The header name may contain only letters, digits and the characters !#$%&'*+-.^_`|~."));
     }
   }
 
@@ -88,12 +165,53 @@ class SettingsForm extends ConfigFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $docsUrl = rtrim($form_state->getValue('doc_server_url'), "/");
+    $docsInternalUrl = rtrim($form_state->getValue('doc_server_internal_url'), "/");
+    $storageUrl = rtrim($form_state->getValue('storage_url'), "/");
 
     $this->config('onlyoffice.settings')
       ->set('doc_server_url', $docsUrl)
       ->set('doc_server_jwt', $form_state->getValue('doc_server_jwt'))
+      ->set('doc_server_jwt_header', $form_state->getValue('doc_server_jwt_header'))
+      ->set('doc_server_internal_url', $docsInternalUrl)
+      ->set('storage_url', $storageUrl)
       ->save();
     parent::submitForm($form, $form_state);
+
+    // The check result is informational only, the settings are saved anyway.
+    try {
+      $version = $this->documentService->checkConnection();
+      $this->messenger()->addStatus($this->t('ONLYOFFICE Docs connection check succeeded (version @version).', ['@version' => $version]));
+    }
+    catch (\RuntimeException $e) {
+      $this->logger('onlyoffice')->warning('Connection check failed: @error', ['@error' => $e->getMessage()]);
+      $this->messenger()->addWarning($this->t('ONLYOFFICE Docs connection check failed: @error', ['@error' => $this->translateCheckError($e->getMessage())]));
+    }
+  }
+
+  /**
+   * Translate the known reason of the failed connection check.
+   *
+   * @param string $message
+   *   The English message of the connection check exception.
+   *
+   * @return string
+   *   The message with its known reason translated, details stay as is.
+   */
+  protected function translateCheckError(string $message): string {
+    $reasons = [
+      'Error occurred in the document service' => $this->t('Error occurred in the document service'),
+      'Not supported version' => $this->t('Not supported version'),
+      'Mixed Active Content is not allowed. HTTPS address for ONLYOFFICE Docs is required.' => $this->t('Mixed Active Content is not allowed. HTTPS address for ONLYOFFICE Docs is required.'),
+      'Bad healthcheck status' => $this->t('Bad healthcheck status'),
+    ];
+
+    foreach ($reasons as $reason => $translated) {
+      if (str_starts_with($message, $reason)) {
+        return $translated . substr($message, strlen($reason));
+      }
+    }
+
+    return $message;
   }
 
 }

@@ -71,3 +71,39 @@ msgstr "Percentuali"
 
 msgid "Pixels"
 msgstr "Pixel"
+
+msgid "Advanced server settings"
+msgstr "Impostazioni avanzate del server"
+
+msgid "ONLYOFFICE Docs address for internal requests from the server"
+msgstr "Indirizzo di ONLYOFFICE Docs per le richieste interne del server"
+
+msgid "Server address for internal requests from ONLYOFFICE Docs"
+msgstr "Indirizzo del server per le richieste interne da ONLYOFFICE Docs"
+
+msgid "Authorization header (leave blank to use default header)"
+msgstr "Intestazione di autorizzazione (lascia vuoto per utilizzare l'intestazione predefinita)"
+
+msgid "The address must not contain a query or a fragment."
+msgstr "L'indirizzo non deve contenere una query o un frammento."
+
+msgid "The header name may contain only letters, digits and the characters !#$%&'*+-.^_`|~."
+msgstr "Il nome dell'intestazione può contenere solo lettere, cifre e i caratteri !#$%&'*+-.^_`|~."
+
+msgid "ONLYOFFICE Docs connection check succeeded (version @version)."
+msgstr "Il controllo della connessione a ONLYOFFICE Docs è riuscito (versione @version)."
+
+msgid "ONLYOFFICE Docs connection check failed: @error"
+msgstr "Il controllo della connessione a ONLYOFFICE Docs non è riuscito: @error"
+
+msgid "Error occurred in the document service"
+msgstr "Si è verificato un errore nel servizio documenti"
+
+msgid "Not supported version"
+msgstr "Versione non supportata"
+
+msgid "Mixed Active Content is not allowed. HTTPS address for ONLYOFFICE Docs is required."
+msgstr "Il contenuto attivo misto non è consentito. È richiesto l'indirizzo HTTPS per ONLYOFFICE Docs."
+
+msgid "Bad healthcheck status"
+msgstr "Stato di controllo integrità non valido"

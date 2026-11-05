@@ -3,6 +3,11 @@
 ## Changed
 - minimum supported drupal version is 10.3
 
+## Added
+- addresses for internal requests between Drupal and ONLYOFFICE Docs in the advanced server settings
+- authorization header setting
+- connection check to ONLYOFFICE Docs when saving the settings
+
 ## 2.0.0
 ## Added
 - new ONLYOFFICE Form submodule

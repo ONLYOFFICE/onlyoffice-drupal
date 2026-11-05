@@ -71,3 +71,39 @@ msgstr "パーセント"
 
 msgid "Pixels"
 msgstr "ピクセル"
+
+msgid "Advanced server settings"
+msgstr "サーバー詳細設定"
+
+msgid "ONLYOFFICE Docs address for internal requests from the server"
+msgstr "サーバーから内部リクエストに利用されるONLYOFFICE Docs アドレス"
+
+msgid "Server address for internal requests from ONLYOFFICE Docs"
+msgstr "ONLYOFFICE Docsから内部リクエストに利用されるサーバーアドレス"
+
+msgid "Authorization header (leave blank to use default header)"
+msgstr "認証ヘッダー (デフォルトのヘッダーを使用したい場合は空白にしてください)"
+
+msgid "The address must not contain a query or a fragment."
+msgstr "アドレスにクエリやフラグメントを含めることはできません。"
+
+msgid "The header name may contain only letters, digits and the characters !#$%&'*+-.^_`|~."
+msgstr "ヘッダー名に使用できるのは、英字、数字、および文字 !#$%&'*+-.^_`|~ のみです。"
+
+msgid "ONLYOFFICE Docs connection check succeeded (version @version)."
+msgstr "ONLYOFFICE Docsへの接続チェックに成功しました (バージョン @version)。"
+
+msgid "ONLYOFFICE Docs connection check failed: @error"
+msgstr "ONLYOFFICE Docsへの接続チェックに失敗しました: @error"
+
+msgid "Error occurred in the document service"
+msgstr "ドキュメントサービスでエラーが発生しました"
+
+msgid "Not supported version"
+msgstr "サポートされていないバージョン"
+
+msgid "Mixed Active Content is not allowed. HTTPS address for ONLYOFFICE Docs is required."
+msgstr "アクティブコンテンツの混在は許可されていません。ONLYOFFICE DocsにはHTTPSアドレスが必要です。"
+
+msgid "Bad healthcheck status"
+msgstr "ヘルスチェックのステータスが不正です"
