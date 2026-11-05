@@ -89,3 +89,21 @@ msgstr "Die Adresse darf keine Abfrage und kein Fragment enthalten."
 
 msgid "The header name may contain only letters, digits and the characters !#$%&'*+-.^_`|~."
 msgstr "Der Name der Kopfzeile darf nur Buchstaben, Ziffern und die Zeichen !#$%&'*+-.^_`|~ enthalten."
+
+msgid "ONLYOFFICE Docs connection check succeeded (version @version)."
+msgstr "Die Verbindungsprüfung zu ONLYOFFICE Docs war erfolgreich (Version @version)."
+
+msgid "ONLYOFFICE Docs connection check failed: @error"
+msgstr "Die Verbindungsprüfung zu ONLYOFFICE Docs ist fehlgeschlagen: @error"
+
+msgid "Error occurred in the document service"
+msgstr "Im Dokumentenservice ist ein Fehler aufgetreten"
+
+msgid "Not supported version"
+msgstr "Nicht unterstützte Version"
+
+msgid "Mixed Active Content is not allowed. HTTPS address for ONLYOFFICE Docs is required."
+msgstr "Mixed Active Content ist nicht möglich. HTTPS-Adresse für ONLYOFFICE Docs ist erforderlich."
+
+msgid "Bad healthcheck status"
+msgstr "Ungültiger Healthcheck-Status"

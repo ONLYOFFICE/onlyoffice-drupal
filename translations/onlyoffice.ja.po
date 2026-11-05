@@ -89,3 +89,21 @@ msgstr "アドレスにクエリやフラグメントを含めることはでき
 
 msgid "The header name may contain only letters, digits and the characters !#$%&'*+-.^_`|~."
 msgstr "ヘッダー名に使用できるのは、英字、数字、および文字 !#$%&'*+-.^_`|~ のみです。"
+
+msgid "ONLYOFFICE Docs connection check succeeded (version @version)."
+msgstr "ONLYOFFICE Docsへの接続チェックに成功しました (バージョン @version)。"
+
+msgid "ONLYOFFICE Docs connection check failed: @error"
+msgstr "ONLYOFFICE Docsへの接続チェックに失敗しました: @error"
+
+msgid "Error occurred in the document service"
+msgstr "ドキュメントサービスでエラーが発生しました"
+
+msgid "Not supported version"
+msgstr "サポートされていないバージョン"
+
+msgid "Mixed Active Content is not allowed. HTTPS address for ONLYOFFICE Docs is required."
+msgstr "アクティブコンテンツの混在は許可されていません。ONLYOFFICE DocsにはHTTPSアドレスが必要です。"
+
+msgid "Bad healthcheck status"
+msgstr "ヘルスチェックのステータスが不正です"

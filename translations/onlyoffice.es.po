@@ -89,3 +89,21 @@ msgstr "La dirección no debe contener una consulta ni un fragmento."
 
 msgid "The header name may contain only letters, digits and the characters !#$%&'*+-.^_`|~."
 msgstr "El nombre del encabezado solo puede contener letras, dígitos y los caracteres !#$%&'*+-.^_`|~."
+
+msgid "ONLYOFFICE Docs connection check succeeded (version @version)."
+msgstr "La comprobación de conexión con ONLYOFFICE Docs se ha realizado correctamente (versión @version)."
+
+msgid "ONLYOFFICE Docs connection check failed: @error"
+msgstr "La comprobación de conexión con ONLYOFFICE Docs ha fallado: @error"
+
+msgid "Error occurred in the document service"
+msgstr "Se ha producido un error en el servicio de documentos"
+
+msgid "Not supported version"
+msgstr "Versión no compatible"
+
+msgid "Mixed Active Content is not allowed. HTTPS address for ONLYOFFICE Docs is required."
+msgstr "Contenido Mixto Activo no está permitido. Se requiere la dirección HTTPS para ONLYOFFICE Docs."
+
+msgid "Bad healthcheck status"
+msgstr "Estado de verificación de estado incorrecto"

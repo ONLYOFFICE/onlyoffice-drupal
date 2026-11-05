@@ -89,3 +89,21 @@ msgstr "Адрес не должен содержать строку запро�
 
 msgid "The header name may contain only letters, digits and the characters !#$%&'*+-.^_`|~."
 msgstr "Имя заголовка может содержать только буквы, цифры и символы !#$%&'*+-.^_`|~."
+
+msgid "ONLYOFFICE Docs connection check succeeded (version @version)."
+msgstr "Проверка подключения к ONLYOFFICE Docs выполнена успешно (версия @version)."
+
+msgid "ONLYOFFICE Docs connection check failed: @error"
+msgstr "Проверка подключения к ONLYOFFICE Docs не удалась: @error"
+
+msgid "Error occurred in the document service"
+msgstr "Возникла ошибка в службе документов"
+
+msgid "Not supported version"
+msgstr "Неподдерживаемая версия"
+
+msgid "Mixed Active Content is not allowed. HTTPS address for ONLYOFFICE Docs is required."
+msgstr "Смешанное активное содержимое запрещено. Для ONLYOFFICE Docs необходимо использовать HTTPS-адрес."
+
+msgid "Bad healthcheck status"
+msgstr "Неверный статус проверки работоспособности"
