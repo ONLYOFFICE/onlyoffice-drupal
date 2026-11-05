@@ -24,8 +24,11 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Hook\Attribute\LegacyHook;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\media\MediaInterface;
 use Drupal\onlyoffice_form\Hook\OnlyofficeFormHooks;
 
 /**
@@ -61,9 +64,25 @@ function template_preprocess_onlyoffice_form_file_upload(array &$variables): voi
 }
 
 /**
+ * Implements hook_ENTITY_TYPE_access() for media entities.
+ */
+#[LegacyHook]
+function onlyoffice_form_media_access(MediaInterface $media, string $operation, AccountInterface $account): AccessResultInterface {
+  return \Drupal::service(OnlyofficeFormHooks::class)->mediaAccess($media, $operation, $account);
+}
+
+/**
  * Implements hook_field_type_category_info_alter().
  */
 #[LegacyHook]
 function onlyoffice_form_field_type_category_info_alter(array &$definitions): void {
   \Drupal::service(OnlyofficeFormHooks::class)->fieldTypeCategoryInfoAlter($definitions);
+}
+
+/**
+ * Implements hook_locale_translation_projects_alter().
+ */
+#[LegacyHook]
+function onlyoffice_form_locale_translation_projects_alter(array &$projects): void {
+  \Drupal::service(OnlyofficeFormHooks::class)->localeTranslationProjectsAlter($projects);
 }

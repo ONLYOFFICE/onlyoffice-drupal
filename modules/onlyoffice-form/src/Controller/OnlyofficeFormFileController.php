@@ -21,16 +21,20 @@ namespace Drupal\onlyoffice_form\Controller;
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+use Drupal\Component\Utility\Bytes;
+use Drupal\Component\Utility\Environment;
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\file\Entity\File;
+use Drupal\Core\StringTranslation\ByteSizeMarkup;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
+use Drupal\Core\File\FileExists;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\onlyoffice_form\OnlyofficeFormDocumentHelper;
-use Drupal\file\FileUsage\DatabaseFileUsageBackend;
+use Drupal\file\Upload\FileUploadHandler;
+use Drupal\file\Upload\FormUploadedFile;
 
 /**
  * Controller for handling file uploads.
@@ -66,11 +70,11 @@ class OnlyofficeFormFileController extends ControllerBase {
   protected $documentHelper;
 
   /**
-   * The file usage service.
+   * The file upload handler.
    *
-   * @var \Drupal\file\FileUsage\DatabaseFileUsageBackend
+   * @var \Drupal\file\Upload\FileUploadHandler
    */
-  protected $fileUsage;
+  protected $fileUploadHandler;
 
   /**
    * Constructs a new OnlyofficeFormFileController.
@@ -83,21 +87,21 @@ class OnlyofficeFormFileController extends ControllerBase {
    *   The file system service.
    * @param \Drupal\onlyoffice_form\OnlyofficeFormDocumentHelper $document_helper
    *   The ONLYOFFICE form document helper.
-   * @param \Drupal\file\FileUsage\DatabaseFileUsageBackend $file_usage
-   *   The file usage service.
+   * @param \Drupal\file\Upload\FileUploadHandler $file_upload_handler
+   *   The file upload handler.
    */
   public function __construct(
     EntityTypeManagerInterface $entity_type_manager,
     LoggerChannelFactoryInterface $logger_factory,
     FileSystemInterface $file_system,
     OnlyofficeFormDocumentHelper $document_helper,
-    DatabaseFileUsageBackend $file_usage,
+    FileUploadHandler $file_upload_handler,
   ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->loggerFactory = $logger_factory;
     $this->fileSystem = $file_system;
     $this->documentHelper = $document_helper;
-    $this->fileUsage = $file_usage;
+    $this->fileUploadHandler = $file_upload_handler;
   }
 
   /**
@@ -109,7 +113,7 @@ class OnlyofficeFormFileController extends ControllerBase {
       $container->get('logger.factory'),
       $container->get('file_system'),
       $container->get('onlyoffice_form.document_helper'),
-      $container->get('file.usage'),
+      $container->get('file.upload_handler'),
     );
   }
 
@@ -127,6 +131,17 @@ class OnlyofficeFormFileController extends ControllerBase {
     $files = $request->files->get('files');
 
     if (empty($files) || empty($files['upload_file'])) {
+      // PHP drops the whole request body when it exceeds post_max_size.
+      $post_max_size = Bytes::toNumber(ini_get('post_max_size'));
+      if ($post_max_size > 0 && (int) $request->server->get('CONTENT_LENGTH') > $post_max_size) {
+        return new JsonResponse([
+          'status' => 'error',
+          'message' => $this->t('An unrecoverable error occurred. The uploaded file likely exceeded the maximum file size (@size) that this server supports.', [
+            '@size' => ByteSizeMarkup::create(Environment::getUploadMaxSize()),
+          ]),
+        ], 413);
+      }
+
       return new JsonResponse([
         'status' => 'error',
         'message' => $this->t('No file uploaded.'),
@@ -135,37 +150,34 @@ class OnlyofficeFormFileController extends ControllerBase {
 
     $uploadedFile = $files['upload_file'];
 
-    // Validate the file.
-    if (!$uploadedFile->isValid()) {
-      return new JsonResponse([
-        'status' => 'error',
-        'message' => $this->t('Invalid file upload.'),
-      ], 400);
-    }
-
     // Prepare the destination directory.
     $directory = 'public://onlyoffice_forms/';
     $this->fileSystem->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY);
 
     // Save the file.
     try {
-      $file = File::create([
-        'uri' => $uploadedFile->getRealPath(),
-        'filename' => $uploadedFile->getClientOriginalName(),
-        'filemime' => $uploadedFile->getMimeType(),
-        'status' => File::STATUS_PERMANENT,
-      ]);
+      $result = $this->fileUploadHandler->handleFileUpload(
+        new FormUploadedFile($uploadedFile),
+        ['FileExtension' => ['extensions' => 'pdf']],
+        $directory,
+        FileExists::Rename,
+        // Drupal 10 throws on violations unless this is FALSE; 11+ ignores it.
+        FALSE,
+      );
 
-      // Move the uploaded file to the destination.
-      $destination = $directory . $uploadedFile->getClientOriginalName();
-      $this->fileSystem->move($uploadedFile->getRealPath(), $destination);
-      $file->setFileUri($destination);
+      if ($result->hasViolations()) {
+        return new JsonResponse([
+          'status' => 'error',
+          'message' => (string) $result->getViolations()->get(0)->getMessage(),
+        ], 400);
+      }
 
-      // Save the file entity.
-      $file->save();
+      $file = $result->getFile();
 
-      // Set file usage to prevent it from being deleted during cron.
-      $this->fileUsage->add($file, 'onlyoffice_form', 'onlyoffice_form_pdf', $file->id());
+      if ($file->getFilename() !== $result->getSanitizedFilename()) {
+        $file->setFilename($result->getSanitizedFilename());
+        $file->save();
+      }
 
       // Return success response with file ID.
       return new JsonResponse([

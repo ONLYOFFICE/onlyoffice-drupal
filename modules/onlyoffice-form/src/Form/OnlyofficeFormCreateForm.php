@@ -233,7 +233,7 @@ class OnlyofficeFormCreateForm extends FormBase {
       '#type' => 'managed_file',
       '#upload_location' => 'public://onlyoffice_forms/',
       '#upload_validators' => [
-        'file_validate_extensions' => ['pdf'],
+        'FileExtension' => ['extensions' => 'pdf'],
       ],
       '#required' => $source == 'upload',
       '#access' => $source == 'upload',
@@ -336,7 +336,7 @@ class OnlyofficeFormCreateForm extends FormBase {
         }
         catch (\Exception $e) {
           $this->loggerFactory->get('onlyoffice_form')->error('Error validating PDF form: @error', ['@error' => $e->getMessage()]);
-          $form_state->setErrorByName('upload_file', $this->t('Error validating PDF form: @error', ['@error' => $e->getMessage()]));
+          $form_state->setErrorByName('upload_file', $this->t('The uploaded file is not a valid ONLYOFFICE form.'));
         }
       }
     }
@@ -440,15 +440,13 @@ class OnlyofficeFormCreateForm extends FormBase {
         }
         else {
           $this->loggerFactory->get('onlyoffice_form')->error('Could not copy template file to @destination', ['@destination' => $destination]);
-          // Set form error instead of using MessageCommand.
-          $form_state->setErrorByName('name', $this->t('Could not create the blank form.'));
+          $this->messenger()->addError($this->t('Could not create the blank form.'));
           return $this->replaceFormInModal($form, $form_state);
         }
       }
       catch (\Exception $e) {
         $this->loggerFactory->get('onlyoffice_form')->error('Error creating blank PDF form: @message', ['@message' => $e->getMessage()]);
-        // Set form error instead of using MessageCommand.
-        $form_state->setErrorByName('name', $this->t('An error occurred while creating the blank PDF form: @error', ['@error' => $e->getMessage()]));
+        $this->messenger()->addError($this->t('Could not create the blank form.'));
         return $this->replaceFormInModal($form, $form_state);
       }
     }
@@ -469,8 +467,6 @@ class OnlyofficeFormCreateForm extends FormBase {
           $fid = NULL;
         }
       }
-
-      $this->loggerFactory->get('onlyoffice_form')->notice('Extracted file ID: @fid', ['@fid' => $fid]);
 
       try {
         // Load the file entity.
@@ -533,15 +529,13 @@ class OnlyofficeFormCreateForm extends FormBase {
         }
         else {
           $this->loggerFactory->get('onlyoffice_form')->error('Could not load file with ID: @fid', ['@fid' => $fid]);
-          // Set form error instead of using MessageCommand.
-          $form_state->setErrorByName('upload_file', $this->t('Could not load the uploaded file.'));
+          $this->messenger()->addError($this->t('Could not load the uploaded file.'));
           return $this->replaceFormInModal($form, $form_state);
         }
       }
       catch (\Exception $e) {
         $this->loggerFactory->get('onlyoffice_form')->error('Error saving PDF form: @message', ['@message' => $e->getMessage()]);
-        // Set form error instead of using MessageCommand.
-        $form_state->setErrorByName('upload_file', $this->t('An error occurred while saving the PDF form: @error', ['@error' => $e->getMessage()]));
+        $this->messenger()->addError($this->t('Failed to save the file. Please try again.'));
         return $this->replaceFormInModal($form, $form_state);
       }
     }

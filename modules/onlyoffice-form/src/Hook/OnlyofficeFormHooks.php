@@ -21,15 +21,17 @@ namespace Drupal\onlyoffice_form\Hook;
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ExtensionPathResolver;
 use Drupal\Core\Field\FieldTypeCategoryManagerInterface;
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\file\FileInterface;
-use Psr\Log\LoggerInterface;
-use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Drupal\media\MediaInterface;
 
 /**
  * Hook implementations for the ONLYOFFICE form module.
@@ -43,15 +45,11 @@ class OnlyofficeFormHooks {
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
-   * @param \Psr\Log\LoggerInterface $logger
-   *   The onlyoffice_form logger channel.
    * @param \Drupal\Core\Extension\ExtensionPathResolver $extensionPathResolver
    *   The extension path resolver.
    */
   public function __construct(
     protected readonly EntityTypeManagerInterface $entityTypeManager,
-    #[Autowire(service: 'logger.channel.onlyoffice_form')]
-    protected readonly LoggerInterface $logger,
     protected readonly ExtensionPathResolver $extensionPathResolver,
   ) {}
 
@@ -109,8 +107,6 @@ class OnlyofficeFormHooks {
       $fid = $element['#value'];
     }
 
-    $this->logger->notice('File ID in preprocess: @fid', ['@fid' => print_r($fid, TRUE)]);
-
     if (is_array($fid)) {
       // Check if it's in the format used by managed_file.
       if (isset($fid['fids']) && is_array($fid['fids']) && !empty($fid['fids'])) {
@@ -120,8 +116,6 @@ class OnlyofficeFormHooks {
         $fid = reset($fid);
       }
     }
-
-    $this->logger->notice('Extracted file ID: @fid', ['@fid' => $fid]);
 
     $file = $fid ? $this->entityTypeManager->getStorage('file')->load($fid) : NULL;
 
@@ -146,6 +140,20 @@ class OnlyofficeFormHooks {
   }
 
   /**
+   * Implements hook_ENTITY_TYPE_access() for media entities.
+   *
+   * Lets form administrators delete forms through core's delete form.
+   */
+  #[Hook('media_access')]
+  public function mediaAccess(MediaInterface $media, string $operation, AccountInterface $account): AccessResultInterface {
+    if ($operation === 'delete' && $media->bundle() === 'onlyoffice_pdf_form') {
+      return AccessResult::allowedIfHasPermission($account, 'administer onlyoffice forms');
+    }
+
+    return AccessResult::neutral();
+  }
+
+  /**
    * Implements hook_field_type_category_info_alter().
    */
   #[Hook('field_type_category_info_alter')]
@@ -153,6 +161,19 @@ class OnlyofficeFormHooks {
     // The `onlyoffice_form` field type belongs in the `general` category, so
     // the libraries need to be attached using an alter hook.
     $definitions[FieldTypeCategoryManagerInterface::FALLBACK_CATEGORY]['libraries'][] = 'onlyoffice_form/onlyoffice_form.onlyoffice_form-icon';
+  }
+
+  /**
+   * Implements hook_locale_translation_projects_alter().
+   */
+  #[Hook('locale_translation_projects_alter')]
+  public function localeTranslationProjectsAlter(array &$projects): void {
+    if (!isset($projects['onlyoffice_form'])) {
+      return;
+    }
+
+    $path = $this->extensionPathResolver->getPath('module', 'onlyoffice_form');
+    $projects['onlyoffice_form']['info']['interface translation server pattern'] = $path . '/translations/onlyoffice_form.%language.po';
   }
 
 }

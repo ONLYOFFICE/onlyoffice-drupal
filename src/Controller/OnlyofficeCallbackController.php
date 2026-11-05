@@ -33,6 +33,8 @@ use Drupal\file\Entity\File;
 use Drupal\file\FileInterface;
 use Drupal\media\Entity\Media;
 use Drupal\onlyoffice\OnlyofficeAppConfig;
+use Drupal\onlyoffice\OnlyofficeCallbackStatus;
+use Drupal\onlyoffice\OnlyofficeCallbackTrait;
 use Drupal\onlyoffice\OnlyofficeDocumentHelper;
 use Drupal\onlyoffice\OnlyofficeUrlHelper;
 use Drupal\user\Entity\User;
@@ -48,18 +50,7 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class OnlyofficeCallbackController extends ControllerBase {
 
-  /**
-   * Defines the status of the document from document editing service.
-   */
-  const CALLBACK_STATUS = [
-    0 => 'NotFound',
-    1 => 'Editing',
-    2 => 'MustSave',
-    3 => 'Corrupted',
-    4 => 'Closed',
-    6 => 'MustForceSave',
-    7 => 'CorruptedForceSave',
-  ];
+  use OnlyofficeCallbackTrait;
 
   /**
    * The user storage.
@@ -232,9 +223,9 @@ class OnlyofficeCallbackController extends ControllerBase {
       'link' => OnlyofficeUrlHelper::getEditorLink($media)->toString(),
     ];
 
-    $userId = isset($body->actions) ? $body->actions[0]->userid : NULL;
+    $userId = $body->actions[0]->userid ?? NULL;
 
-    $account = $this->userStorage->load($userId);
+    $account = $userId !== NULL ? $this->userStorage->load($userId) : NULL;
 
     if ($account) {
       $this->currentUser()->setAccount($account);
@@ -243,33 +234,20 @@ class OnlyofficeCallbackController extends ControllerBase {
       $this->currentUser()->setAccount(User::getAnonymousUser());
     }
 
-    $status = OnlyofficeCallbackController::CALLBACK_STATUS[$body->status];
+    return match (OnlyofficeCallbackStatus::fromCallback($body->status ?? NULL)) {
+      OnlyofficeCallbackStatus::Editing => $this->processEditing($body, $context),
+      OnlyofficeCallbackStatus::MustSave,
+      OnlyofficeCallbackStatus::Corrupted => $this->proccessSave($body, $media, $context),
+      OnlyofficeCallbackStatus::Closed => $this->processClosed($context),
+      default => new JsonResponse(['error' => 0], 200),
+    };
+  }
 
-    switch ($status) {
-      case "Editing":
-        switch ($body->actions[0]->type) {
-          case 0:
-            $this->getLogger('onlyoffice')->notice('Disconnected from the media @type %label co-editing.', $context);
-            break;
-
-          case 1:
-            $this->getLogger('onlyoffice')->notice('Connected to the media @type %label co-editing.', $context);
-            break;
-        }
-        break;
-
-      case "MustSave":
-      case "Corrupted":
-        return $this->proccessSave($body, $media, $context);
-
-      case "Closed":
-        $this->getLogger('onlyoffice')->notice('Media @type %label was closed with no changes.', $context);
-        break;
-
-      case "MustForceSave":
-      case "CorruptedForceSave":
-        break;
-    }
+  /**
+   * Logs that the editor was closed without changes.
+   */
+  private function processClosed(array $context): JsonResponse {
+    $this->getLogger('onlyoffice')->notice('Media @type %label was closed with no changes.', $context);
 
     return new JsonResponse(['error' => 0], 200);
   }

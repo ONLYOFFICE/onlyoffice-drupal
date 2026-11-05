@@ -46,18 +46,6 @@
         },
       );
 
-      // Add special handling for the source dropdown
-      $(once('onlyoffice-form-source', 'select[name="source"]', context)).on(
-        'change',
-        function () {
-          var source = $(this).val();
-          var $dialog = $(this).closest('.ui-dialog-content');
-
-          // Update submit button text
-          updateSubmitButtonText($dialog, source);
-        },
-      );
-
       // Custom file upload handling
       $(
         once(
@@ -87,6 +75,8 @@
         $fileInput.on('change', function () {
           if (this.files && this.files.length > 0) {
             var file = this.files[0];
+
+            getUploadMessages($wrapper).clear();
 
             // Show loading state
             showLoadingState($wrapper);
@@ -147,17 +137,14 @@
                 } else {
                   console.error('File upload failed:', response);
 
-                  // Only log errors to console
-                  if (response && response.message) {
-                    console.error('Error message:', response.message);
-                  }
-
                   removeSelectedFile($wrapper);
+                  showUploadError($wrapper, response && response.message);
                 }
               })
               .catch(function (error) {
                 console.error('File upload error:', error);
                 removeSelectedFile($wrapper);
+                showUploadError($wrapper);
               });
           } else {
             // If no file was selected (user canceled the file dialog)
@@ -172,6 +159,44 @@
           return false;
         });
       });
+
+      /**
+       * Returns the messages area above the file picker.
+       *
+       * @param {jQuery} $wrapper
+       *   The file upload wrapper jQuery object.
+       *
+       * @return {Drupal.Message}
+       *   The messages object for the upload field.
+       */
+      function getUploadMessages($wrapper) {
+        const wrapper = $wrapper[0];
+        let messageWrapper = wrapper.querySelector(
+          '.onlyoffice-form-upload-messages',
+        );
+        if (!messageWrapper) {
+          messageWrapper = document.createElement('div');
+          messageWrapper.className = 'onlyoffice-form-upload-messages';
+          wrapper.prepend(messageWrapper);
+        }
+        return new Drupal.Message(messageWrapper);
+      }
+
+      /**
+       * Shows why an upload failed above the file picker.
+       *
+       * @param {jQuery} $wrapper
+       *   The file upload wrapper jQuery object.
+       * @param {string} [message]
+       *   The server's error message, already translated and escaped.
+       */
+      function showUploadError($wrapper, message) {
+        getUploadMessages($wrapper).add(
+          message ||
+            Drupal.t('The file could not be uploaded. Please try again.'),
+          { type: 'error' },
+        );
+      }
 
       /**
        * Shows a loading state in the UI.
@@ -198,27 +223,6 @@
       }
 
       /**
-       * Updates the submit button text based on the selected source.
-       *
-       * @param {jQuery} $dialog
-       *   The dialog jQuery object.
-       * @param {string} source
-       *   The selected source value.
-       */
-      function updateSubmitButtonText($dialog, source) {
-        var buttonText = 'Create';
-
-        if (source === 'upload') {
-          buttonText = 'Upload';
-        }
-
-        // Find the submit button and update its text
-        if ($dialog.length) {
-          $dialog.find('input[type="submit"]').val(buttonText);
-        }
-      }
-
-      /**
        * Shows the selected file in the UI.
        *
        * @param {jQuery} $wrapper
@@ -230,12 +234,12 @@
         // Create the file preview HTML
         var filePreviewHtml = `<div class="onlyoffice-form-uploaded-file">
         <div class="onlyoffice-form-file-preview">
-          <img src="${drupalSettings.myModule.modulePath}/images/pdf.svg" alt="PDF File" width="96" height="96">
+          <img src="${drupalSettings.myModule.modulePath}/images/pdf.svg" alt="${Drupal.t('PDF File')}" width="96" height="96">
           <div class="onlyoffice-form-file-info">
-            <div class="onlyoffice-form-file-title"><span>Title</span>: ${Drupal.checkPlain(file.name)}</div>
+            <div class="onlyoffice-form-file-title"><span>${Drupal.t('Title')}</span>: ${Drupal.checkPlain(file.name)}</div>
           </div>
         </div>
-        <button type="button" class="onlyoffice-form-remove-button button">Remove</button>
+        <button type="button" class="onlyoffice-form-remove-button button">${Drupal.t('Remove')}</button>
       </div>`;
 
         // Replace the upload container or loading indicator with the file preview
@@ -263,7 +267,9 @@
         var uploadButtonHtml =
           '<div class="onlyoffice-form-upload-container">' +
           '<div class="onlyoffice-form-upload-button-wrapper">' +
-          '<button type="button" class="onlyoffice-form-upload-button button">Select file</button>' +
+          '<button type="button" class="onlyoffice-form-upload-button button">' +
+          Drupal.t('Select file') +
+          '</button>' +
           '</div>' +
           '</div>';
 
