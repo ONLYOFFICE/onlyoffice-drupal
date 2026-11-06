@@ -33,11 +33,41 @@ msgstr "Einstellungen des ONLYOFFICE-Konnektors verwalten."
 msgid "ONLYOFFICE Connector settings"
 msgstr "Einstellungen vom ONLYOFFICE-Konnektor"
 
-msgid "Document Editing Service address"
-msgstr "Die Adresse des Dokumentenbearbeitungsservices"
+msgid "Welcome to ONLYOFFICE Docs!"
+msgstr "Willkommen bei ONLYOFFICE Docs!"
 
-msgid "Secret key (leave blank to disable)"
-msgstr "Geheimer Schlüssel (freilassen, um zu deaktivieren)"
+msgid "Add office files to your Drupal website to enable document previews directly on public pages. Collaborate and edit office files with other Drupal users."
+msgstr "Fügen Sie Ihrer Drupal-Website Office-Dateien hinzu, um Dokumentvorschauen direkt auf öffentlichen Seiten zu ermöglichen. Bearbeiten Sie Office-Dateien gemeinsam mit anderen Drupal-Benutzern."
+
+msgid "Learn more"
+msgstr "Mehr erfahren"
+
+msgid "Suggest a feature"
+msgstr "Funktion vorschlagen"
+
+msgid "ONLYOFFICE Docs Cloud"
+msgstr "ONLYOFFICE Docs Cloud"
+
+msgid "Easily launch the editors in the cloud without downloading and installation"
+msgstr "Öffnen Sie die Editoren in der Cloud einfach ohne Herunterladen und Installation"
+
+msgid "Get Now"
+msgstr "Jetzt erhalten"
+
+msgid "Connection settings"
+msgstr "Verbindungseinstellungen"
+
+msgid "ONLYOFFICE Docs address"
+msgstr "Adresse von ONLYOFFICE Docs"
+
+msgid "Here, please specify the address of your ONLYOFFICE Docs server."
+msgstr "Geben Sie hier bitte die Adresse Ihres ONLYOFFICE Docs-Servers an."
+
+msgid "ONLYOFFICE Docs secret key"
+msgstr "Geheimer Schlüssel von ONLYOFFICE Docs"
+
+msgid "Set a JWT secret key here and the same one in the ONLYOFFICE Docs config file. Leave blank to disable."
+msgstr "Legen Sie hier einen geheimen JWT-Schlüssel und denselben in der Konfigurationsdatei von ONLYOFFICE Docs fest. Leer lassen, um zu deaktivieren."
 
 msgid "Edit in ONLYOFFICE"
 msgstr "Mit ONLYOFFICE bearbeiten"

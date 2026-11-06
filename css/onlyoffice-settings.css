@@ -28,3 +28,162 @@
 .onlyoffice-secret__toggle:hover {
   color: #222330;
 }
+
+.onlyoffice-secret__toggle::before {
+  width: 20px;
+  height: 20px;
+  content: "";
+  background-color: currentColor;
+  mask: url(../images/eye.svg) no-repeat center / contain;
+}
+
+.onlyoffice-secret__toggle[aria-pressed="true"]::before {
+  mask-image: url(../images/eye_off.svg);
+}
+
+.onlyoffice-settings {
+  padding: 1.25rem;
+  border: 1px solid #dedfe4;
+  border-radius: 2px;
+}
+
+.onlyoffice-settings h2 {
+  margin: 0 0 0.75rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.onlyoffice-settings__description {
+  margin-bottom: 1.5rem;
+}
+
+.onlyoffice-settings__description p {
+  margin: 0 0 0.75rem;
+}
+
+.onlyoffice-settings__links {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 1.5rem;
+}
+
+.onlyoffice-settings__links a::after {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin-left: 4px;
+  content: "";
+  background-color: currentColor;
+  mask: url(../images/top_right_arrow.svg) no-repeat center / contain;
+}
+
+.onlyoffice-banner {
+  container-type: inline-size;
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.5rem;
+  box-sizing: border-box;
+  margin-bottom: 1.5rem;
+  padding: 1rem 1.25rem;
+  color: #222330;
+  border: 1px solid #dedfe4;
+  border-radius: 2px;
+  background: #fff url(../images/banner_bg.svg) no-repeat left top;
+}
+
+.onlyoffice-banner[hidden] {
+  display: none;
+}
+
+.onlyoffice-banner__image {
+  flex: none;
+  width: 82px;
+  height: 79px;
+  background: url(../images/banner_image.svg) no-repeat center / contain;
+}
+
+.onlyoffice-banner__text {
+  flex: 1 1 100%;
+  min-width: 0;
+  hyphens: manual;
+}
+
+.onlyoffice-banner__title {
+  margin: 0 0 0.25rem;
+  font-size: 1.125rem;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.onlyoffice-banner__description {
+  margin: 0;
+  color: #545560;
+}
+
+.onlyoffice-banner__link {
+  flex: none;
+  padding: 0.375rem 1.25rem;
+  text-decoration: none;
+  color: #003ecc;
+  border: 1px solid currentColor;
+  border-radius: 1rem;
+  font-weight: 600;
+}
+
+.onlyoffice-banner__link:hover,
+.onlyoffice-banner__link:focus {
+  text-decoration: none;
+  color: #003ecc;
+  background-color: #f3f4f9;
+}
+
+.onlyoffice-banner__close {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  display: flex;
+  padding: 0.25rem;
+  cursor: pointer;
+  color: #545560;
+  border: 0;
+  border-radius: 2px;
+  background: transparent;
+}
+
+.onlyoffice-banner__close:hover {
+  color: #222330;
+}
+
+.onlyoffice-banner__close::before {
+  width: 16px;
+  height: 16px;
+  content: "";
+  background-color: currentColor;
+  mask: url(../images/close.svg) no-repeat center / contain;
+}
+
+@container (min-width: 30rem) {
+  .onlyoffice-banner__text {
+    flex-basis: 0;
+  }
+
+  .onlyoffice-banner__link {
+    margin-right: 1.75rem;
+  }
+}
+
+@media (forced-colors: active) {
+  .onlyoffice-settings__links a::after {
+    forced-color-adjust: none;
+    background-color: linktext;
+  }
+
+  .onlyoffice-secret__toggle::before,
+  .onlyoffice-banner__close::before {
+    forced-color-adjust: none;
+    background-color: buttontext;
+  }
+}

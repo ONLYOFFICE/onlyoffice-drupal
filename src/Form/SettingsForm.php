@@ -23,6 +23,7 @@ namespace Drupal\onlyoffice\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url as DrupalUrl;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Validator\Constraints\Url;
 use Symfony\Component\Validator\Validation;
@@ -67,15 +68,93 @@ class SettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
+    $form['#attributes']['class'][] = 'onlyoffice-settings';
+    $form['description'] = [
+      '#type' => 'container',
+      '#attributes' => ['class' => ['onlyoffice-settings__description']],
+      'title' => [
+        '#type' => 'html_tag',
+        '#tag' => 'h2',
+        '#value' => $this->t('Welcome to ONLYOFFICE Docs!'),
+      ],
+      'text' => [
+        '#type' => 'html_tag',
+        '#tag' => 'p',
+        '#value' => $this->t('Add office files to your Drupal website to enable document previews directly on public pages. Collaborate and edit office files with other Drupal users.'),
+      ],
+      'links' => [
+        '#type' => 'container',
+        '#attributes' => ['class' => ['onlyoffice-settings__links']],
+        'learn_more' => [
+          '#type' => 'link',
+          '#title' => $this->t('Learn more'),
+          '#url' => DrupalUrl::fromUri('https://helpcenter.onlyoffice.com/integration/drupal.aspx'),
+          '#attributes' => ['target' => '_blank', 'rel' => 'noopener noreferrer'],
+        ],
+        'suggest_feature' => [
+          '#type' => 'link',
+          '#title' => $this->t('Suggest a feature'),
+          '#url' => DrupalUrl::fromUri('https://community.onlyoffice.com/c/suggestions/integrations/56'),
+          '#attributes' => ['target' => '_blank', 'rel' => 'noopener noreferrer'],
+        ],
+      ],
+    ];
+    $form['cloud_banner'] = [
+      '#type' => 'container',
+      '#attributes' => [
+        'class' => ['onlyoffice-banner'],
+        'data-onlyoffice-banner' => '',
+        'hidden' => 'hidden',
+      ],
+      'image' => [
+        '#type' => 'html_tag',
+        '#tag' => 'div',
+        '#attributes' => ['class' => ['onlyoffice-banner__image']],
+      ],
+      'text' => [
+        '#type' => 'container',
+        '#attributes' => ['class' => ['onlyoffice-banner__text']],
+        'title' => [
+          '#type' => 'html_tag',
+          '#tag' => 'h3',
+          '#value' => $this->t('ONLYOFFICE Docs Cloud'),
+          '#attributes' => ['class' => ['onlyoffice-banner__title']],
+        ],
+        'description' => [
+          '#type' => 'html_tag',
+          '#tag' => 'p',
+          '#value' => $this->t('Easily launch the editors in the cloud without downloading and installation'),
+          '#attributes' => ['class' => ['onlyoffice-banner__description']],
+        ],
+      ],
+      'link' => [
+        '#type' => 'link',
+        '#title' => $this->t('Get Now'),
+        '#url' => DrupalUrl::fromUri('https://www.onlyoffice.com/docs-registration.aspx?referer=drupal'),
+        '#attributes' => [
+          'class' => ['onlyoffice-banner__link'],
+          'target' => '_blank',
+          'rel' => 'noopener noreferrer',
+        ],
+      ],
+    ];
+    $form['connection_title'] = [
+      '#type' => 'html_tag',
+      '#tag' => 'h2',
+      '#value' => $this->t('Connection settings'),
+    ];
     $form['doc_server_url'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('Document Editing Service address'),
+      '#title' => $this->t('ONLYOFFICE Docs address'),
+      '#description' => $this->t('Here, please specify the address of your ONLYOFFICE Docs server.'),
       '#default_value' => $this->config('onlyoffice.settings')->get('doc_server_url'),
+      '#placeholder' => 'https://',
       '#required' => TRUE,
     ];
     $form['doc_server_jwt'] = [
       '#type' => 'password',
-      '#title' => $this->t('Secret key (leave blank to disable)'),
+      '#title' => $this->t('ONLYOFFICE Docs secret key'),
+      '#description' => $this->t('Set a JWT secret key here and the same one in the ONLYOFFICE Docs config file. Leave blank to disable.'),
       '#default_value' => $this->config('onlyoffice.settings')->get('doc_server_jwt'),
       '#attributes' => [
         'autocomplete' => 'new-password',

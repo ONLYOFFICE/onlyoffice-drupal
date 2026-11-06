@@ -33,11 +33,41 @@ msgstr "管理ONLYOFFICE连接器设置。"
 msgid "ONLYOFFICE Connector settings"
 msgstr "ONLYOFFICE连接器的设置"
 
-msgid "Document Editing Service address"
-msgstr "文件编辑服务地址"
+msgid "Welcome to ONLYOFFICE Docs!"
+msgstr "欢迎使用 ONLYOFFICE Docs！"
 
-msgid "Secret key (leave blank to disable)"
-msgstr "秘钥(留空为关闭)"
+msgid "Add office files to your Drupal website to enable document previews directly on public pages. Collaborate and edit office files with other Drupal users."
+msgstr "将办公文件添加到您的 Drupal 网站，即可直接在公共页面上预览文档。与其他 Drupal 用户协作编辑办公文件。"
+
+msgid "Learn more"
+msgstr "了解更多"
+
+msgid "Suggest a feature"
+msgstr "建议功能"
+
+msgid "ONLYOFFICE Docs Cloud"
+msgstr "ONLYOFFICE Docs Cloud"
+
+msgid "Easily launch the editors in the cloud without downloading and installation"
+msgstr "无需下载和安装即可轻松启动云端编辑器"
+
+msgid "Get Now"
+msgstr "立即获取"
+
+msgid "Connection settings"
+msgstr "连接设置"
+
+msgid "ONLYOFFICE Docs address"
+msgstr "ONLYOFFICE Docs 地址"
+
+msgid "Here, please specify the address of your ONLYOFFICE Docs server."
+msgstr "请在此处指定您的 ONLYOFFICE Docs 服务器地址。"
+
+msgid "ONLYOFFICE Docs secret key"
+msgstr "ONLYOFFICE Docs 秘钥"
+
+msgid "Set a JWT secret key here and the same one in the ONLYOFFICE Docs config file. Leave blank to disable."
+msgstr "在此处设置 JWT 秘钥，并在 ONLYOFFICE Docs 配置文件中设置相同的秘钥。留空即可禁用。"
 
 msgid "Edit in ONLYOFFICE"
 msgstr "在ONLYOFFICE中编辑"

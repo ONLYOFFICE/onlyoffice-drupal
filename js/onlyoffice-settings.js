@@ -17,13 +17,36 @@
  */
 
 (function (Drupal, once) {
-  const EYE_ICON =
-    '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">' +
-    '<path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>';
+  const BANNER_CLOSED_KEY = 'onlyoffice.cloudBanner.closed';
 
-  const EYE_OFF_ICON =
-    '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">' +
-    '<path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/><path d="M3 3l18 18"/></svg>';
+  const widthTargets = new WeakMap();
+
+  const widthObserver = new ResizeObserver(function (entries) {
+    entries.forEach(function (entry) {
+      let width = entry.target.offsetWidth;
+      if (!width) {
+        return;
+      }
+
+      widthTargets.get(entry.target).forEach(function (target) {
+        target.element.style[target.property] = width + 'px';
+      });
+    });
+  });
+
+  const matchAddressWidth = function (element, property) {
+    let form = element.closest('form');
+    let field = form && form.querySelector('[name="doc_server_url"]');
+    if (!field) {
+      return;
+    }
+
+    if (!widthTargets.has(field)) {
+      widthTargets.set(field, []);
+      widthObserver.observe(field);
+    }
+    widthTargets.get(field).push({ element: element, property: property });
+  };
 
   Drupal.behaviors.onlyofficeSecretToggle = {
     attach: function (context) {
@@ -32,10 +55,7 @@
         '[data-onlyoffice-secret]',
         context,
       ).forEach(function (input) {
-        // Keep the original width, so the padding for the toggle does not stretch the field.
-        if (input.offsetWidth) {
-          input.style.width = input.offsetWidth + 'px';
-        }
+        matchAddressWidth(input, 'width');
 
         let wrapper = document.createElement('span');
         wrapper.className = 'onlyoffice-secret';
@@ -49,7 +69,6 @@
         let update = function () {
           let hidden = input.type === 'password';
           let label = hidden ? Drupal.t('Show') : Drupal.t('Hide');
-          button.innerHTML = hidden ? EYE_ICON : EYE_OFF_ICON;
           button.setAttribute('aria-label', label);
           button.setAttribute('title', label);
           button.setAttribute('aria-pressed', hidden ? 'false' : 'true');
@@ -63,6 +82,49 @@
         update();
         wrapper.appendChild(button);
       });
+    },
+  };
+
+  Drupal.behaviors.onlyofficeBanner = {
+    attach: function (context) {
+      once('onlyoffice-banner', '[data-onlyoffice-banner]', context).forEach(
+        function (banner) {
+          try {
+            if (localStorage.getItem(BANNER_CLOSED_KEY)) {
+              return;
+            }
+          } catch {
+            // Show the banner when the browser storage is unavailable.
+          }
+
+          let button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'onlyoffice-banner__close';
+          button.setAttribute('aria-label', Drupal.t('Close'));
+          button.setAttribute('title', Drupal.t('Close'));
+
+          button.addEventListener('click', function () {
+            banner.hidden = true;
+
+            let next = banner.nextElementSibling;
+            if (next) {
+              next.setAttribute('tabindex', '-1');
+              next.focus();
+            }
+
+            try {
+              localStorage.setItem(BANNER_CLOSED_KEY, '1');
+            } catch {
+              // Keep the banner closed until the page is reloaded.
+            }
+          });
+
+          matchAddressWidth(banner, 'maxWidth');
+
+          banner.appendChild(button);
+          banner.hidden = false;
+        },
+      );
     },
   };
 })(Drupal, once);
