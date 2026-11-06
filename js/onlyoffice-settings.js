@@ -17,14 +17,6 @@
  */
 
 (function (Drupal, once) {
-  const EYE_ICON =
-    '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">' +
-    '<path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>';
-
-  const EYE_OFF_ICON =
-    '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">' +
-    '<path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/><path d="M3 3l18 18"/></svg>';
-
   Drupal.behaviors.onlyofficeSecretToggle = {
     attach: function (context) {
       once(
@@ -49,7 +41,6 @@
         let update = function () {
           let hidden = input.type === 'password';
           let label = hidden ? Drupal.t('Show') : Drupal.t('Hide');
-          button.innerHTML = hidden ? EYE_ICON : EYE_OFF_ICON;
           button.setAttribute('aria-label', label);
           button.setAttribute('title', label);
           button.setAttribute('aria-pressed', hidden ? 'false' : 'true');

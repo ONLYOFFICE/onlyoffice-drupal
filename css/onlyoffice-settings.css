@@ -28,3 +28,22 @@
 .onlyoffice-secret__toggle:hover {
   color: #222330;
 }
+
+.onlyoffice-secret__toggle::before {
+  width: 20px;
+  height: 20px;
+  content: "";
+  background-color: currentColor;
+  mask: url(../images/eye.svg) no-repeat center / contain;
+}
+
+.onlyoffice-secret__toggle[aria-pressed="true"]::before {
+  mask-image: url(../images/eye_off.svg);
+}
+
+@media (forced-colors: active) {
+  .onlyoffice-secret__toggle::before {
+    forced-color-adjust: none;
+    background-color: buttontext;
+  }
+}
