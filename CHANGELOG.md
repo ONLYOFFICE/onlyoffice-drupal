@@ -10,6 +10,7 @@
 - connection check to ONLYOFFICE Docs when saving the settings
 - welcome description with useful links on the settings page
 - ONLYOFFICE Docs Cloud banner on the settings page
+- expiration time for the download links
 
 ## 2.0.0
 ## Added
