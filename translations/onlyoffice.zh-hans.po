@@ -45,6 +45,15 @@ msgstr "了解更多"
 msgid "Suggest a feature"
 msgstr "建议功能"
 
+msgid "ONLYOFFICE Docs Cloud"
+msgstr "ONLYOFFICE Docs Cloud"
+
+msgid "Easily launch the editors in the cloud without downloading and installation"
+msgstr "无需下载和安装即可轻松启动云端编辑器"
+
+msgid "Get Now"
+msgstr "立即获取"
+
 msgid "Connection settings"
 msgstr "连接设置"
 

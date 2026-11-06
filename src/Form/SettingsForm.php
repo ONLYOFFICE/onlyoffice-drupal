@@ -99,6 +99,45 @@ class SettingsForm extends ConfigFormBase {
         ],
       ],
     ];
+    $form['cloud_banner'] = [
+      '#type' => 'container',
+      '#attributes' => [
+        'class' => ['onlyoffice-banner'],
+        'data-onlyoffice-banner' => '',
+        'hidden' => 'hidden',
+      ],
+      'image' => [
+        '#type' => 'html_tag',
+        '#tag' => 'div',
+        '#attributes' => ['class' => ['onlyoffice-banner__image']],
+      ],
+      'text' => [
+        '#type' => 'container',
+        '#attributes' => ['class' => ['onlyoffice-banner__text']],
+        'title' => [
+          '#type' => 'html_tag',
+          '#tag' => 'h3',
+          '#value' => $this->t('ONLYOFFICE Docs Cloud'),
+          '#attributes' => ['class' => ['onlyoffice-banner__title']],
+        ],
+        'description' => [
+          '#type' => 'html_tag',
+          '#tag' => 'p',
+          '#value' => $this->t('Easily launch the editors in the cloud without downloading and installation'),
+          '#attributes' => ['class' => ['onlyoffice-banner__description']],
+        ],
+      ],
+      'link' => [
+        '#type' => 'link',
+        '#title' => $this->t('Get Now'),
+        '#url' => DrupalUrl::fromUri('https://www.onlyoffice.com/docs-registration.aspx?referer=drupal'),
+        '#attributes' => [
+          'class' => ['onlyoffice-banner__link'],
+          'target' => '_blank',
+          'rel' => 'noopener noreferrer',
+        ],
+      ],
+    ];
     $form['connection_title'] = [
       '#type' => 'html_tag',
       '#tag' => 'h2',

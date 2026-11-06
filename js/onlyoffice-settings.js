@@ -17,6 +17,8 @@
  */
 
 (function (Drupal, once) {
+  const BANNER_CLOSED_KEY = 'onlyoffice.cloudBanner.closed';
+
   const widthTargets = new WeakMap();
 
   const widthObserver = new ResizeObserver(function (entries) {
@@ -80,6 +82,49 @@
         update();
         wrapper.appendChild(button);
       });
+    },
+  };
+
+  Drupal.behaviors.onlyofficeBanner = {
+    attach: function (context) {
+      once('onlyoffice-banner', '[data-onlyoffice-banner]', context).forEach(
+        function (banner) {
+          try {
+            if (localStorage.getItem(BANNER_CLOSED_KEY)) {
+              return;
+            }
+          } catch {
+            // Show the banner when the browser storage is unavailable.
+          }
+
+          let button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'onlyoffice-banner__close';
+          button.setAttribute('aria-label', Drupal.t('Close'));
+          button.setAttribute('title', Drupal.t('Close'));
+
+          button.addEventListener('click', function () {
+            banner.hidden = true;
+
+            let next = banner.nextElementSibling;
+            if (next) {
+              next.setAttribute('tabindex', '-1');
+              next.focus();
+            }
+
+            try {
+              localStorage.setItem(BANNER_CLOSED_KEY, '1');
+            } catch {
+              // Keep the banner closed until the page is reloaded.
+            }
+          });
+
+          matchAddressWidth(banner, 'maxWidth');
+
+          banner.appendChild(button);
+          banner.hidden = false;
+        },
+      );
     },
   };
 })(Drupal, once);

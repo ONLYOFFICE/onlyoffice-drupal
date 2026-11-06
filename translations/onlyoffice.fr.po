@@ -45,6 +45,15 @@ msgstr "En savoir plus"
 msgid "Suggest a feature"
 msgstr "Suggérer une fonctionnalité"
 
+msgid "ONLYOFFICE Docs Cloud"
+msgstr "ONLYOFFICE Docs Cloud"
+
+msgid "Easily launch the editors in the cloud without downloading and installation"
+msgstr "Lancez facilement les éditeurs dans le cloud sans téléchargement ni installation"
+
+msgid "Get Now"
+msgstr "Obtenir maintenant"
+
 msgid "Connection settings"
 msgstr "Paramètres de connexion"
 

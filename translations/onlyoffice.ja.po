@@ -45,6 +45,15 @@ msgstr "詳細を見る"
 msgid "Suggest a feature"
 msgstr "機能を提案"
 
+msgid "ONLYOFFICE Docs Cloud"
+msgstr "ONLYOFFICE Docs Cloud"
+
+msgid "Easily launch the editors in the cloud without downloading and installation"
+msgstr "ダウンロードやインストールをすることなく、クラウド上で簡単にエディタを起動することができます"
+
+msgid "Get Now"
+msgstr "今すぐ使ってみる"
+
 msgid "Connection settings"
 msgstr "接続設定"
 
