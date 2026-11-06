@@ -33,6 +33,21 @@ msgstr "Gestisci le impostazioni del connettore ONLYOFFICE."
 msgid "ONLYOFFICE Connector settings"
 msgstr "Impostazioni del connettore ONLYOFFICE"
 
+msgid "Welcome to ONLYOFFICE Docs!"
+msgstr "Benvenuto in ONLYOFFICE Docs!"
+
+msgid "Add office files to your Drupal website to enable document previews directly on public pages. Collaborate and edit office files with other Drupal users."
+msgstr "Aggiungi file di Office al tuo sito Drupal per abilitare le anteprime dei documenti direttamente nelle pagine pubbliche. Collabora e modifica i file di Office con altri utenti di Drupal."
+
+msgid "Learn more"
+msgstr "Scopri di più"
+
+msgid "Suggest a feature"
+msgstr "Suggerisci una funzione"
+
+msgid "Connection settings"
+msgstr "Impostazioni di connessione"
+
 msgid "ONLYOFFICE Docs address"
 msgstr "Indirizzo di ONLYOFFICE Docs"
 

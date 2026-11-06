@@ -23,6 +23,7 @@ namespace Drupal\onlyoffice\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url as DrupalUrl;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Validator\Constraints\Url;
 use Symfony\Component\Validator\Validation;
@@ -67,6 +68,42 @@ class SettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
+    $form['#attributes']['class'][] = 'onlyoffice-settings';
+    $form['description'] = [
+      '#type' => 'container',
+      '#attributes' => ['class' => ['onlyoffice-settings__description']],
+      'title' => [
+        '#type' => 'html_tag',
+        '#tag' => 'h2',
+        '#value' => $this->t('Welcome to ONLYOFFICE Docs!'),
+      ],
+      'text' => [
+        '#type' => 'html_tag',
+        '#tag' => 'p',
+        '#value' => $this->t('Add office files to your Drupal website to enable document previews directly on public pages. Collaborate and edit office files with other Drupal users.'),
+      ],
+      'links' => [
+        '#type' => 'container',
+        '#attributes' => ['class' => ['onlyoffice-settings__links']],
+        'learn_more' => [
+          '#type' => 'link',
+          '#title' => $this->t('Learn more'),
+          '#url' => DrupalUrl::fromUri('https://helpcenter.onlyoffice.com/integration/drupal.aspx'),
+          '#attributes' => ['target' => '_blank', 'rel' => 'noopener noreferrer'],
+        ],
+        'suggest_feature' => [
+          '#type' => 'link',
+          '#title' => $this->t('Suggest a feature'),
+          '#url' => DrupalUrl::fromUri('https://community.onlyoffice.com/c/suggestions/integrations/56'),
+          '#attributes' => ['target' => '_blank', 'rel' => 'noopener noreferrer'],
+        ],
+      ],
+    ];
+    $form['connection_title'] = [
+      '#type' => 'html_tag',
+      '#tag' => 'h2',
+      '#value' => $this->t('Connection settings'),
+    ];
     $form['doc_server_url'] = [
       '#type' => 'textfield',
       '#title' => $this->t('ONLYOFFICE Docs address'),

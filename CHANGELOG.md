@@ -8,6 +8,7 @@
 - addresses for internal requests between Drupal and ONLYOFFICE Docs in the advanced server settings
 - authorization header setting
 - connection check to ONLYOFFICE Docs when saving the settings
+- welcome description with useful links on the settings page
 
 ## 2.0.0
 ## Added

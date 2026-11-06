@@ -33,6 +33,21 @@ msgstr "管理ONLYOFFICE连接器设置。"
 msgid "ONLYOFFICE Connector settings"
 msgstr "ONLYOFFICE连接器的设置"
 
+msgid "Welcome to ONLYOFFICE Docs!"
+msgstr "欢迎使用 ONLYOFFICE Docs！"
+
+msgid "Add office files to your Drupal website to enable document previews directly on public pages. Collaborate and edit office files with other Drupal users."
+msgstr "将办公文件添加到您的 Drupal 网站，即可直接在公共页面上预览文档。与其他 Drupal 用户协作编辑办公文件。"
+
+msgid "Learn more"
+msgstr "了解更多"
+
+msgid "Suggest a feature"
+msgstr "建议功能"
+
+msgid "Connection settings"
+msgstr "连接设置"
+
 msgid "ONLYOFFICE Docs address"
 msgstr "ONLYOFFICE Docs 地址"
 

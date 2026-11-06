@@ -41,7 +41,49 @@
   mask-image: url(../images/eye_off.svg);
 }
 
+.onlyoffice-settings {
+  padding: 1.25rem;
+  border: 1px solid #dedfe4;
+  border-radius: 2px;
+}
+
+.onlyoffice-settings h2 {
+  margin: 0 0 0.75rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.onlyoffice-settings__description {
+  margin-bottom: 1.5rem;
+}
+
+.onlyoffice-settings__description p {
+  margin: 0 0 0.75rem;
+}
+
+.onlyoffice-settings__links {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 1.5rem;
+}
+
+.onlyoffice-settings__links a::after {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin-left: 4px;
+  content: "";
+  background-color: currentColor;
+  mask: url(../images/top_right_arrow.svg) no-repeat center / contain;
+}
+
 @media (forced-colors: active) {
+  .onlyoffice-settings__links a::after {
+    forced-color-adjust: none;
+    background-color: linktext;
+  }
+
   .onlyoffice-secret__toggle::before {
     forced-color-adjust: none;
     background-color: buttontext;
