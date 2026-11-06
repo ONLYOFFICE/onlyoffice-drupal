@@ -33,11 +33,17 @@ msgstr "ONLYOFFICEコネクタ設定を管理する"
 msgid "ONLYOFFICE Connector settings"
 msgstr "ONLYOFFICEコネクタ設定"
 
-msgid "Document Editing Service address"
-msgstr "文書編集サービスアドレス"
+msgid "ONLYOFFICE Docs address"
+msgstr "ONLYOFFICE Docsアドレス"
 
-msgid "Secret key (leave blank to disable)"
-msgstr "シークレットキー (ブランクで無効)"
+msgid "Here, please specify the address of your ONLYOFFICE Docs server."
+msgstr "ここにONLYOFFICE Docsサーバーのアドレスを指定してください。"
+
+msgid "ONLYOFFICE Docs secret key"
+msgstr "ONLYOFFICE Docsシークレットキー"
+
+msgid "Set a JWT secret key here and the same one in the ONLYOFFICE Docs config file. Leave blank to disable."
+msgstr "ここにJWTシークレットキーを設定し、ONLYOFFICE Docsの設定ファイルにも同じキーを設定してください。無効にする場合は空白のままにしてください。"
 
 msgid "Edit in ONLYOFFICE"
 msgstr "ONLYOFFICEで編集する"

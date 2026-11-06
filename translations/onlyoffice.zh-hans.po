@@ -33,11 +33,17 @@ msgstr "管理ONLYOFFICE连接器设置。"
 msgid "ONLYOFFICE Connector settings"
 msgstr "ONLYOFFICE连接器的设置"
 
-msgid "Document Editing Service address"
-msgstr "文件编辑服务地址"
+msgid "ONLYOFFICE Docs address"
+msgstr "ONLYOFFICE Docs 地址"
 
-msgid "Secret key (leave blank to disable)"
-msgstr "秘钥(留空为关闭)"
+msgid "Here, please specify the address of your ONLYOFFICE Docs server."
+msgstr "请在此处指定您的 ONLYOFFICE Docs 服务器地址。"
+
+msgid "ONLYOFFICE Docs secret key"
+msgstr "ONLYOFFICE Docs 秘钥"
+
+msgid "Set a JWT secret key here and the same one in the ONLYOFFICE Docs config file. Leave blank to disable."
+msgstr "在此处设置 JWT 秘钥，并在 ONLYOFFICE Docs 配置文件中设置相同的秘钥。留空即可禁用。"
 
 msgid "Edit in ONLYOFFICE"
 msgstr "在ONLYOFFICE中编辑"

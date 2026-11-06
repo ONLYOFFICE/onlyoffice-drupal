@@ -2,6 +2,7 @@
 
 ## Changed
 - minimum supported drupal version is 10.3
+- ONLYOFFICE Docs address and secret key settings renamed and given descriptions
 
 ## Added
 - addresses for internal requests between Drupal and ONLYOFFICE Docs in the advanced server settings

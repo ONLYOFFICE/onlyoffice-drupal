@@ -33,11 +33,17 @@ msgstr "Управление настройками ONLYOFFICE Connector."
 msgid "ONLYOFFICE Connector settings"
 msgstr "Настройки коннектора ONLYOFFICE"
 
-msgid "Document Editing Service address"
-msgstr "Адрес службы редактирования документов"
+msgid "ONLYOFFICE Docs address"
+msgstr "Адрес ONLYOFFICE Docs"
 
-msgid "Secret key (leave blank to disable)"
-msgstr "Секретный ключ (оставьте пустым для отключения)"
+msgid "Here, please specify the address of your ONLYOFFICE Docs server."
+msgstr "Укажите здесь адрес вашего сервера ONLYOFFICE Docs."
+
+msgid "ONLYOFFICE Docs secret key"
+msgstr "Секретный ключ ONLYOFFICE Docs"
+
+msgid "Set a JWT secret key here and the same one in the ONLYOFFICE Docs config file. Leave blank to disable."
+msgstr "Укажите здесь секретный ключ JWT и тот же ключ в файле конфигурации ONLYOFFICE Docs. Оставьте пустым, чтобы отключить."
 
 msgid "Edit in ONLYOFFICE"
 msgstr "Редактировать в ONLYOFFICE"

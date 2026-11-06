@@ -69,13 +69,16 @@ class SettingsForm extends ConfigFormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form['doc_server_url'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('Document Editing Service address'),
+      '#title' => $this->t('ONLYOFFICE Docs address'),
+      '#description' => $this->t('Here, please specify the address of your ONLYOFFICE Docs server.'),
       '#default_value' => $this->config('onlyoffice.settings')->get('doc_server_url'),
+      '#placeholder' => 'https://',
       '#required' => TRUE,
     ];
     $form['doc_server_jwt'] = [
       '#type' => 'password',
-      '#title' => $this->t('Secret key (leave blank to disable)'),
+      '#title' => $this->t('ONLYOFFICE Docs secret key'),
+      '#description' => $this->t('Set a JWT secret key here and the same one in the ONLYOFFICE Docs config file. Leave blank to disable.'),
       '#default_value' => $this->config('onlyoffice.settings')->get('doc_server_jwt'),
       '#attributes' => [
         'autocomplete' => 'new-password',

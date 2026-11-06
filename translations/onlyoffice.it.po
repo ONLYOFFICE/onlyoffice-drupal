@@ -33,11 +33,17 @@ msgstr "Gestisci le impostazioni del connettore ONLYOFFICE."
 msgid "ONLYOFFICE Connector settings"
 msgstr "Impostazioni del connettore ONLYOFFICE"
 
-msgid "Document Editing Service address"
-msgstr "Indirizzo del servizio di modifica documenti"
+msgid "ONLYOFFICE Docs address"
+msgstr "Indirizzo di ONLYOFFICE Docs"
 
-msgid "Secret key (leave blank to disable)"
-msgstr "Chiave segreta (lasciare vuoto per disabilitare)"
+msgid "Here, please specify the address of your ONLYOFFICE Docs server."
+msgstr "Specifica qui l'indirizzo del tuo server ONLYOFFICE Docs."
+
+msgid "ONLYOFFICE Docs secret key"
+msgstr "Chiave segreta di ONLYOFFICE Docs"
+
+msgid "Set a JWT secret key here and the same one in the ONLYOFFICE Docs config file. Leave blank to disable."
+msgstr "Imposta qui una chiave segreta JWT e la stessa nel file di configurazione di ONLYOFFICE Docs. Lascia vuoto per disabilitare."
 
 msgid "Edit in ONLYOFFICE"
 msgstr "Modifica in ONLYOFFICE"
