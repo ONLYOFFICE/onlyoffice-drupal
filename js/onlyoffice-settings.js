@@ -17,6 +17,35 @@
  */
 
 (function (Drupal, once) {
+  const widthTargets = new WeakMap();
+
+  const widthObserver = new ResizeObserver(function (entries) {
+    entries.forEach(function (entry) {
+      let width = entry.target.offsetWidth;
+      if (!width) {
+        return;
+      }
+
+      widthTargets.get(entry.target).forEach(function (target) {
+        target.element.style[target.property] = width + 'px';
+      });
+    });
+  });
+
+  const matchAddressWidth = function (element, property) {
+    let form = element.closest('form');
+    let field = form && form.querySelector('[name="doc_server_url"]');
+    if (!field) {
+      return;
+    }
+
+    if (!widthTargets.has(field)) {
+      widthTargets.set(field, []);
+      widthObserver.observe(field);
+    }
+    widthTargets.get(field).push({ element: element, property: property });
+  };
+
   Drupal.behaviors.onlyofficeSecretToggle = {
     attach: function (context) {
       once(
@@ -24,10 +53,7 @@
         '[data-onlyoffice-secret]',
         context,
       ).forEach(function (input) {
-        // Keep the original width, so the padding for the toggle does not stretch the field.
-        if (input.offsetWidth) {
-          input.style.width = input.offsetWidth + 'px';
-        }
+        matchAddressWidth(input, 'width');
 
         let wrapper = document.createElement('span');
         wrapper.className = 'onlyoffice-secret';
