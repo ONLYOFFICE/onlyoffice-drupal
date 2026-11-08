@@ -33,11 +33,41 @@ msgstr "ONLYOFFICEコネクタ設定を管理する"
 msgid "ONLYOFFICE Connector settings"
 msgstr "ONLYOFFICEコネクタ設定"
 
-msgid "Document Editing Service address"
-msgstr "文書編集サービスアドレス"
+msgid "Welcome to ONLYOFFICE Docs!"
+msgstr "ONLYOFFICE Docsへようこそ！"
 
-msgid "Secret key (leave blank to disable)"
-msgstr "シークレットキー (ブランクで無効)"
+msgid "Add office files to your Drupal website to enable document previews directly on public pages. Collaborate and edit office files with other Drupal users."
+msgstr "Drupalサイトにオフィスファイルを追加して、公開ページで直接ドキュメントをプレビューできるようにします。他のDrupalユーザーとオフィスファイルを共同編集できます。"
+
+msgid "Learn more"
+msgstr "詳細を見る"
+
+msgid "Suggest a feature"
+msgstr "機能を提案"
+
+msgid "ONLYOFFICE Docs Cloud"
+msgstr "ONLYOFFICE Docs Cloud"
+
+msgid "Easily launch the editors in the cloud without downloading and installation"
+msgstr "ダウンロードやインストールをすることなく、クラウド上で簡単にエディタを起動することができます"
+
+msgid "Get Now"
+msgstr "今すぐ使ってみる"
+
+msgid "Connection settings"
+msgstr "接続設定"
+
+msgid "ONLYOFFICE Docs address"
+msgstr "ONLYOFFICE Docsアドレス"
+
+msgid "Here, please specify the address of your ONLYOFFICE Docs server."
+msgstr "ここにONLYOFFICE Docsサーバーのアドレスを指定してください。"
+
+msgid "ONLYOFFICE Docs secret key"
+msgstr "ONLYOFFICE Docsシークレットキー"
+
+msgid "Set a JWT secret key here and the same one in the ONLYOFFICE Docs config file. Leave blank to disable."
+msgstr "ここにJWTシークレットキーを設定し、ONLYOFFICE Docsの設定ファイルにも同じキーを設定してください。無効にする場合は空白のままにしてください。"
 
 msgid "Edit in ONLYOFFICE"
 msgstr "ONLYOFFICEで編集する"
@@ -71,3 +101,39 @@ msgstr "パーセント"
 
 msgid "Pixels"
 msgstr "ピクセル"
+
+msgid "Advanced server settings"
+msgstr "サーバー詳細設定"
+
+msgid "ONLYOFFICE Docs address for internal requests from the server"
+msgstr "サーバーから内部リクエストに利用されるONLYOFFICE Docs アドレス"
+
+msgid "Server address for internal requests from ONLYOFFICE Docs"
+msgstr "ONLYOFFICE Docsから内部リクエストに利用されるサーバーアドレス"
+
+msgid "Authorization header (leave blank to use default header)"
+msgstr "認証ヘッダー (デフォルトのヘッダーを使用したい場合は空白にしてください)"
+
+msgid "The address must not contain a query or a fragment."
+msgstr "アドレスにクエリやフラグメントを含めることはできません。"
+
+msgid "The header name may contain only letters, digits and the characters !#$%&'*+-.^_`|~."
+msgstr "ヘッダー名に使用できるのは、英字、数字、および文字 !#$%&'*+-.^_`|~ のみです。"
+
+msgid "ONLYOFFICE Docs connection check succeeded (version @version)."
+msgstr "ONLYOFFICE Docsへの接続チェックに成功しました (バージョン @version)。"
+
+msgid "ONLYOFFICE Docs connection check failed: @error"
+msgstr "ONLYOFFICE Docsへの接続チェックに失敗しました: @error"
+
+msgid "Error occurred in the document service"
+msgstr "ドキュメントサービスでエラーが発生しました"
+
+msgid "Not supported version"
+msgstr "サポートされていないバージョン"
+
+msgid "Mixed Active Content is not allowed. HTTPS address for ONLYOFFICE Docs is required."
+msgstr "アクティブコンテンツの混在は許可されていません。ONLYOFFICE DocsにはHTTPSアドレスが必要です。"
+
+msgid "Bad healthcheck status"
+msgstr "ヘルスチェックのステータスが不正です"

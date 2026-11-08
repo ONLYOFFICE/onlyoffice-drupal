@@ -29,7 +29,6 @@ use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\PageCache\ResponsePolicy\KillSwitch;
-use Drupal\Core\Url;
 use Drupal\media\Entity\Media;
 use Drupal\file\Entity\File;
 use Drupal\onlyoffice\OnlyofficeDocumentHelper;
@@ -41,13 +40,14 @@ use Psr\Log\LoggerInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Drupal\Core\Field\Attribute\FieldFormatter;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Plugin implementation of the 'onlyoffice_form_formatter' formatter.
  */
 #[FieldFormatter(
   id: "onlyoffice_form_formatter",
-  label: new \Drupal\Core\StringTranslation\TranslatableMarkup("ONLYOFFICE form"),
+  label: new TranslatableMarkup("ONLYOFFICE form"),
   field_types: [
     "onlyoffice_form",
   ]
@@ -479,13 +479,7 @@ class OnlyofficeFormFormatter extends FormatterBase {
       }
     }
 
-    $linkParameters = [
-      $media->uuid(),
-    ];
-
-    $key = OnlyofficeUrlHelper::signLinkParameters($linkParameters);
-
-    $callbackurl = Url::fromRoute('onlyoffice_form.callback', ['key' => $key])->setAbsolute()->toString();
+    $callbackurl = OnlyofficeUrlHelper::getFormCallbackUrl($media);
 
     return OnlyofficeDocumentHelper::createEditorConfig(
       'embedded',

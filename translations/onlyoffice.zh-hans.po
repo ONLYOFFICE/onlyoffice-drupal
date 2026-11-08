@@ -33,11 +33,41 @@ msgstr "管理ONLYOFFICE连接器设置。"
 msgid "ONLYOFFICE Connector settings"
 msgstr "ONLYOFFICE连接器的设置"
 
-msgid "Document Editing Service address"
-msgstr "文件编辑服务地址"
+msgid "Welcome to ONLYOFFICE Docs!"
+msgstr "欢迎使用 ONLYOFFICE Docs！"
 
-msgid "Secret key (leave blank to disable)"
-msgstr "秘钥(留空为关闭)"
+msgid "Add office files to your Drupal website to enable document previews directly on public pages. Collaborate and edit office files with other Drupal users."
+msgstr "将办公文件添加到您的 Drupal 网站，即可直接在公共页面上预览文档。与其他 Drupal 用户协作编辑办公文件。"
+
+msgid "Learn more"
+msgstr "了解更多"
+
+msgid "Suggest a feature"
+msgstr "建议功能"
+
+msgid "ONLYOFFICE Docs Cloud"
+msgstr "ONLYOFFICE Docs Cloud"
+
+msgid "Easily launch the editors in the cloud without downloading and installation"
+msgstr "无需下载和安装即可轻松启动云端编辑器"
+
+msgid "Get Now"
+msgstr "立即获取"
+
+msgid "Connection settings"
+msgstr "连接设置"
+
+msgid "ONLYOFFICE Docs address"
+msgstr "ONLYOFFICE Docs 地址"
+
+msgid "Here, please specify the address of your ONLYOFFICE Docs server."
+msgstr "请在此处指定您的 ONLYOFFICE Docs 服务器地址。"
+
+msgid "ONLYOFFICE Docs secret key"
+msgstr "ONLYOFFICE Docs 秘钥"
+
+msgid "Set a JWT secret key here and the same one in the ONLYOFFICE Docs config file. Leave blank to disable."
+msgstr "在此处设置 JWT 秘钥，并在 ONLYOFFICE Docs 配置文件中设置相同的秘钥。留空即可禁用。"
 
 msgid "Edit in ONLYOFFICE"
 msgstr "在ONLYOFFICE中编辑"
@@ -71,3 +101,39 @@ msgstr "百分数"
 
 msgid "Pixels"
 msgstr "像素"
+
+msgid "Advanced server settings"
+msgstr "更多设置"
+
+msgid "ONLYOFFICE Docs address for internal requests from the server"
+msgstr "服务器内部请求 ONLYOFFICE Docs 的地址"
+
+msgid "Server address for internal requests from ONLYOFFICE Docs"
+msgstr "ONLYOFFICE Docs 内部请求服务器的地址"
+
+msgid "Authorization header (leave blank to use default header)"
+msgstr "授权标头 (留空以使用默认的标头)"
+
+msgid "The address must not contain a query or a fragment."
+msgstr "地址不能包含查询字符串或片段。"
+
+msgid "The header name may contain only letters, digits and the characters !#$%&'*+-.^_`|~."
+msgstr "标头名称只能包含字母、数字和字符 !#$%&'*+-.^_`|~。"
+
+msgid "ONLYOFFICE Docs connection check succeeded (version @version)."
+msgstr "ONLYOFFICE Docs 连接检查成功 (版本 @version)。"
+
+msgid "ONLYOFFICE Docs connection check failed: @error"
+msgstr "ONLYOFFICE Docs 连接检查失败: @error"
+
+msgid "Error occurred in the document service"
+msgstr "文档服务内部发生异常"
+
+msgid "Not supported version"
+msgstr "不支持的版本"
+
+msgid "Mixed Active Content is not allowed. HTTPS address for ONLYOFFICE Docs is required."
+msgstr "不允许混合活动内容，请使用HTTPS连接ONLYOFFICE Docs。"
+
+msgid "Bad healthcheck status"
+msgstr "健康检查状态异常"

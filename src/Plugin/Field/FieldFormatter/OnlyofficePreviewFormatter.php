@@ -24,11 +24,13 @@ namespace Drupal\onlyoffice\Plugin\Field\FieldFormatter;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Field\Attribute\FieldFormatter;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\PageCache\ResponsePolicy\KillSwitch;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\file\Entity\File;
 use Drupal\onlyoffice\OnlyofficeDocumentHelper;
 use Drupal\onlyoffice\OnlyofficeUrlHelper;
@@ -36,16 +38,15 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Plugin implementation of the 'onlyoffice_preview' formatter.
- *
- * @FieldFormatter(
- *   id = "onlyoffice_preview",
- *   label = @Translation("ONLYOFFICE Preview"),
- *   description = @Translation("Displaying files using the ONLYOFFICE editor."),
- *   field_types = {
- *     "file"
- *   }
- * )
  */
+#[FieldFormatter(
+  id: "onlyoffice_preview",
+  label: new TranslatableMarkup("ONLYOFFICE Preview"),
+  description: new TranslatableMarkup("Displaying files using the ONLYOFFICE editor."),
+  field_types: [
+    "file",
+  ]
+)]
 class OnlyofficePreviewFormatter extends OnlyofficeBaseFormatter {
 
   /**

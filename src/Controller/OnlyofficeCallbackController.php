@@ -26,13 +26,17 @@ use Drupal\Component\Uuid\Uuid;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\File\Exception\InvalidStreamWrapperException;
+use Drupal\Core\File\FileExists;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
 use Drupal\file\Entity\File;
 use Drupal\file\FileInterface;
 use Drupal\media\Entity\Media;
 use Drupal\onlyoffice\OnlyofficeAppConfig;
+use Drupal\onlyoffice\OnlyofficeCallbackStatus;
+use Drupal\onlyoffice\OnlyofficeCallbackTrait;
 use Drupal\onlyoffice\OnlyofficeDocumentHelper;
+use Drupal\onlyoffice\OnlyofficeDocumentService;
 use Drupal\onlyoffice\OnlyofficeUrlHelper;
 use Drupal\user\Entity\User;
 use Drupal\user\UserStorageInterface;
@@ -47,18 +51,7 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class OnlyofficeCallbackController extends ControllerBase {
 
-  /**
-   * Defines the status of the document from document editing service.
-   */
-  const CALLBACK_STATUS = [
-    0 => 'NotFound',
-    1 => 'Editing',
-    2 => 'MustSave',
-    3 => 'Corrupted',
-    4 => 'Closed',
-    6 => 'MustForceSave',
-    7 => 'CorruptedForceSave',
-  ];
+  use OnlyofficeCallbackTrait;
 
   /**
    * The user storage.
@@ -96,6 +89,13 @@ class OnlyofficeCallbackController extends ControllerBase {
   protected $time;
 
   /**
+   * The document service.
+   *
+   * @var \Drupal\onlyoffice\OnlyofficeDocumentService
+   */
+  protected $documentService;
+
+  /**
    * Constructs a OnlyofficeCallbackController object.
    *
    * @param \Drupal\user\Entity\UserStorageInterface $user_storage
@@ -108,6 +108,8 @@ class OnlyofficeCallbackController extends ControllerBase {
    *   The stream wrapper manager.
    * @param \Drupal\Component\Datetime\TimeInterface $time
    *   The time service.
+   * @param \Drupal\onlyoffice\OnlyofficeDocumentService $document_service
+   *   The document service.
    */
   public function __construct(
     UserStorageInterface $user_storage,
@@ -115,12 +117,14 @@ class OnlyofficeCallbackController extends ControllerBase {
     FileSystemInterface $file_system,
     StreamWrapperManagerInterface $streamWrapperManager,
     TimeInterface $time,
+    OnlyofficeDocumentService $document_service,
   ) {
     $this->userStorage = $user_storage;
     $this->entityRepository = $entity_repository;
     $this->fileSystem = $file_system;
     $this->streamWrapperManager = $streamWrapperManager;
     $this->time = $time;
+    $this->documentService = $document_service;
   }
 
   /**
@@ -132,7 +136,8 @@ class OnlyofficeCallbackController extends ControllerBase {
           $container->get('entity.repository'),
           $container->get('file_system'),
           $container->get('stream_wrapper_manager'),
-          $container->get('datetime.time')
+          $container->get('datetime.time'),
+          $container->get('onlyoffice.document_service')
       );
   }
 
@@ -231,9 +236,9 @@ class OnlyofficeCallbackController extends ControllerBase {
       'link' => OnlyofficeUrlHelper::getEditorLink($media)->toString(),
     ];
 
-    $userId = isset($body->actions) ? $body->actions[0]->userid : NULL;
+    $userId = $body->actions[0]->userid ?? NULL;
 
-    $account = $this->userStorage->load($userId);
+    $account = $userId !== NULL ? $this->userStorage->load($userId) : NULL;
 
     if ($account) {
       $this->currentUser()->setAccount($account);
@@ -242,33 +247,20 @@ class OnlyofficeCallbackController extends ControllerBase {
       $this->currentUser()->setAccount(User::getAnonymousUser());
     }
 
-    $status = OnlyofficeCallbackController::CALLBACK_STATUS[$body->status];
+    return match (OnlyofficeCallbackStatus::fromCallback($body->status ?? NULL)) {
+      OnlyofficeCallbackStatus::Editing => $this->processEditing($body, $context),
+      OnlyofficeCallbackStatus::MustSave,
+      OnlyofficeCallbackStatus::Corrupted => $this->proccessSave($body, $media, $context),
+      OnlyofficeCallbackStatus::Closed => $this->processClosed($context),
+      default => new JsonResponse(['error' => 0], 200),
+    };
+  }
 
-    switch ($status) {
-      case "Editing":
-        switch ($body->actions[0]->type) {
-          case 0:
-            $this->getLogger('onlyoffice')->notice('Disconnected from the media @type %label co-editing.', $context);
-            break;
-
-          case 1:
-            $this->getLogger('onlyoffice')->notice('Connected to the media @type %label co-editing.', $context);
-            break;
-        }
-        break;
-
-      case "MustSave":
-      case "Corrupted":
-        return $this->proccessSave($body, $media, $context);
-
-      case "Closed":
-        $this->getLogger('onlyoffice')->notice('Media @type %label was closed with no changes.', $context);
-        break;
-
-      case "MustForceSave":
-      case "CorruptedForceSave":
-        break;
-    }
+  /**
+   * Logs that the editor was closed without changes.
+   */
+  private function processClosed(array $context): JsonResponse {
+    $this->getLogger('onlyoffice')->notice('Media @type %label was closed with no changes.', $context);
 
     return new JsonResponse(['error' => 0], 200);
   }
@@ -305,7 +297,14 @@ class OnlyofficeCallbackController extends ControllerBase {
     $separator = substr($directory, -1) == '/' ? '' : '/';
     $newDestination = $directory . $separator . $file->getFilename();
 
-    if ($new_data = file_get_contents($download_url)) {
+    try {
+      $new_data = $this->documentService->download($download_url);
+    }
+    catch (\RuntimeException $e) {
+      $new_data = NULL;
+    }
+
+    if ($new_data) {
       $newFile = $this->writeData($new_data, $newDestination);
 
       $media->set(OnlyofficeDocumentHelper::getSourceFieldName($media), $newFile);
@@ -330,7 +329,7 @@ class OnlyofficeCallbackController extends ControllerBase {
   /**
    * Writing data to file.
    */
-  private function writeData(string $data, string $destination, int $replace = FileSystemInterface::EXISTS_RENAME): FileInterface {
+  private function writeData(string $data, string $destination, FileExists $replace = FileExists::Rename): FileInterface {
     if (!$this->streamWrapperManager->isValidUri($destination)) {
       throw new InvalidStreamWrapperException(sprintf('Invalid stream wrapper: %destination', ['%destination' => $destination]));
     }
@@ -339,8 +338,8 @@ class OnlyofficeCallbackController extends ControllerBase {
     $file = File::create(['uri' => $uri]);
     $file->setOwnerId($this->currentUser()->getAccount()->id());
 
-    if ($replace === FileSystemInterface::EXISTS_RENAME && is_file($destination)) {
-      $file->setFilename($this->fileSystem->basename($destination));
+    if ($replace === FileExists::Rename && is_file($destination)) {
+      $file->setFilename(basename($destination));
     }
 
     $file->setPermanent();

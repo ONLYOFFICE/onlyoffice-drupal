@@ -5,7 +5,16 @@ onlyoffice.settings:
   mapping:
     doc_server_url:
       type: string
-      label: 'Document Editing Service address'
+      label: 'ONLYOFFICE Docs address'
     doc_server_jwt:
       type: string
-      label: 'Secret key (leave blank to disable)'
+      label: 'ONLYOFFICE Docs secret key'
+    doc_server_jwt_header:
+      type: string
+      label: 'Authorization header (leave blank to use default header)'
+    doc_server_internal_url:
+      type: string
+      label: 'ONLYOFFICE Docs address for internal requests from the server'
+    storage_url:
+      type: string
+      label: 'Server address for internal requests from ONLYOFFICE Docs'

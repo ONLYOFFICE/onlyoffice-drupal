@@ -54,10 +54,10 @@
 
 .onlyoffice-form-submissions td.form a {
   display: inline-block;
-  max-width: 100%;
   overflow: hidden;
-  text-overflow: ellipsis;
+  max-width: 100%;
   white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 /**

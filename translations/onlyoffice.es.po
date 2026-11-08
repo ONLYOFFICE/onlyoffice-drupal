@@ -33,11 +33,41 @@ msgstr "Gestione los ajustes del conector de ONLYOFFICE."
 msgid "ONLYOFFICE Connector settings"
 msgstr "Ajustes del conector de ONLYOFFICE"
 
-msgid "Document Editing Service address"
-msgstr "Dirección de servicio de edición de documentos"
+msgid "Welcome to ONLYOFFICE Docs!"
+msgstr "¡Bienvenido(a) a ONLYOFFICE Docs!"
 
-msgid "Secret key (leave blank to disable)"
-msgstr "Clave secreta (deje en blanco o desactive)"
+msgid "Add office files to your Drupal website to enable document previews directly on public pages. Collaborate and edit office files with other Drupal users."
+msgstr "Añada archivos de Office a su sitio web de Drupal para habilitar vistas previas de documentos directamente en páginas públicas. Colabore y edite archivos de Office con otros usuarios de Drupal."
+
+msgid "Learn more"
+msgstr "Más información"
+
+msgid "Suggest a feature"
+msgstr "Sugerir una función"
+
+msgid "ONLYOFFICE Docs Cloud"
+msgstr "ONLYOFFICE Docs Cloud"
+
+msgid "Easily launch the editors in the cloud without downloading and installation"
+msgstr "Inicie fácilmente los editores en la nube sin tener que descargarlos ni instalarlos"
+
+msgid "Get Now"
+msgstr "Obtener ahora"
+
+msgid "Connection settings"
+msgstr "Configuración de conexión"
+
+msgid "ONLYOFFICE Docs address"
+msgstr "Dirección de ONLYOFFICE Docs"
+
+msgid "Here, please specify the address of your ONLYOFFICE Docs server."
+msgstr "Aquí, especifique la dirección de su servidor de ONLYOFFICE Docs."
+
+msgid "ONLYOFFICE Docs secret key"
+msgstr "Clave secreta de ONLYOFFICE Docs"
+
+msgid "Set a JWT secret key here and the same one in the ONLYOFFICE Docs config file. Leave blank to disable."
+msgstr "Establezca aquí una clave secreta JWT y la misma en el archivo de configuración de ONLYOFFICE Docs. Déjela en blanco para desactivarla."
 
 msgid "Edit in ONLYOFFICE"
 msgstr "Editar en ONLYOFFICE"
@@ -71,3 +101,39 @@ msgstr "Porcentajes"
 
 msgid "Pixels"
 msgstr "Píxeles"
+
+msgid "Advanced server settings"
+msgstr "Ajustes de servidor avanzados"
+
+msgid "ONLYOFFICE Docs address for internal requests from the server"
+msgstr "Dirección de ONLYOFFICE Docs para solicitudes internas del servidor"
+
+msgid "Server address for internal requests from ONLYOFFICE Docs"
+msgstr "Dirección de servidor para solicitudes internas del ONLYOFFICE Docs"
+
+msgid "Authorization header (leave blank to use default header)"
+msgstr "Encabezado de autenticación (dejar en blanco para utilizar el encabezado predeterminado)"
+
+msgid "The address must not contain a query or a fragment."
+msgstr "La dirección no debe contener una consulta ni un fragmento."
+
+msgid "The header name may contain only letters, digits and the characters !#$%&'*+-.^_`|~."
+msgstr "El nombre del encabezado solo puede contener letras, dígitos y los caracteres !#$%&'*+-.^_`|~."
+
+msgid "ONLYOFFICE Docs connection check succeeded (version @version)."
+msgstr "La comprobación de conexión con ONLYOFFICE Docs se ha realizado correctamente (versión @version)."
+
+msgid "ONLYOFFICE Docs connection check failed: @error"
+msgstr "La comprobación de conexión con ONLYOFFICE Docs ha fallado: @error"
+
+msgid "Error occurred in the document service"
+msgstr "Se ha producido un error en el servicio de documentos"
+
+msgid "Not supported version"
+msgstr "Versión no compatible"
+
+msgid "Mixed Active Content is not allowed. HTTPS address for ONLYOFFICE Docs is required."
+msgstr "Contenido Mixto Activo no está permitido. Se requiere la dirección HTTPS para ONLYOFFICE Docs."
+
+msgid "Bad healthcheck status"
+msgstr "Estado de verificación de estado incorrecto"

@@ -10,7 +10,7 @@ Contents of this file
  * Usage
  * Installing ONLYOFFICE Docs
  * Known issues
- 
+
 ## Introduction
 
 The ONLYOFFICE module allows users to view and edit files stored in the [Drupal](https://www.drupal.org) Media module using [ONLYOFFICE Docs](https://www.onlyoffice.com/docs).
@@ -19,15 +19,15 @@ The module allows to:
 
 * Edit text documents, spreadsheets, and presentations.
 * Preview files on public pages.
-* Collaborate on documents using two co-editing modes (real-time and 
+* Collaborate on documents using two co-editing modes (real-time and
 paragraph-locking).
 * Create and fill out PDF forms.
 
 **Supported formats:**
 
 * **For editing:** DOCX, XLSX, PPTX, PDF forms.
-* **For viewing only:** DJVU, DOC, DOCM, DOT, DOTM, DOTX, EPUB, FB2, FODT, HTML, 
-MHT, ODT, OTT, OXPS, PDF, RTF, TXT, XPS, XML, CSV, FODS, ODS, OTS, XLS, 
+* **For viewing only:** DJVU, DOC, DOCM, DOT, DOTM, DOTX, EPUB, FB2, FODT, HTML,
+MHT, ODT, OTT, OXPS, PDF, RTF, TXT, XPS, XML, CSV, FODS, ODS, OTS, XLS,
 XLSM, XLT, XLTM, XLTX, FODP, ODP, OTP, POT, POTM, POTX, PPS, PPSM, PPSX,
 PPT, PPTM.
 
@@ -51,16 +51,16 @@ composer require firebase/php-jwt:^6.0
 
 First way: Add a module using [Drupal's User Interface (easy)](https://www.drupal.org/docs/extending-drupal/installing-modules#s-add-a-module-using-drupals-user-interface-easy).
 
-1. On the Admin toolbar project page on drupal.org 
-(https://www.drupal.org/project), scroll to the Downloads section 
+1. On the Admin toolbar project page on drupal.org
+(https://www.drupal.org/project), scroll to the Downloads section
 at the bottom of the page.
-2. Copy the address of the tar.gz link. Depending on your device and 
+2. Copy the address of the tar.gz link. Depending on your device and
 browser, you might do this by right clicking and selecting Copy link address.
 3. In the Manage administrative menu, navigate to Extend (admin/modules).
 The Extend page appears.
 4. Click Install new module. The Install new module page appears.
 5. In the field Install from a URL, paste the copied download link.
-6. Click Install to upload and unpack the new module on the server. 
+6. Click Install to upload and unpack the new module on the server.
 The files are being downloaded to the modules directory.
 
 Second way: Add a module with [Composer](https://www.drupal.org/docs/extending-drupal/installing-modules#s-add-a-module-with-composer).
@@ -74,7 +74,7 @@ composer require onlyoffice/onlyoffice-drupal
 **Step 2: Enable the module**
 
 First way: Using the Drupal User Interface (easy).
-1. Navigate to the Extend page (admin/modules) via the Manage 
+1. Navigate to the Extend page (admin/modules) via the Manage
 administrative menu.
 2. Locate the ONLYOFFICE Connector module and check the box.
 3. Click Install to enable.
@@ -97,21 +97,63 @@ Enter the address to connect ONLYOFFICE Document Server:
 https://<documentserver>/
 ```
 
-Where **documentserver** is the name of the server with the ONLYOFFICE 
+Where **documentserver** is the name of the server with the ONLYOFFICE
 Document Server installed.
 The address must be accessible for the user browser and from the Drupal server.
-The Drupal server address must also be accessible from ONLYOFFICE 
+The Drupal server address must also be accessible from ONLYOFFICE
 Document Server for correct work.
 
-Configuration settings include JWT, enabled by default to protect the editors from unauthorized access. If setting a custom **Secret key**, ensure it matches the one in the ONLYOFFICE Docs [config file](https://api.onlyoffice.com/docs/docs-api/additional-api/signature/) for proper validation.
+Sometimes your network configuration might not allow the requests between
+Drupal and ONLYOFFICE Document Server using the public addresses.
+The *Advanced server settings* allow you to set the ONLYOFFICE Document Server
+address for internal requests from the Drupal server and the returning Drupal
+address for internal requests from ONLYOFFICE Document Server.
+Enter them in the **ONLYOFFICE Docs address for internal requests from the server**
+and **Server address for internal requests from ONLYOFFICE Docs** fields.
+
+Configuration settings include JWT, enabled by default to protect the editors from unauthorized access. If setting a custom **ONLYOFFICE Docs secret key**, ensure it matches the one in the ONLYOFFICE Docs [config file](https://api.onlyoffice.com/docs/docs-api/additional-api/signature/) for proper validation.
+
+The **Authorization header** in the *Advanced server settings* sets the header
+used to pass the token between Drupal and ONLYOFFICE Docs. Leave it blank to use
+the default `Authorization` header. If you change it, set the same header in
+the ONLYOFFICE Docs config file.
+
+### settings.php
+
+The settings can also be defined in the `settings.php` file of the site:
+
+```php
+$config['onlyoffice.settings']['{setting_key}'] = '{setting_value}';
+```
+
+The values defined there take precedence over the values saved on the settings
+page and are not stored in the database, which is useful for the secret key.
+The settings page keeps showing the saved values.
+
+| Setting key               | Setting                                                         |
+|---------------------------|-----------------------------------------------------------------|
+| `doc_server_url`          | ONLYOFFICE Docs address                                         |
+| `doc_server_jwt`          | ONLYOFFICE Docs secret key                                      |
+| `doc_server_jwt_header`   | Authorization header                                            |
+| `doc_server_internal_url` | ONLYOFFICE Docs address for internal requests from the server   |
+| `storage_url`             | Server address for internal requests from ONLYOFFICE Docs       |
+
+## Checking the connection
+
+When the settings are saved, the module checks the connection to ONLYOFFICE Docs:
+it requests the health status and the version of ONLYOFFICE Docs and converts a test
+document, which checks the addresses in both directions and the secret key.
+
+You will see a message either with the ONLYOFFICE Docs version or with the cause
+of the error. The settings are saved even if the check fails.
 
 ## Usage
 
 ### Edit files already uploaded to Drupal
 
 All office files added to Media can be opened for editing. In the last
-table column, call the drop-down list and select the Edit in ONLYOFFICE action. 
-The editor opens in the same tab. Users with Administrator rights are able 
+table column, call the drop-down list and select the Edit in ONLYOFFICE action.
+The editor opens in the same tab. Users with Administrator rights are able
 to co-edit files using ONLYOFFICE Docs. All changes are saved in the same file.
 
 ### Create new posts
@@ -131,8 +173,8 @@ the file formats that will be shown in the editors (docx,xlsx,pptx).
 
    For the Document field, specify the *ONLYOFFICE Preview* format. By clicking on the gear symbol, you can specify the dimensions of the embedded editor window.
 
-When you are done with the pre-settings, you can create posts on the Content 
-tab. Click on the *Add Content* button and select the created content. 
+When you are done with the pre-settings, you can create posts on the Content
+tab. Click on the *Add Content* button and select the created content.
 
 Specify title and select a file (if the content contains File fields).
 
@@ -177,8 +219,8 @@ In the *Manage –> Content –> ONLYOFFICE form –> Submitted forms* section, 
 
 ## Installing ONLYOFFICE Docs
 
-You will need an instance of ONLYOFFICE Docs (Document Server) that 
-is resolvable and connectable both from Drupal and any end clients. 
+You will need an instance of ONLYOFFICE Docs (Document Server) that
+is resolvable and connectable both from Drupal and any end clients.
 ONLYOFFICE Document Server must also be able to POST to Drupal directly.
 
 You can install free Community version of ONLYOFFICE Docs or scalable
@@ -190,7 +232,7 @@ To install Enterprise Edition, follow the instructions [here](https://helpcenter
 
 Alternatively, you can opt for **ONLYOFFICE Docs Cloud** which doesn't require downloading and installation. To get ONLYOFFICE Docs Cloud, get started [here](https://www.onlyoffice.com/docs-registration).
 
-**ONLYOFFICE Docs** packaged as Document Server: 
+**ONLYOFFICE Docs** packaged as Document Server:
 
 * Community Edition 🆓 (`onlyoffice-documentserver` package)
 * Enterprise Edition 🏢 (`onlyoffice-documentserver-ee` package)
@@ -286,7 +328,7 @@ Drupal is designed in such a way that if you configure HTTPS via proxy, Drupal
 will still replace links with *http*. Therefore, links to `callback` and
 `fileUrl` are sent to the config in the http format. As a result, ONLYOFFICE
 Document Server receives the *308 Permanent Redirect* response to the
-callback request. 
+callback request.
 
 To fix it, adjust the Drupal settings in your `settings.php` file:
 
