@@ -6,6 +6,9 @@ onlyoffice.settings:
     doc_server_url:
       type: string
       label: 'ONLYOFFICE Docs address'
+    verify_peer_off:
+      type: boolean
+      label: 'Disable certificate verification (insecure)'
     doc_server_jwt:
       type: string
       label: 'ONLYOFFICE Docs secret key'

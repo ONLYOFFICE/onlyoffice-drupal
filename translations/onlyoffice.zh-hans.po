@@ -203,3 +203,6 @@ msgstr "浅色"
 
 msgid "Dark"
 msgstr "深色"
+
+msgid "Disable certificate verification (insecure)"
+msgstr "关闭证书校验(不安全)"

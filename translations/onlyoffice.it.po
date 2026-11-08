@@ -203,3 +203,6 @@ msgstr "Chiaro"
 
 msgid "Dark"
 msgstr "Scuro"
+
+msgid "Disable certificate verification (insecure)"
+msgstr "Disattiva la verifica del certificato (non sicuro)"

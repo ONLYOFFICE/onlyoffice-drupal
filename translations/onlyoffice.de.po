@@ -203,3 +203,6 @@ msgstr "Hell"
 
 msgid "Dark"
 msgstr "Dunkel"
+
+msgid "Disable certificate verification (insecure)"
+msgstr "Zertifikatsüberprüfung deaktivieren (unsicher)"

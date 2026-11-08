@@ -1,4 +1,5 @@
 doc_server_url: ''
+verify_peer_off: false
 doc_server_jwt: ''
 doc_server_jwt_header: ''
 doc_server_internal_url: ''

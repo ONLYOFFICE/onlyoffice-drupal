@@ -151,6 +151,11 @@ class SettingsForm extends ConfigFormBase {
       '#placeholder' => 'https://',
       '#required' => TRUE,
     ];
+    $form['verify_peer_off'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Disable certificate verification (insecure)'),
+      '#default_value' => $this->config('onlyoffice.settings')->get('verify_peer_off'),
+    ];
     $form['doc_server_jwt'] = [
       '#type' => 'password',
       '#title' => $this->t('ONLYOFFICE Docs secret key'),
@@ -308,6 +313,7 @@ class SettingsForm extends ConfigFormBase {
 
     $this->config('onlyoffice.settings')
       ->set('doc_server_url', $docsUrl)
+      ->set('verify_peer_off', (bool) $form_state->getValue('verify_peer_off'))
       ->set('doc_server_jwt', $form_state->getValue('doc_server_jwt'))
       ->set('doc_server_jwt_header', $form_state->getValue('doc_server_jwt_header'))
       ->set('doc_server_internal_url', $docsInternalUrl)

@@ -103,6 +103,10 @@ The address must be accessible for the user browser and from the Drupal server.
 The Drupal server address must also be accessible from ONLYOFFICE
 Document Server for correct work.
 
+If ONLYOFFICE Docs uses a self-signed certificate, select
+**Disable certificate verification (insecure)** so that Drupal accepts it in
+the requests to ONLYOFFICE Docs. Use it only for testing.
+
 Sometimes your network configuration might not allow the requests between
 Drupal and ONLYOFFICE Document Server using the public addresses.
 The *Advanced server settings* allow you to set the ONLYOFFICE Document Server
@@ -147,6 +151,7 @@ The settings page keeps showing the saved values.
 | Setting key               | Setting                                                       | Values                                          |
 |---------------------------|---------------------------------------------------------------|-------------------------------------------------|
 | `doc_server_url`          | ONLYOFFICE Docs address                                       | address                                         |
+| `verify_peer_off`         | Disable certificate verification (insecure)                   | `TRUE`, `FALSE`                                 |
 | `doc_server_jwt`          | ONLYOFFICE Docs secret key                                    | text                                            |
 | `doc_server_jwt_header`   | Authorization header                                          | header name                                     |
 | `doc_server_internal_url` | ONLYOFFICE Docs address for internal requests from the server | address                                         |

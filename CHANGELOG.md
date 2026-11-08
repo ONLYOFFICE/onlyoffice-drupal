@@ -14,6 +14,7 @@
 - saving a copy of the document from the editor
 - plugins, macros and document protection settings
 - editor customization settings: chat, compact header, feedback, help and theme
+- setting to disable certificate verification of ONLYOFFICE Docs
 
 ## 2.0.0
 ## Added

@@ -203,3 +203,6 @@ msgstr "ライト"
 
 msgid "Dark"
 msgstr "ダーク"
+
+msgid "Disable certificate verification (insecure)"
+msgstr "証明書の検証を無効にする（安全ではありません）"
