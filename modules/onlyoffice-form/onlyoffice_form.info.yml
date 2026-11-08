@@ -2,7 +2,7 @@ name: ONLYOFFICE form
 type: module
 description: 'Allows users to create and edit ONLYOFFICE forms directly in Drupal.'
 package: ONLYOFFICE
-core_version_requirement: "^11"
+core_version_requirement: ^11 || ^12
 configure: entity.onlyoffice_form.collection
 dependencies:
   - 'onlyoffice:onlyoffice'
