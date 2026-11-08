@@ -1,0 +1,8 @@
+doc_server_url: ''
+doc_server_jwt: ''
+doc_server_jwt_header: ''
+doc_server_internal_url: ''
+storage_url: ''
+plugins: true
+macros: true
+protection: owner

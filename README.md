@@ -118,6 +118,13 @@ used to pass the token between Drupal and ONLYOFFICE Docs. Leave it blank to use
 the default `Authorization` header. If you change it, set the same header in
 the ONLYOFFICE Docs config file.
 
+The *Security* settings control what the editor allows:
+
+* **Enable plugins** shows the plugins in the editor.
+* **Run document macros** runs the macros saved in documents.
+* **Enable document protection for** sets who can protect documents in the
+  editor: all users who can edit the document or only its owner.
+
 ### settings.php
 
 The settings can also be defined in the `settings.php` file of the site:
@@ -126,17 +133,22 @@ The settings can also be defined in the `settings.php` file of the site:
 $config['onlyoffice.settings']['{setting_key}'] = '{setting_value}';
 ```
 
+Set the on/off settings to `TRUE` or `FALSE` without quotes.
+
 The values defined there take precedence over the values saved on the settings
 page and are not stored in the database, which is useful for the secret key.
 The settings page keeps showing the saved values.
 
-| Setting key               | Setting                                                         |
-|---------------------------|-----------------------------------------------------------------|
-| `doc_server_url`          | ONLYOFFICE Docs address                                         |
-| `doc_server_jwt`          | ONLYOFFICE Docs secret key                                      |
-| `doc_server_jwt_header`   | Authorization header                                            |
-| `doc_server_internal_url` | ONLYOFFICE Docs address for internal requests from the server   |
-| `storage_url`             | Server address for internal requests from ONLYOFFICE Docs       |
+| Setting key               | Setting                                                       | Values                                          |
+|---------------------------|---------------------------------------------------------------|-------------------------------------------------|
+| `doc_server_url`          | ONLYOFFICE Docs address                                       | address                                         |
+| `doc_server_jwt`          | ONLYOFFICE Docs secret key                                    | text                                            |
+| `doc_server_jwt_header`   | Authorization header                                          | header name                                     |
+| `doc_server_internal_url` | ONLYOFFICE Docs address for internal requests from the server | address                                         |
+| `storage_url`             | Server address for internal requests from ONLYOFFICE Docs     | address                                         |
+| `plugins`                 | Enable plugins                                                | `TRUE`, `FALSE`                                 |
+| `macros`                  | Run document macros                                           | `TRUE`, `FALSE`                                 |
+| `protection`              | Enable document protection for                                | `all`, `owner`                                  |
 
 ## Checking the connection
 

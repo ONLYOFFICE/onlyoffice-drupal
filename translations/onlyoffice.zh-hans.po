@@ -158,3 +158,21 @@ msgstr "无法保存副本。"
 
 msgid "The copy was saved as @name."
 msgstr "副本已另存为 @name。"
+
+msgid "Security"
+msgstr "安全"
+
+msgid "Enable plugins"
+msgstr "启用插件"
+
+msgid "Run document macros"
+msgstr "运行文档宏"
+
+msgid "Enable document protection for"
+msgstr "为以下用户启用文档保护"
+
+msgid "All users"
+msgstr "所有用户"
+
+msgid "Owner only"
+msgstr "仅限所有者"

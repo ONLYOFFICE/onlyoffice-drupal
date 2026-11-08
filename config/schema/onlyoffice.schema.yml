@@ -18,3 +18,12 @@ onlyoffice.settings:
     storage_url:
       type: string
       label: 'Server address for internal requests from ONLYOFFICE Docs'
+    plugins:
+      type: boolean
+      label: 'Enable plugins'
+    macros:
+      type: boolean
+      label: 'Run document macros'
+    protection:
+      type: string
+      label: 'Enable document protection for'

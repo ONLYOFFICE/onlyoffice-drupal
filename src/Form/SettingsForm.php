@@ -189,6 +189,30 @@ class SettingsForm extends ConfigFormBase {
       '#title' => $this->t('Server address for internal requests from ONLYOFFICE Docs'),
       '#default_value' => $this->config('onlyoffice.settings')->get('storage_url'),
     ];
+    $form['security_title'] = [
+      '#type' => 'html_tag',
+      '#tag' => 'h2',
+      '#value' => $this->t('Security'),
+    ];
+    $form['plugins'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Enable plugins'),
+      '#default_value' => $this->config('onlyoffice.settings')->get('plugins'),
+    ];
+    $form['macros'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Run document macros'),
+      '#default_value' => $this->config('onlyoffice.settings')->get('macros'),
+    ];
+    $form['protection'] = [
+      '#type' => 'radios',
+      '#title' => $this->t('Enable document protection for'),
+      '#options' => [
+        'all' => $this->t('All users'),
+        'owner' => $this->t('Owner only'),
+      ],
+      '#default_value' => $this->config('onlyoffice.settings')->get('protection'),
+    ];
     return parent::buildForm($form, $form_state);
   }
 
@@ -253,6 +277,9 @@ class SettingsForm extends ConfigFormBase {
       ->set('doc_server_jwt_header', $form_state->getValue('doc_server_jwt_header'))
       ->set('doc_server_internal_url', $docsInternalUrl)
       ->set('storage_url', $storageUrl)
+      ->set('plugins', (bool) $form_state->getValue('plugins'))
+      ->set('macros', (bool) $form_state->getValue('macros'))
+      ->set('protection', $form_state->getValue('protection'))
       ->save();
     parent::submitForm($form, $form_state);
 

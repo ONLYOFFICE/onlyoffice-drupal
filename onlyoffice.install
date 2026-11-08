@@ -44,6 +44,26 @@ function onlyoffice_uninstall() {
 }
 
 /**
+ * Set the default plugins, macros and document protection settings.
+ */
+function onlyoffice_update_10001() {
+  $config = \Drupal::configFactory()->getEditable('onlyoffice.settings');
+  $defaults = [
+    'plugins' => TRUE,
+    'macros' => TRUE,
+    'protection' => 'owner',
+  ];
+
+  foreach ($defaults as $key => $value) {
+    if ($config->get($key) === NULL) {
+      $config->set($key, $value);
+    }
+  }
+
+  $config->save(TRUE);
+}
+
+/**
  * Implements hook_requirements().
  *
  * Drupal 11.3 and later skip this function and use

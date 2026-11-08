@@ -158,3 +158,21 @@ msgstr "コピーを保存できませんでした。"
 
 msgid "The copy was saved as @name."
 msgstr "コピーは @name として保存されました。"
+
+msgid "Security"
+msgstr "セキュリティ"
+
+msgid "Enable plugins"
+msgstr "プラグインを有効にする"
+
+msgid "Run document macros"
+msgstr "ドキュメントマクロを実行する"
+
+msgid "Enable document protection for"
+msgstr "次のユーザーに対して文書の保護機能を有効にする"
+
+msgid "All users"
+msgstr "すべてのユーザー"
+
+msgid "Owner only"
+msgstr "所有者のみ"

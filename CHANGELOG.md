@@ -12,6 +12,7 @@
 - ONLYOFFICE Docs Cloud banner on the settings page
 - expiration time for the download links
 - saving a copy of the document from the editor
+- plugins, macros and document protection settings
 
 ## 2.0.0
 ## Added

@@ -158,3 +158,21 @@ msgstr "Не удалось сохранить копию."
 
 msgid "The copy was saved as @name."
 msgstr "Копия сохранена как @name."
+
+msgid "Security"
+msgstr "Безопасность"
+
+msgid "Enable plugins"
+msgstr "Включить работу с плагинами"
+
+msgid "Run document macros"
+msgstr "Запускать макросы документа"
+
+msgid "Enable document protection for"
+msgstr "Разрешить защиту документа"
+
+msgid "All users"
+msgstr "Всем пользователям"
+
+msgid "Owner only"
+msgstr "Только владельцу"

@@ -158,3 +158,21 @@ msgstr "Impossibile salvare la copia."
 
 msgid "The copy was saved as @name."
 msgstr "La copia è stata salvata come @name."
+
+msgid "Security"
+msgstr "Sicurezza"
+
+msgid "Enable plugins"
+msgstr "Abilitare plugin"
+
+msgid "Run document macros"
+msgstr "Esegui le macro del documento"
+
+msgid "Enable document protection for"
+msgstr "Abilitare la protezione del documento per"
+
+msgid "All users"
+msgstr "Tutti gli utenti"
+
+msgid "Owner only"
+msgstr "Solo proprietario"
