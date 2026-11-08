@@ -189,6 +189,41 @@ class SettingsForm extends ConfigFormBase {
       '#title' => $this->t('Server address for internal requests from ONLYOFFICE Docs'),
       '#default_value' => $this->config('onlyoffice.settings')->get('storage_url'),
     ];
+    $form['customization_title'] = [
+      '#type' => 'html_tag',
+      '#tag' => 'h2',
+      '#value' => $this->t('Editor customization settings'),
+    ];
+    $form['chat'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Display Chat menu button'),
+      '#default_value' => $this->config('onlyoffice.settings')->get('chat'),
+    ];
+    $form['compact_header'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Display the header more compact'),
+      '#default_value' => $this->config('onlyoffice.settings')->get('compact_header'),
+    ];
+    $form['feedback'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Display Feedback & Support menu button'),
+      '#default_value' => $this->config('onlyoffice.settings')->get('feedback'),
+    ];
+    $form['help'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Display Help menu button'),
+      '#default_value' => $this->config('onlyoffice.settings')->get('help'),
+    ];
+    $form['theme'] = [
+      '#type' => 'radios',
+      '#title' => $this->t('Default editor theme'),
+      '#options' => [
+        'theme-system' => $this->t('Same as system'),
+        'default-light' => $this->t('Light'),
+        'default-dark' => $this->t('Dark'),
+      ],
+      '#default_value' => $this->config('onlyoffice.settings')->get('theme'),
+    ];
     $form['security_title'] = [
       '#type' => 'html_tag',
       '#tag' => 'h2',
@@ -277,6 +312,11 @@ class SettingsForm extends ConfigFormBase {
       ->set('doc_server_jwt_header', $form_state->getValue('doc_server_jwt_header'))
       ->set('doc_server_internal_url', $docsInternalUrl)
       ->set('storage_url', $storageUrl)
+      ->set('chat', (bool) $form_state->getValue('chat'))
+      ->set('compact_header', (bool) $form_state->getValue('compact_header'))
+      ->set('feedback', (bool) $form_state->getValue('feedback'))
+      ->set('help', (bool) $form_state->getValue('help'))
+      ->set('theme', $form_state->getValue('theme'))
       ->set('plugins', (bool) $form_state->getValue('plugins'))
       ->set('macros', (bool) $form_state->getValue('macros'))
       ->set('protection', $form_state->getValue('protection'))

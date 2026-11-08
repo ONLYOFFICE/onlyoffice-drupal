@@ -44,11 +44,16 @@ function onlyoffice_uninstall() {
 }
 
 /**
- * Set the default plugins, macros and document protection settings.
+ * Set the default editor and security settings.
  */
 function onlyoffice_update_10001() {
   $config = \Drupal::configFactory()->getEditable('onlyoffice.settings');
   $defaults = [
+    'chat' => TRUE,
+    'compact_header' => FALSE,
+    'feedback' => FALSE,
+    'help' => TRUE,
+    'theme' => 'theme-system',
     'plugins' => TRUE,
     'macros' => TRUE,
     'protection' => 'owner',

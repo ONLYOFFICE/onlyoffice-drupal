@@ -176,3 +176,30 @@ msgstr "Tutti gli utenti"
 
 msgid "Owner only"
 msgstr "Solo proprietario"
+
+msgid "Editor customization settings"
+msgstr "Impostazioni di personalizzazione dell'editor"
+
+msgid "Display Chat menu button"
+msgstr "Mostra il pulsante del menu Chat"
+
+msgid "Display the header more compact"
+msgstr "Mostra l'intestazione più compatta"
+
+msgid "Display Feedback & Support menu button"
+msgstr "Mostra il pulsante del menu Feedback e supporto"
+
+msgid "Display Help menu button"
+msgstr "Mostra il pulsante del menu Guida"
+
+msgid "Default editor theme"
+msgstr "Tema dell'editor predefinito"
+
+msgid "Same as system"
+msgstr "Uguale al sistema"
+
+msgid "Light"
+msgstr "Chiaro"
+
+msgid "Dark"
+msgstr "Scuro"

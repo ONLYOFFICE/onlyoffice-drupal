@@ -118,6 +118,11 @@ used to pass the token between Drupal and ONLYOFFICE Docs. Leave it blank to use
 the default `Authorization` header. If you change it, set the same header in
 the ONLYOFFICE Docs config file.
 
+The *Editor customization settings* change the editor interface: show or hide
+the **Chat**, **Feedback & Support** and **Help** buttons, make the header more
+compact and choose the default editor theme. **Same as system** follows the
+light or dark mode of the user's system.
+
 The *Security* settings control what the editor allows:
 
 * **Enable plugins** shows the plugins in the editor.
@@ -146,6 +151,11 @@ The settings page keeps showing the saved values.
 | `doc_server_jwt_header`   | Authorization header                                          | header name                                     |
 | `doc_server_internal_url` | ONLYOFFICE Docs address for internal requests from the server | address                                         |
 | `storage_url`             | Server address for internal requests from ONLYOFFICE Docs     | address                                         |
+| `chat`                    | Display Chat menu button                                      | `TRUE`, `FALSE`                                 |
+| `compact_header`          | Display the header more compact                               | `TRUE`, `FALSE`                                 |
+| `feedback`                | Display Feedback & Support menu button                        | `TRUE`, `FALSE`                                 |
+| `help`                    | Display Help menu button                                      | `TRUE`, `FALSE`                                 |
+| `theme`                   | Default editor theme                                          | `theme-system`, `default-light`, `default-dark` |
 | `plugins`                 | Enable plugins                                                | `TRUE`, `FALSE`                                 |
 | `macros`                  | Run document macros                                           | `TRUE`, `FALSE`                                 |
 | `protection`              | Enable document protection for                                | `all`, `owner`                                  |

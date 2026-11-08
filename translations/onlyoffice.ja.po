@@ -176,3 +176,30 @@ msgstr "すべてのユーザー"
 
 msgid "Owner only"
 msgstr "所有者のみ"
+
+msgid "Editor customization settings"
+msgstr "エディターカスタム設定"
+
+msgid "Display Chat menu button"
+msgstr "チャットメニューボタンを表示する"
+
+msgid "Display the header more compact"
+msgstr "ヘッダーをよりコンパクトに表示する"
+
+msgid "Display Feedback & Support menu button"
+msgstr "フィードバックとサポートメニューボタンを表示する"
+
+msgid "Display Help menu button"
+msgstr "ヘルプメニューボタンを表示する"
+
+msgid "Default editor theme"
+msgstr "エディターのデフォルトテーマ"
+
+msgid "Same as system"
+msgstr "システム設定と同じ"
+
+msgid "Light"
+msgstr "ライト"
+
+msgid "Dark"
+msgstr "ダーク"

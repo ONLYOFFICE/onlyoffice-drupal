@@ -176,3 +176,30 @@ msgstr "所有用户"
 
 msgid "Owner only"
 msgstr "仅限所有者"
+
+msgid "Editor customization settings"
+msgstr "编辑器自定义设置"
+
+msgid "Display Chat menu button"
+msgstr "显示聊天菜单按钮"
+
+msgid "Display the header more compact"
+msgstr "更紧凑地显示标题栏"
+
+msgid "Display Feedback & Support menu button"
+msgstr "显示反馈&支持菜单按钮"
+
+msgid "Display Help menu button"
+msgstr "显示帮助菜单按钮"
+
+msgid "Default editor theme"
+msgstr "编辑器默认的主题"
+
+msgid "Same as system"
+msgstr "和系统一致"
+
+msgid "Light"
+msgstr "浅色"
+
+msgid "Dark"
+msgstr "深色"

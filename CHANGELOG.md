@@ -13,6 +13,7 @@
 - expiration time for the download links
 - saving a copy of the document from the editor
 - plugins, macros and document protection settings
+- editor customization settings: chat, compact header, feedback, help and theme
 
 ## 2.0.0
 ## Added

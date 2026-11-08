@@ -213,6 +213,26 @@ class OnlyofficeDocumentHelper {
 
     $options = \Drupal::config('onlyoffice.settings');
 
+    if (!$options->get('chat')) {
+      $config['document']['permissions']['chat'] = FALSE;
+    }
+
+    if ($options->get('compact_header')) {
+      $config['editorConfig']['customization']['compactHeader'] = TRUE;
+    }
+
+    if ($options->get('feedback')) {
+      $config['editorConfig']['customization']['feedback'] = TRUE;
+    }
+
+    if (!$options->get('help')) {
+      $config['editorConfig']['customization']['help'] = FALSE;
+    }
+
+    if ($options->get('theme')) {
+      $config['editorConfig']['customization']['uiTheme'] = $options->get('theme');
+    }
+
     if (!$options->get('plugins')) {
       $config['editorConfig']['customization']['plugins'] = FALSE;
     }
