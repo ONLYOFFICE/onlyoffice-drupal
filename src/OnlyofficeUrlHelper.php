@@ -27,11 +27,17 @@ use Drupal\Core\Url;
 use Drupal\file\Entity\File;
 use Drupal\media\Entity\Media;
 use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 
 /**
  * URL generation toolkit.
  */
 class OnlyofficeUrlHelper {
+
+  /**
+   * Lifetime of the links to download documents, in seconds.
+   */
+  private const LINK_LIFETIME = 300;
 
   /**
    * Return URL to Document Editor.
@@ -64,7 +70,7 @@ class OnlyofficeUrlHelper {
       $media->uuid(),
     ];
 
-    $key = static::signLinkParameters($linkParameters);
+    $key = static::createLinkToken($linkParameters);
 
     $url = Url::fromRoute('onlyoffice.callback', ['key' => $key])->setAbsolute()->toString();
 
@@ -79,7 +85,7 @@ class OnlyofficeUrlHelper {
       $media->uuid(),
     ];
 
-    $key = static::signLinkParameters($linkParameters);
+    $key = static::createLinkToken($linkParameters);
 
     $url = Url::fromRoute('onlyoffice_form.callback', ['key' => $key])->setAbsolute()->toString();
 
@@ -95,7 +101,7 @@ class OnlyofficeUrlHelper {
       \Drupal::currentUser()->getAccount()->id(),
     ];
 
-    $key = static::signLinkParameters($linkParameters);
+    $key = static::createLinkToken($linkParameters, self::LINK_LIFETIME);
 
     $url = Url::fromRoute('onlyoffice.download', ['key' => $key])->setAbsolute()->toString();
 
@@ -108,10 +114,9 @@ class OnlyofficeUrlHelper {
   public static function getEmptyFileUrl() {
     $linkParameters = [
       'empty',
-      \Drupal::time()->getRequestTime(),
     ];
 
-    $key = static::signLinkParameters($linkParameters);
+    $key = static::createLinkToken($linkParameters, self::LINK_LIFETIME);
 
     $url = Url::fromRoute('onlyoffice.empty_file', ['key' => $key])->setAbsolute()->toString();
 
@@ -190,34 +195,37 @@ class OnlyofficeUrlHelper {
   }
 
   /**
-   * Sign a query parameters with a given key and algorithm.
+   * Create the link token with the parameters, expiring after the lifetime.
    */
-  public static function signLinkParameters(array $parameters) {
-    $payload = \implode('?', $parameters);
+  public static function createLinkToken(array $parameters, ?int $lifetime = NULL) {
+    $payload = ['params' => $parameters];
 
-    $signature = JWT::urlsafeB64Encode(JWT::sign($payload, Settings::getHashSalt() . \Drupal::service('private_key')->get(), 'HS256'));
+    if ($lifetime !== NULL) {
+      $payload['exp'] = \Drupal::time()->getRequestTime() + $lifetime;
+    }
 
-    return JWT::urlsafeB64Encode($signature . '?' . $payload);
+    return JWT::encode($payload, static::getLinkSecret(), 'HS256');
   }
 
   /**
-   * Key Validation and getting query parameters.
+   * Return the parameters of the link token, or FALSE if it is not valid.
    */
-  public static function verifyLinkKey($key) {
-    $signature = JWT::urlsafeB64Decode($key);
-
-    if ($signature) {
-      $segments = \explode('?', $signature);
-
-      $hash = $segments[0];
-      $parameters = array_slice($segments, 1);
-
-      if (hash_equals(JWT::urlsafeB64Encode(JWT::sign(\implode('?', $parameters), Settings::getHashSalt() . \Drupal::service('private_key')->get(), 'HS256')), $hash)) {
-        return $parameters;
-      }
+  public static function decodeLinkToken($token) {
+    try {
+      $payload = JWT::decode((string) $token, new Key(static::getLinkSecret(), 'HS256'));
+    }
+    catch (\Throwable $e) {
+      return FALSE;
     }
 
-    return FALSE;
+    return \is_array($payload->params ?? NULL) ? $payload->params : FALSE;
+  }
+
+  /**
+   * Return the secret for signing the links.
+   */
+  private static function getLinkSecret() {
+    return Settings::getHashSalt() . \Drupal::service('private_key')->get();
   }
 
 }

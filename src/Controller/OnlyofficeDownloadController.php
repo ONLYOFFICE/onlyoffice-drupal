@@ -21,7 +21,6 @@ namespace Drupal\onlyoffice\Controller;
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Component\Uuid\Uuid;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityRepositoryInterface;
@@ -43,11 +42,6 @@ use Symfony\Component\HttpFoundation\Request;
 class OnlyofficeDownloadController extends ControllerBase {
 
   /**
-   * Lifetime of the link to empty document, in seconds.
-   */
-  private const EMPTY_FILE_LINK_LIFETIME = 300;
-
-  /**
    * The entity repository.
    *
    * @var \Drupal\Core\Entity\EntityRepositoryInterface
@@ -62,30 +56,19 @@ class OnlyofficeDownloadController extends ControllerBase {
   protected $userStorage;
 
   /**
-   * The time service.
-   *
-   * @var \Drupal\Component\Datetime\TimeInterface
-   */
-  protected $time;
-
-  /**
    * Constructs a OnlyofficeCallbackController object.
    *
    * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
    *   The entity repository.
    * @param \Drupal\user\UserStorageInterface $user_storage
    *   The user storage.
-   * @param \Drupal\Component\Datetime\TimeInterface $time
-   *   The time service.
    */
   public function __construct(
     EntityRepositoryInterface $entity_repository,
     UserStorageInterface $user_storage,
-    TimeInterface $time,
   ) {
     $this->entityRepository = $entity_repository;
     $this->userStorage = $user_storage;
-    $this->time = $time;
   }
 
   /**
@@ -94,8 +77,7 @@ class OnlyofficeDownloadController extends ControllerBase {
   public static function create(ContainerInterface $container) {
     return new static(
           $container->get('entity.repository'),
-          $container->get('entity_type.manager')->getStorage('user'),
-          $container->get('datetime.time')
+          $container->get('entity_type.manager')->getStorage('user')
       );
   }
 
@@ -108,9 +90,9 @@ class OnlyofficeDownloadController extends ControllerBase {
       return $tokenError;
     }
 
-    $linkParameters = OnlyofficeUrlHelper::verifyLinkKey($key);
+    $linkParameters = OnlyofficeUrlHelper::decodeLinkToken($key);
 
-    if (!$linkParameters) {
+    if (!$linkParameters || count($linkParameters) !== 2) {
       $this->getLogger('onlyoffice')->error('Invalid link key: @key.', ['@key' => $key]);
       return new JsonResponse(
         ['error' => 1, 'message' => 'Invalid link key: ' . $key . '.'],
@@ -187,21 +169,13 @@ class OnlyofficeDownloadController extends ControllerBase {
       return $tokenError;
     }
 
-    $linkParameters = OnlyofficeUrlHelper::verifyLinkKey($key);
+    $linkParameters = OnlyofficeUrlHelper::decodeLinkToken($key);
 
     if (!$linkParameters || $linkParameters[0] !== 'empty') {
       $this->getLogger('onlyoffice')->error('Invalid link key: @key.', ['@key' => $key]);
       return new JsonResponse(
         ['error' => 1, 'message' => 'Invalid link key: ' . $key . '.'],
         400
-      );
-    }
-
-    if ($this->time->getRequestTime() - (int) ($linkParameters[1] ?? 0) > self::EMPTY_FILE_LINK_LIFETIME) {
-      $this->getLogger('onlyoffice')->error('Expired link key: @key.', ['@key' => $key]);
-      return new JsonResponse(
-        ['error' => 1, 'message' => 'Expired link key: ' . $key . '.'],
-        403
       );
     }
 

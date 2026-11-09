@@ -218,7 +218,7 @@ class OnlyofficeFormCallbackController extends ControllerBase {
       }
     }
 
-    $linkParameters = OnlyofficeUrlHelper::verifyLinkKey($key);
+    $linkParameters = OnlyofficeUrlHelper::decodeLinkToken($key);
 
     if (!$linkParameters) {
       $this->getLogger('onlyoffice')->error('Invalid link key: @key.', ['@key' => $key]);
