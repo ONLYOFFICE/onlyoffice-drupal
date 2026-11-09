@@ -151,6 +151,11 @@ class SettingsForm extends ConfigFormBase {
       '#placeholder' => 'https://',
       '#required' => TRUE,
     ];
+    $form['verify_peer_off'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Disable certificate verification (insecure)'),
+      '#default_value' => $this->config('onlyoffice.settings')->get('verify_peer_off'),
+    ];
     $form['doc_server_jwt'] = [
       '#type' => 'password',
       '#title' => $this->t('ONLYOFFICE Docs secret key'),
@@ -188,6 +193,65 @@ class SettingsForm extends ConfigFormBase {
       '#type' => 'textfield',
       '#title' => $this->t('Server address for internal requests from ONLYOFFICE Docs'),
       '#default_value' => $this->config('onlyoffice.settings')->get('storage_url'),
+    ];
+    $form['customization_title'] = [
+      '#type' => 'html_tag',
+      '#tag' => 'h2',
+      '#value' => $this->t('Editor customization settings'),
+    ];
+    $form['chat'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Display Chat menu button'),
+      '#default_value' => $this->config('onlyoffice.settings')->get('chat'),
+    ];
+    $form['compact_header'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Display the header more compact'),
+      '#default_value' => $this->config('onlyoffice.settings')->get('compact_header'),
+    ];
+    $form['feedback'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Display Feedback & Support menu button'),
+      '#default_value' => $this->config('onlyoffice.settings')->get('feedback'),
+    ];
+    $form['help'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Display Help menu button'),
+      '#default_value' => $this->config('onlyoffice.settings')->get('help'),
+    ];
+    $form['theme'] = [
+      '#type' => 'radios',
+      '#title' => $this->t('Default editor theme'),
+      '#options' => [
+        'theme-system' => $this->t('Same as system'),
+        'default-light' => $this->t('Light'),
+        'default-dark' => $this->t('Dark'),
+      ],
+      '#default_value' => $this->config('onlyoffice.settings')->get('theme'),
+    ];
+    $form['security_title'] = [
+      '#type' => 'html_tag',
+      '#tag' => 'h2',
+      '#value' => $this->t('Security'),
+    ];
+    $form['plugins'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Enable plugins'),
+      '#default_value' => $this->config('onlyoffice.settings')->get('plugins'),
+    ];
+    $form['macros'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Run document macros'),
+      '#default_value' => $this->config('onlyoffice.settings')->get('macros'),
+    ];
+    $form['protection'] = [
+      '#type' => 'radios',
+      '#title' => $this->t('Enable document protection for'),
+      '#options' => [
+        'all' => $this->t('All users'),
+        'owner' => $this->t('Owner only'),
+      ],
+      '#default_value' => $this->config('onlyoffice.settings')->get('protection'),
     ];
     return parent::buildForm($form, $form_state);
   }
@@ -249,10 +313,19 @@ class SettingsForm extends ConfigFormBase {
 
     $this->config('onlyoffice.settings')
       ->set('doc_server_url', $docsUrl)
+      ->set('verify_peer_off', (bool) $form_state->getValue('verify_peer_off'))
       ->set('doc_server_jwt', $form_state->getValue('doc_server_jwt'))
       ->set('doc_server_jwt_header', $form_state->getValue('doc_server_jwt_header'))
       ->set('doc_server_internal_url', $docsInternalUrl)
       ->set('storage_url', $storageUrl)
+      ->set('chat', (bool) $form_state->getValue('chat'))
+      ->set('compact_header', (bool) $form_state->getValue('compact_header'))
+      ->set('feedback', (bool) $form_state->getValue('feedback'))
+      ->set('help', (bool) $form_state->getValue('help'))
+      ->set('theme', $form_state->getValue('theme'))
+      ->set('plugins', (bool) $form_state->getValue('plugins'))
+      ->set('macros', (bool) $form_state->getValue('macros'))
+      ->set('protection', $form_state->getValue('protection'))
       ->save();
     parent::submitForm($form, $form_state);
 

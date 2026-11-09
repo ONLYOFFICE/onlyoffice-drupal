@@ -158,3 +158,51 @@ msgstr "Не удалось сохранить копию."
 
 msgid "The copy was saved as @name."
 msgstr "Копия сохранена как @name."
+
+msgid "Security"
+msgstr "Безопасность"
+
+msgid "Enable plugins"
+msgstr "Включить работу с плагинами"
+
+msgid "Run document macros"
+msgstr "Запускать макросы документа"
+
+msgid "Enable document protection for"
+msgstr "Разрешить защиту документа"
+
+msgid "All users"
+msgstr "Всем пользователям"
+
+msgid "Owner only"
+msgstr "Только владельцу"
+
+msgid "Editor customization settings"
+msgstr "Настройка редактора"
+
+msgid "Display Chat menu button"
+msgstr "Отображать кнопку чата"
+
+msgid "Display the header more compact"
+msgstr "Отображать заголовок компактным"
+
+msgid "Display Feedback & Support menu button"
+msgstr "Отображать кнопку Обратной связи и поддержки"
+
+msgid "Display Help menu button"
+msgstr "Отображать кнопку справки"
+
+msgid "Default editor theme"
+msgstr "Тема редактора по умолчанию"
+
+msgid "Same as system"
+msgstr "Такая же, как в системе"
+
+msgid "Light"
+msgstr "Светлая"
+
+msgid "Dark"
+msgstr "Темная"
+
+msgid "Disable certificate verification (insecure)"
+msgstr "Отключить проверку сертификата (небезопасно)"

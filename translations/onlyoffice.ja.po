@@ -158,3 +158,51 @@ msgstr "コピーを保存できませんでした。"
 
 msgid "The copy was saved as @name."
 msgstr "コピーは @name として保存されました。"
+
+msgid "Security"
+msgstr "セキュリティ"
+
+msgid "Enable plugins"
+msgstr "プラグインを有効にする"
+
+msgid "Run document macros"
+msgstr "ドキュメントマクロを実行する"
+
+msgid "Enable document protection for"
+msgstr "次のユーザーに対して文書の保護機能を有効にする"
+
+msgid "All users"
+msgstr "すべてのユーザー"
+
+msgid "Owner only"
+msgstr "所有者のみ"
+
+msgid "Editor customization settings"
+msgstr "エディターカスタム設定"
+
+msgid "Display Chat menu button"
+msgstr "チャットメニューボタンを表示する"
+
+msgid "Display the header more compact"
+msgstr "ヘッダーをよりコンパクトに表示する"
+
+msgid "Display Feedback & Support menu button"
+msgstr "フィードバックとサポートメニューボタンを表示する"
+
+msgid "Display Help menu button"
+msgstr "ヘルプメニューボタンを表示する"
+
+msgid "Default editor theme"
+msgstr "エディターのデフォルトテーマ"
+
+msgid "Same as system"
+msgstr "システム設定と同じ"
+
+msgid "Light"
+msgstr "ライト"
+
+msgid "Dark"
+msgstr "ダーク"
+
+msgid "Disable certificate verification (insecure)"
+msgstr "証明書の検証を無効にする（安全ではありません）"

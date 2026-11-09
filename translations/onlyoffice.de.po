@@ -158,3 +158,51 @@ msgstr "Die Kopie konnte nicht gespeichert werden."
 
 msgid "The copy was saved as @name."
 msgstr "Die Kopie wurde als @name gespeichert."
+
+msgid "Security"
+msgstr "Sicherheit"
+
+msgid "Enable plugins"
+msgstr "Arbeit mit Plugins aktivieren"
+
+msgid "Run document macros"
+msgstr "Makros im Dokument ausführen"
+
+msgid "Enable document protection for"
+msgstr "Dokumentenschutz aktivieren für"
+
+msgid "All users"
+msgstr "Alle Benutzer"
+
+msgid "Owner only"
+msgstr "Nur Besitzer"
+
+msgid "Editor customization settings"
+msgstr "Editor-Einstellungen"
+
+msgid "Display Chat menu button"
+msgstr "Chat-Taste anzeigen"
+
+msgid "Display the header more compact"
+msgstr "Kompakten Header anzeigen"
+
+msgid "Display Feedback & Support menu button"
+msgstr "Feedback-& Support-Taste anzeigen"
+
+msgid "Display Help menu button"
+msgstr "Hilfetaste anzeigen"
+
+msgid "Default editor theme"
+msgstr "Standardmäßiges Thema des Editors"
+
+msgid "Same as system"
+msgstr "Wie im System"
+
+msgid "Light"
+msgstr "Hell"
+
+msgid "Dark"
+msgstr "Dunkel"
+
+msgid "Disable certificate verification (insecure)"
+msgstr "Zertifikatsüberprüfung deaktivieren (unsicher)"

@@ -498,7 +498,8 @@ class OnlyofficeFormFormatter extends FormatterBase {
       $editor_width,
       $editor_height,
       TRUE,
-      $this->getSetting('save_submissions')
+      $this->getSetting('save_submissions'),
+      document_permissions_protect: FALSE
     );
   }
 
