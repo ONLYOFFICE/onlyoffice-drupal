@@ -247,6 +247,8 @@ class OnlyofficeEditorController extends ControllerBase {
     $user = $this->currentUser()->getAccount();
     $can_edit = $this->documentHelper->isEditable($media);
     $edit_permission = $media->access("update", $user);
+    $protect_permission = $this->config('onlyoffice.settings')->get('protection') === 'all'
+      || $media->getOwnerId() == $user->id();
 
     $editorConfig = $this->documentHelper->createEditorConfig(
           $editorType,
@@ -263,7 +265,8 @@ class OnlyofficeEditorController extends ControllerBase {
           $user->getDisplayName(),
           OnlyofficeUrlHelper::getGoBackUrl($media),
           "100%",
-          "100%"
+          "100%",
+          document_permissions_protect: $protect_permission
       );
 
     $this->getLogger('onlyoffice')->debug('Generated config for media @type %label: <br><pre><code>' . print_r($editorConfig, TRUE) . '</code></pre>', $context);

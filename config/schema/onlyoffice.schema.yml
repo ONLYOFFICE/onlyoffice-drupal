@@ -6,6 +6,9 @@ onlyoffice.settings:
     doc_server_url:
       type: string
       label: 'ONLYOFFICE Docs address'
+    verify_peer_off:
+      type: boolean
+      label: 'Disable certificate verification (insecure)'
     doc_server_jwt:
       type: string
       label: 'ONLYOFFICE Docs secret key'
@@ -18,3 +21,27 @@ onlyoffice.settings:
     storage_url:
       type: string
       label: 'Server address for internal requests from ONLYOFFICE Docs'
+    chat:
+      type: boolean
+      label: 'Display Chat menu button'
+    compact_header:
+      type: boolean
+      label: 'Display the header more compact'
+    feedback:
+      type: boolean
+      label: 'Display Feedback & Support menu button'
+    help:
+      type: boolean
+      label: 'Display Help menu button'
+    theme:
+      type: string
+      label: 'Default editor theme'
+    plugins:
+      type: boolean
+      label: 'Enable plugins'
+    macros:
+      type: boolean
+      label: 'Run document macros'
+    protection:
+      type: string
+      label: 'Enable document protection for'

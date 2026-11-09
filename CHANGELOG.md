@@ -11,6 +11,9 @@
 - ONLYOFFICE Docs Cloud banner on the settings page
 - expiration time for the download links
 - saving a copy of the document from the editor
+- plugins, macros and document protection settings
+- editor customization settings: chat, compact header, feedback, help and theme
+- setting to disable certificate verification of ONLYOFFICE Docs
 - support for drupal 12
 
 ## 3.0.0

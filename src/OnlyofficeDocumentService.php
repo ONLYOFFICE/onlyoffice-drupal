@@ -300,6 +300,10 @@ class OnlyofficeDocumentService {
   protected function request(string $method, string $url, array $options = []): string {
     $options += ['timeout' => self::TIMEOUT];
 
+    if ($this->configFactory->get('onlyoffice.settings')->get('verify_peer_off')) {
+      $options['verify'] = FALSE;
+    }
+
     try {
       return (string) $this->httpClient->request($method, $url, $options)->getBody();
     }

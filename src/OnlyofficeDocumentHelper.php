@@ -165,6 +165,7 @@ class OnlyofficeDocumentHelper {
     $editor_height,
     $document_permissions_fillForms = FALSE,
     $show_submit = FALSE,
+    bool $document_permissions_protect = TRUE,
   ) {
 
     $document_fileType = static::getExtension($document_title);
@@ -187,6 +188,7 @@ class OnlyofficeDocumentHelper {
           'download' => TRUE,
           'edit' => $document_permissions_edit,
           'fillForms' => $document_permissions_fillForms,
+          'protect' => $document_permissions_protect,
         ],
       ],
       'editorConfig' => [
@@ -210,6 +212,34 @@ class OnlyofficeDocumentHelper {
     ];
 
     $options = \Drupal::config('onlyoffice.settings');
+
+    if (!$options->get('chat')) {
+      $config['document']['permissions']['chat'] = FALSE;
+    }
+
+    if ($options->get('compact_header')) {
+      $config['editorConfig']['customization']['compactHeader'] = TRUE;
+    }
+
+    if ($options->get('feedback')) {
+      $config['editorConfig']['customization']['feedback'] = TRUE;
+    }
+
+    if (!$options->get('help')) {
+      $config['editorConfig']['customization']['help'] = FALSE;
+    }
+
+    if ($options->get('theme')) {
+      $config['editorConfig']['customization']['uiTheme'] = $options->get('theme');
+    }
+
+    if (!$options->get('plugins')) {
+      $config['editorConfig']['customization']['plugins'] = FALSE;
+    }
+
+    if (!$options->get('macros')) {
+      $config['editorConfig']['customization']['macros'] = FALSE;
+    }
 
     if ($options->get('doc_server_jwt')) {
       $token = JWT::encode($config, $options->get('doc_server_jwt'), 'HS256');

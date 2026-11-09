@@ -103,6 +103,10 @@ The address must be accessible for the user browser and from the Drupal server.
 The Drupal server address must also be accessible from ONLYOFFICE
 Document Server for correct work.
 
+If ONLYOFFICE Docs uses a self-signed certificate, select
+**Disable certificate verification (insecure)** so that Drupal accepts it in
+the requests to ONLYOFFICE Docs. Use it only for testing.
+
 Sometimes your network configuration might not allow the requests between
 Drupal and ONLYOFFICE Document Server using the public addresses.
 The *Advanced server settings* allow you to set the ONLYOFFICE Document Server
@@ -118,6 +122,18 @@ used to pass the token between Drupal and ONLYOFFICE Docs. Leave it blank to use
 the default `Authorization` header. If you change it, set the same header in
 the ONLYOFFICE Docs config file.
 
+The *Editor customization settings* change the editor interface: show or hide
+the **Chat**, **Feedback & Support** and **Help** buttons, make the header more
+compact and choose the default editor theme. **Same as system** follows the
+light or dark mode of the user's system.
+
+The *Security* settings control what the editor allows:
+
+* **Enable plugins** shows the plugins in the editor.
+* **Run document macros** runs the macros saved in documents.
+* **Enable document protection for** sets who can protect documents in the
+  editor: all users who can edit the document or only its owner.
+
 ### settings.php
 
 The settings can also be defined in the `settings.php` file of the site:
@@ -126,17 +142,28 @@ The settings can also be defined in the `settings.php` file of the site:
 $config['onlyoffice.settings']['{setting_key}'] = '{setting_value}';
 ```
 
+Set the on/off settings to `TRUE` or `FALSE` without quotes.
+
 The values defined there take precedence over the values saved on the settings
 page and are not stored in the database, which is useful for the secret key.
 The settings page keeps showing the saved values.
 
-| Setting key               | Setting                                                         |
-|---------------------------|-----------------------------------------------------------------|
-| `doc_server_url`          | ONLYOFFICE Docs address                                         |
-| `doc_server_jwt`          | ONLYOFFICE Docs secret key                                      |
-| `doc_server_jwt_header`   | Authorization header                                            |
-| `doc_server_internal_url` | ONLYOFFICE Docs address for internal requests from the server   |
-| `storage_url`             | Server address for internal requests from ONLYOFFICE Docs       |
+| Setting key               | Setting                                                       | Values                                          |
+|---------------------------|---------------------------------------------------------------|-------------------------------------------------|
+| `doc_server_url`          | ONLYOFFICE Docs address                                       | address                                         |
+| `verify_peer_off`         | Disable certificate verification (insecure)                   | `TRUE`, `FALSE`                                 |
+| `doc_server_jwt`          | ONLYOFFICE Docs secret key                                    | text                                            |
+| `doc_server_jwt_header`   | Authorization header                                          | header name                                     |
+| `doc_server_internal_url` | ONLYOFFICE Docs address for internal requests from the server | address                                         |
+| `storage_url`             | Server address for internal requests from ONLYOFFICE Docs     | address                                         |
+| `chat`                    | Display Chat menu button                                      | `TRUE`, `FALSE`                                 |
+| `compact_header`          | Display the header more compact                               | `TRUE`, `FALSE`                                 |
+| `feedback`                | Display Feedback & Support menu button                        | `TRUE`, `FALSE`                                 |
+| `help`                    | Display Help menu button                                      | `TRUE`, `FALSE`                                 |
+| `theme`                   | Default editor theme                                          | `theme-system`, `default-light`, `default-dark` |
+| `plugins`                 | Enable plugins                                                | `TRUE`, `FALSE`                                 |
+| `macros`                  | Run document macros                                           | `TRUE`, `FALSE`                                 |
+| `protection`              | Enable document protection for                                | `all`, `owner`                                  |
 
 ## Checking the connection
 
