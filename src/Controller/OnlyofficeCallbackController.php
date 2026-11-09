@@ -25,12 +25,8 @@ use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Component\Uuid\Uuid;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityRepositoryInterface;
-use Drupal\Core\File\Exception\InvalidStreamWrapperException;
-use Drupal\Core\File\FileExists;
 use Drupal\Core\File\FileSystemInterface;
-use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
-use Drupal\file\Entity\File;
-use Drupal\file\FileInterface;
+use Drupal\file\FileRepositoryInterface;
 use Drupal\media\Entity\Media;
 use Drupal\onlyoffice\OnlyofficeAppConfig;
 use Drupal\onlyoffice\OnlyofficeCallbackStatus;
@@ -75,13 +71,6 @@ class OnlyofficeCallbackController extends ControllerBase {
   protected $fileSystem;
 
   /**
-   * The stream wrapper manager.
-   *
-   * @var \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface
-   */
-  protected $streamWrapperManager;
-
-  /**
    * The time service.
    *
    * @var \Drupal\Component\Datetime\TimeInterface
@@ -96,6 +85,13 @@ class OnlyofficeCallbackController extends ControllerBase {
   protected $documentService;
 
   /**
+   * The file repository.
+   *
+   * @var \Drupal\file\FileRepositoryInterface
+   */
+  protected $fileRepository;
+
+  /**
    * Constructs a OnlyofficeCallbackController object.
    *
    * @param \Drupal\user\Entity\UserStorageInterface $user_storage
@@ -104,27 +100,27 @@ class OnlyofficeCallbackController extends ControllerBase {
    *   The entity repository.
    * @param \Drupal\Core\File\FileSystemInterface $file_system
    *   The file system service.
-   * @param \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface $streamWrapperManager
-   *   The stream wrapper manager.
    * @param \Drupal\Component\Datetime\TimeInterface $time
    *   The time service.
    * @param \Drupal\onlyoffice\OnlyofficeDocumentService $document_service
    *   The document service.
+   * @param \Drupal\file\FileRepositoryInterface $file_repository
+   *   The file repository.
    */
   public function __construct(
     UserStorageInterface $user_storage,
     EntityRepositoryInterface $entity_repository,
     FileSystemInterface $file_system,
-    StreamWrapperManagerInterface $streamWrapperManager,
     TimeInterface $time,
     OnlyofficeDocumentService $document_service,
+    FileRepositoryInterface $file_repository,
   ) {
     $this->userStorage = $user_storage;
     $this->entityRepository = $entity_repository;
     $this->fileSystem = $file_system;
-    $this->streamWrapperManager = $streamWrapperManager;
     $this->time = $time;
     $this->documentService = $document_service;
+    $this->fileRepository = $file_repository;
   }
 
   /**
@@ -135,9 +131,9 @@ class OnlyofficeCallbackController extends ControllerBase {
           $container->get('entity_type.manager')->getStorage('user'),
           $container->get('entity.repository'),
           $container->get('file_system'),
-          $container->get('stream_wrapper_manager'),
           $container->get('datetime.time'),
-          $container->get('onlyoffice.document_service')
+          $container->get('onlyoffice.document_service'),
+          $container->get('file.repository')
       );
   }
 
@@ -305,7 +301,7 @@ class OnlyofficeCallbackController extends ControllerBase {
     }
 
     if ($new_data) {
-      $newFile = $this->writeData($new_data, $newDestination);
+      $newFile = $this->fileRepository->writeData($new_data, $newDestination);
 
       $media->set(OnlyofficeDocumentHelper::getSourceFieldName($media), $newFile);
       $media->setNewRevision();
@@ -324,29 +320,6 @@ class OnlyofficeCallbackController extends ControllerBase {
         400
       );
     }
-  }
-
-  /**
-   * Writing data to file.
-   */
-  private function writeData(string $data, string $destination, FileExists $replace = FileExists::Rename): FileInterface {
-    if (!$this->streamWrapperManager->isValidUri($destination)) {
-      throw new InvalidStreamWrapperException(sprintf('Invalid stream wrapper: %destination', ['%destination' => $destination]));
-    }
-    $uri = $this->fileSystem->saveData($data, $destination, $replace);
-
-    $file = File::create(['uri' => $uri]);
-    $file->setOwnerId($this->currentUser()->getAccount()->id());
-
-    if ($replace === FileExists::Rename && is_file($destination)) {
-      $file->setFilename(basename($destination));
-    }
-
-    $file->setPermanent();
-    $file->setSize(strlen($data));
-    $file->save();
-
-    return $file;
   }
 
 }

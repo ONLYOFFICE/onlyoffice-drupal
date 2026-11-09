@@ -137,3 +137,24 @@ msgstr "アクティブコンテンツの混在は許可されていません。
 
 msgid "Bad healthcheck status"
 msgstr "ヘルスチェックのステータスが不正です"
+
+msgid "Invalid request."
+msgstr "無効なリクエストです。"
+
+msgid "Saving a copy is not supported for this media type."
+msgstr "このメディアタイプではコピーの保存はサポートされていません。"
+
+msgid "You don't have permission to create media of this type."
+msgstr "このタイプのメディアを作成する権限がありません。"
+
+msgid "The file URL does not match the ONLYOFFICE Docs address."
+msgstr "ファイルの URL が ONLYOFFICE Docsアドレスと一致しません。"
+
+msgid "Failed to download the copy from ONLYOFFICE Docs."
+msgstr "ONLYOFFICE Docs からコピーをダウンロードできませんでした。"
+
+msgid "Failed to save the copy."
+msgstr "コピーを保存できませんでした。"
+
+msgid "The copy was saved as @name."
+msgstr "コピーは @name として保存されました。"
