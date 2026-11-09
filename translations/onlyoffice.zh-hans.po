@@ -137,3 +137,24 @@ msgstr "不允许混合活动内容，请使用HTTPS连接ONLYOFFICE Docs。"
 
 msgid "Bad healthcheck status"
 msgstr "健康检查状态异常"
+
+msgid "Invalid request."
+msgstr "无效的请求。"
+
+msgid "Saving a copy is not supported for this media type."
+msgstr "此媒体类型不支持保存副本。"
+
+msgid "You don't have permission to create media of this type."
+msgstr "您没有创建此类型媒体的权限。"
+
+msgid "The file URL does not match the ONLYOFFICE Docs address."
+msgstr "文件 URL 与 ONLYOFFICE Docs 地址不匹配。"
+
+msgid "Failed to download the copy from ONLYOFFICE Docs."
+msgstr "无法从 ONLYOFFICE Docs 下载副本。"
+
+msgid "Failed to save the copy."
+msgstr "无法保存副本。"
+
+msgid "The copy was saved as @name."
+msgstr "副本已另存为 @name。"

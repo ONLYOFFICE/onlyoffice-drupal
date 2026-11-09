@@ -146,6 +146,21 @@ class OnlyofficeUrlHelper {
   }
 
   /**
+   * Check that the URL is under the public Document Server address.
+   */
+  public static function isDocumentServerUrl(string $url): bool {
+    $path = rawurldecode((string) parse_url($url, PHP_URL_PATH));
+
+    if (preg_match('#(^|[/\\\\])\.{1,2}([/\\\\]|$)#', $path)) {
+      return FALSE;
+    }
+
+    $prefix = rtrim((string) \Drupal::config('onlyoffice.settings')->get('doc_server_url'), '/') . '/';
+
+    return $prefix !== '/' && strncasecmp($url, $prefix, strlen($prefix)) === 0;
+  }
+
+  /**
    * Return Drupal address for internal requests from Document Server.
    */
   public static function getStorageUrl() {

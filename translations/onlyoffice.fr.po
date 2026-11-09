@@ -137,3 +137,24 @@ msgstr "Le contenu mixte actif n'est pas autorisé. Une adresse HTTPS pour le ON
 
 msgid "Bad healthcheck status"
 msgstr "Statut de vérification d'intégrité incorrect"
+
+msgid "Invalid request."
+msgstr "Requête non valide."
+
+msgid "Saving a copy is not supported for this media type."
+msgstr "L'enregistrement d'une copie n'est pas pris en charge pour ce type de média."
+
+msgid "You don't have permission to create media of this type."
+msgstr "Vous n'avez pas l'autorisation de créer des médias de ce type."
+
+msgid "The file URL does not match the ONLYOFFICE Docs address."
+msgstr "L'URL du fichier ne correspond pas à l'adresse d'ONLYOFFICE Docs."
+
+msgid "Failed to download the copy from ONLYOFFICE Docs."
+msgstr "Impossible de télécharger la copie depuis ONLYOFFICE Docs."
+
+msgid "Failed to save the copy."
+msgstr "Impossible d'enregistrer la copie."
+
+msgid "The copy was saved as @name."
+msgstr "La copie a été enregistrée sous @name."

@@ -56,13 +56,33 @@
 
             var config = {{ config|raw }};
             var error =  "{{ error }}";
+            var saveAsUrl = {{ save_as_url|json_encode|raw }};
+
+            config.events = config.events || {};
 
             if (error) {
-              config.events = {
-                onAppReady: function() {
-                  docEditor.showMessage(error);
-                }
-              }
+              config.events.onAppReady = function() {
+                docEditor.showMessage(error);
+              };
+            }
+
+            if (saveAsUrl) {
+              config.events.onRequestSaveAs = function(event) {
+                fetch(saveAsUrl, {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ title: event.data.title, fileType: event.data.fileType, url: event.data.url })
+                })
+                  .then(function(response) {
+                    return response.json();
+                  })
+                  .then(function(result) {
+                    docEditor.showMessage(result.message);
+                  })
+                  .catch(function() {
+                    docEditor.showMessage("{{ 'Failed to save the copy.'|t }}");
+                  });
+              };
             }
 
             docEditor = new DocsAPI.DocEditor("iframeEditor", config);

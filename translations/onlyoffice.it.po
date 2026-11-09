@@ -137,3 +137,24 @@ msgstr "Il contenuto attivo misto non è consentito. È richiesto l'indirizzo HT
 
 msgid "Bad healthcheck status"
 msgstr "Stato di controllo integrità non valido"
+
+msgid "Invalid request."
+msgstr "Richiesta non valida."
+
+msgid "Saving a copy is not supported for this media type."
+msgstr "Il salvataggio di una copia non è supportato per questo tipo di media."
+
+msgid "You don't have permission to create media of this type."
+msgstr "Non hai l'autorizzazione per creare media di questo tipo."
+
+msgid "The file URL does not match the ONLYOFFICE Docs address."
+msgstr "L'URL del file non corrisponde all'indirizzo di ONLYOFFICE Docs."
+
+msgid "Failed to download the copy from ONLYOFFICE Docs."
+msgstr "Impossibile scaricare la copia da ONLYOFFICE Docs."
+
+msgid "Failed to save the copy."
+msgstr "Impossibile salvare la copia."
+
+msgid "The copy was saved as @name."
+msgstr "La copia è stata salvata come @name."
