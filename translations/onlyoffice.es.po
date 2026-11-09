@@ -137,3 +137,24 @@ msgstr "Contenido Mixto Activo no está permitido. Se requiere la dirección HTT
 
 msgid "Bad healthcheck status"
 msgstr "Estado de verificación de estado incorrecto"
+
+msgid "Invalid request."
+msgstr "Solicitud no válida."
+
+msgid "Saving a copy is not supported for this media type."
+msgstr "No se admite guardar una copia para este tipo de medio."
+
+msgid "You don't have permission to create media of this type."
+msgstr "No tiene permiso para crear medios de este tipo."
+
+msgid "The file URL does not match the ONLYOFFICE Docs address."
+msgstr "La URL del archivo no coincide con la dirección de ONLYOFFICE Docs."
+
+msgid "Failed to download the copy from ONLYOFFICE Docs."
+msgstr "No se pudo descargar la copia desde ONLYOFFICE Docs."
+
+msgid "Failed to save the copy."
+msgstr "No se pudo guardar la copia."
+
+msgid "The copy was saved as @name."
+msgstr "La copia se guardó como @name."

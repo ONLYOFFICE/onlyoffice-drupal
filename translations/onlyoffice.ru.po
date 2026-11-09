@@ -137,3 +137,24 @@ msgstr "Смешанное активное содержимое запреще�
 
 msgid "Bad healthcheck status"
 msgstr "Неверный статус проверки работоспособности"
+
+msgid "Invalid request."
+msgstr "Недопустимый запрос."
+
+msgid "Saving a copy is not supported for this media type."
+msgstr "Сохранение копии не поддерживается для этого типа медиа."
+
+msgid "You don't have permission to create media of this type."
+msgstr "У вас нет прав на создание медиа этого типа."
+
+msgid "The file URL does not match the ONLYOFFICE Docs address."
+msgstr "URL-адрес файла не соответствует адресу ONLYOFFICE Docs."
+
+msgid "Failed to download the copy from ONLYOFFICE Docs."
+msgstr "Не удалось скачать копию из ONLYOFFICE Docs."
+
+msgid "Failed to save the copy."
+msgstr "Не удалось сохранить копию."
+
+msgid "The copy was saved as @name."
+msgstr "Копия сохранена как @name."

@@ -20,6 +20,20 @@ onlyoffice.editor:
     _permission: 'view media,access media overview'
     media: '\d+'
 
+onlyoffice.save_as:
+  path: '/admin/media/{media}/onlyoffice-save-as'
+  defaults:
+    _controller: '\Drupal\onlyoffice\Controller\OnlyofficeEditorController::saveAs'
+  methods: [POST]
+  options:
+    parameters:
+      media:
+        type: entity:media
+  requirements:
+    _entity_access: 'media.view'
+    _csrf_token: 'TRUE'
+    media: '\d+'
+
 onlyoffice.callback:
   path: '/onlyoffice-callback/{key}'
   defaults:

@@ -9,6 +9,8 @@
 - connection check to ONLYOFFICE Docs when saving the settings
 - welcome description with useful links on the settings page
 - ONLYOFFICE Docs Cloud banner on the settings page
+- expiration time for the download links
+- saving a copy of the document from the editor
 - support for drupal 12
 
 ## 3.0.0

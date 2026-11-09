@@ -97,6 +97,7 @@ class OnlyofficeHooks {
           'doc_server_url' => 'http://127.0.0.1/',
           'config' => '{}',
           'error' => NULL,
+          'save_as_url' => NULL,
         ],
       ],
     ];

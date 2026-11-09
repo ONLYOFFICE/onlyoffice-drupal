@@ -255,10 +255,10 @@ class OnlyofficeDocumentService {
    * @throws \RuntimeException
    *   When the request fails.
    */
-  public function download(string $url): string {
+  public function download(string $url, array $options = []): string {
     $url = OnlyofficeUrlHelper::replaceDocumentServerUrlToInternal($url);
 
-    return $this->request('GET', $url, ['timeout' => self::DOWNLOAD_TIMEOUT]);
+    return $this->request('GET', $url, $options + ['timeout' => self::DOWNLOAD_TIMEOUT]);
   }
 
   /**

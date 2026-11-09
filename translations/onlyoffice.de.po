@@ -137,3 +137,24 @@ msgstr "Mixed Active Content ist nicht möglich. HTTPS-Adresse für ONLYOFFICE D
 
 msgid "Bad healthcheck status"
 msgstr "Ungültiger Healthcheck-Status"
+
+msgid "Invalid request."
+msgstr "Ungültige Anfrage."
+
+msgid "Saving a copy is not supported for this media type."
+msgstr "Das Speichern einer Kopie wird für diesen Medientyp nicht unterstützt."
+
+msgid "You don't have permission to create media of this type."
+msgstr "Sie haben keine Berechtigung, Medien dieses Typs zu erstellen."
+
+msgid "The file URL does not match the ONLYOFFICE Docs address."
+msgstr "Die Datei-URL stimmt nicht mit der Adresse von ONLYOFFICE Docs überein."
+
+msgid "Failed to download the copy from ONLYOFFICE Docs."
+msgstr "Die Kopie konnte nicht von ONLYOFFICE Docs heruntergeladen werden."
+
+msgid "Failed to save the copy."
+msgstr "Die Kopie konnte nicht gespeichert werden."
+
+msgid "The copy was saved as @name."
+msgstr "Die Kopie wurde als @name gespeichert."
