@@ -1,0 +1,50 @@
+# Local development stand. Start it with dev/stand.sh, which exports the variables below.
+name: onlyoffice-drupal-dev
+
+services:
+  db:
+    image: mariadb:11.4
+    command: --transaction-isolation=READ-COMMITTED
+    environment:
+      MARIADB_DATABASE: drupal
+      MARIADB_USER: drupal
+      MARIADB_PASSWORD: drupal
+      MARIADB_ROOT_PASSWORD: drupal
+    volumes:
+      - dbdata:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 2s
+      retries: 30
+
+  drupal:
+    image: drupal:${DRUPAL_VERSION:-10.3}-php${PHP_VERSION:-8.3}-apache
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      COMPOSER_ALLOW_SUPERUSER: "1"
+    ports:
+      - "${DRUPAL_PORT:-8000}:80"
+    volumes:
+      - drupal:/opt/drupal
+      - ..:/opt/drupal/web/modules/contrib/onlyoffice
+
+  documentserver:
+    image: onlyoffice/documentserver:${DS_VERSION:-latest}
+    environment:
+      JWT_ENABLED: "true"
+      JWT_SECRET: ${DS_JWT_SECRET:-onlyoffice-drupal-dev-stand-secret}
+      # Drupal is reached at http://drupal, a private docker address Docs refuses by default.
+      ALLOW_PRIVATE_IP_ADDRESS: "true"
+    ports:
+      - "${DS_PORT:-8080}:80"
+    healthcheck:
+      test: ["CMD", "curl", "-fs", "http://localhost/healthcheck"]
+      interval: 5s
+      start_period: 60s
+      retries: 60
+
+volumes:
+  drupal: {}
+  dbdata: {}

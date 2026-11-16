@@ -21,7 +21,7 @@ npm run lint:js       # eslint + prettier for JS and YAML (lint:js:fix to autofi
 composer phpcs        # Drupal + DrupalPractice standards
 ```
 
-CI runs the same checks (`.github/workflows/lint.yml`). Lints don't show that a change works: verify changes on a Drupal site connected to a real ONLYOFFICE Docs instance.
+CI runs the same checks (`.github/workflows/lint.yml`). Lints don't show that a change works: verify changes on a Drupal site connected to a real ONLYOFFICE Docs instance. `dev/stand.sh` starts one in Docker with this repository mounted (see `dev/README.md`).
 
 ## Structure
 

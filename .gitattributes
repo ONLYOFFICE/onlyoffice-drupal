@@ -12,6 +12,7 @@
 /LICENSE export-ignore
 /captainhook.json export-ignore
 /composer.lock export-ignore
+/dev export-ignore
 /eslint.config.mjs export-ignore
 /licenses export-ignore
 /package-lock.json export-ignore
