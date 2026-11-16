@@ -16,8 +16,10 @@ if [ -f .env ]; then
     set +a
 fi
 
-export DRUPAL_VERSION="${DRUPAL_VERSION:-10.3}"
-export PHP_VERSION="${PHP_VERSION:-8.3}"
+export DRUPAL_VERSION="${DRUPAL_VERSION:-11}"
+export PHP_VERSION="${PHP_VERSION:-8.4}"
+# The Drupal codebase lives in a volume, so each version needs a project of its own.
+export COMPOSE_PROJECT_NAME="${COMPOSE_PROJECT_NAME:-onlyoffice-drupal-dev-${DRUPAL_VERSION//./-}}"
 export DRUPAL_PORT="${DRUPAL_PORT:-8000}"
 export DS_PORT="${DS_PORT:-8080}"
 export DS_JWT_SECRET="${DS_JWT_SECRET:-onlyoffice-drupal-dev-stand-secret}"

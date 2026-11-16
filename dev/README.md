@@ -23,8 +23,8 @@ connection check as the settings form. Module edits are live; the Drupal codebas
 Settings go in `dev/.env` (git-ignored); defaults shown:
 
 ```
-DRUPAL_VERSION=10.3   # tag of the drupal image; changing it needs `destroy` first
-PHP_VERSION=8.3
+DRUPAL_VERSION=11    # tag of the drupal image
+PHP_VERSION=8.4
 DRUPAL_PORT=8000
 DS_PORT=8080
 DS_VERSION=latest
@@ -33,11 +33,12 @@ ADMIN_USER=admin
 ADMIN_PASS=admin
 ```
 
-The default is the oldest supported Drupal. To check the newest one next to it, start a second stand with its own
-name and ports, and pass the same variables to its other commands (values in `dev/.env` take precedence):
+Each Drupal version gets a stand of its own (Docker project `onlyoffice-drupal-dev-<version>`), so switching the
+version keeps the other stands. To check the oldest supported Drupal next to the default one, give it other ports and
+pass the same variables to its other commands (values in `dev/.env` take precedence):
 
 ```bash
-COMPOSE_PROJECT_NAME=onlyoffice-drupal-dev-d11 DRUPAL_VERSION=11.4 PHP_VERSION=8.4 DRUPAL_PORT=8001 DS_PORT=8081 dev/stand.sh
+DRUPAL_VERSION=10.3 PHP_VERSION=8.3 DRUPAL_PORT=8001 DS_PORT=8081 dev/stand.sh
 ```
 
 Mail is not sent: the stand keeps it with Drupal's test mail collector.

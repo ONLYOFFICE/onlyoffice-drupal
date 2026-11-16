@@ -1,6 +1,4 @@
-# Local development stand. Start it with dev/stand.sh, which exports the variables below.
-name: onlyoffice-drupal-dev
-
+# Local development stand. Start it with dev/stand.sh, which exports the variables and the project name.
 services:
   db:
     image: mariadb:11.4
@@ -18,7 +16,7 @@ services:
       retries: 30
 
   drupal:
-    image: drupal:${DRUPAL_VERSION:-10.3}-php${PHP_VERSION:-8.3}-apache
+    image: drupal:${DRUPAL_VERSION:-11}-php${PHP_VERSION:-8.4}-apache
     depends_on:
       db:
         condition: service_healthy
