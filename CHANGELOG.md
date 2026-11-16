@@ -18,6 +18,11 @@
 - setting to disable certificate verification of ONLYOFFICE Docs
 - support for firebase/php-jwt 7
 - status report warning about a short ONLYOFFICE Docs secret key
+- support for drupal 12
+
+## 3.0.0
+## Added
+- support for drupal 11
 
 ## 2.0.0
 ## Added
