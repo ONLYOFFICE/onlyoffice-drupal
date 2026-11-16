@@ -8,8 +8,8 @@ A Drupal contrib module `onlyoffice` ("ONLYOFFICE Connector") that opens Media-m
 
 ## Branches
 
-- `develop` holds the lowest supported Drupal major version. Support for newer Drupal versions is built in a separate branch, which receives `develop` by merging. `main` holds released code. Each branch's supported core versions are in `core_version_requirement` in its `*.info.yml` files and `drupal/core` in its `composer.json`.
-- `develop` deliberately uses the APIs of the newer Drupal versions (hook classes, plugin attributes, newer core APIs with BC fallbacks) so the branches differ only in version constraints. Keep it that way and don't flag it.
+- `develop` holds the next release, `main` holds released code. One release supports every Drupal core version in `core_version_requirement` in the `*.info.yml` files and `drupal/core` in `composer.json`; keep them in sync.
+- The code deliberately uses the APIs of the newer Drupal versions (hook classes, plugin attributes, newer core APIs with BC fallbacks) so that one build runs on all of them. Keep it that way and don't flag it.
 
 ## Setup and commands
 
