@@ -24,6 +24,7 @@ namespace Drupal\onlyoffice\Form;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url as DrupalUrl;
+use Drupal\onlyoffice\OnlyofficeAppConfig;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Validator\Constraints\Url;
 use Symfony\Component\Validator\Validation;
@@ -300,6 +301,12 @@ class SettingsForm extends ConfigFormBase {
     // Allow only header name token characters, as the HTTP client does.
     if ($header !== '' && !preg_match('/^[a-zA-Z0-9\'`#$%&*+.^_|~!-]+$/D', $header)) {
       $form_state->setErrorByName('doc_server_jwt_header', $this->t("The header name may contain only letters, digits and the characters !#$%&'*+-.^_`|~."));
+    }
+
+    $secret = (string) $form_state->getValue('doc_server_jwt');
+
+    if ($secret !== '' && strlen($secret) < OnlyofficeAppConfig::JWT_SECRET_MIN_LENGTH) {
+      $form_state->setErrorByName('doc_server_jwt', $this->t('The secret key must be at least @length characters long.', ['@length' => OnlyofficeAppConfig::JWT_SECRET_MIN_LENGTH]));
     }
   }
 

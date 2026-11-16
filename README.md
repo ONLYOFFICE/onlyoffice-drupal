@@ -37,13 +37,17 @@ To submit bug reports and feature suggestions, or track changes: [drupal.org/pro
 
 ## Requirements
 
-- **firebase/php-jwt**: 6.0.0 or higher
+- **firebase/php-jwt**: 6.x or 7.x
 
 Make sure to run:
 
 ```bash
-composer require firebase/php-jwt:^6.0
+composer require "firebase/php-jwt:^6.0 || ^7.0"
 ```
+
+Recent Composer versions refuse to install firebase/php-jwt 6.x because of a
+security advisory and install 7.x. Version 7.x requires the ONLYOFFICE Docs
+secret key to be at least 32 characters long.
 
 ## Installation
 
@@ -115,7 +119,7 @@ address for internal requests from ONLYOFFICE Document Server.
 Enter them in the **ONLYOFFICE Docs address for internal requests from the server**
 and **Server address for internal requests from ONLYOFFICE Docs** fields.
 
-Configuration settings include JWT, enabled by default to protect the editors from unauthorized access. If setting a custom **ONLYOFFICE Docs secret key**, ensure it matches the one in the ONLYOFFICE Docs [config file](https://api.onlyoffice.com/docs/docs-api/additional-api/signature/) for proper validation.
+Configuration settings include JWT, enabled by default to protect the editors from unauthorized access. If setting a custom **ONLYOFFICE Docs secret key**, ensure it matches the one in the ONLYOFFICE Docs [config file](https://api.onlyoffice.com/docs/docs-api/additional-api/signature/) for proper validation. The key must be at least 32 characters long. If a shorter key is set, for example in `settings.php`, the status report shows a warning, or an error when the installed firebase/php-jwt version rejects the key and the editors stop working.
 
 The **Authorization header** in the *Advanced server settings* sets the header
 used to pass the token between Drupal and ONLYOFFICE Docs. Leave it blank to use

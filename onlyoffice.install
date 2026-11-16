@@ -28,6 +28,7 @@ use Drupal\Component\Utility\DeprecationHelper;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Extension\Requirement\RequirementSeverity;
 use Drupal\Core\Hook\Attribute\LegacyRequirementsHook;
+use Drupal\onlyoffice\Hook\OnlyofficeHooks;
 
 /**
  * Implements hook_install().
@@ -72,7 +73,8 @@ function onlyoffice_update_10001() {
  * Implements hook_requirements().
  *
  * Drupal 11.3 and later skip this function and use
- * \Drupal\onlyoffice\Install\Requirements\OnlyofficeRequirements instead.
+ * \Drupal\onlyoffice\Install\Requirements\OnlyofficeRequirements and
+ * \Drupal\onlyoffice\Hook\OnlyofficeHooks::runtimeRequirements() instead.
  */
 #[LegacyRequirementsHook]
 function onlyoffice_requirements($phase) {
@@ -90,6 +92,10 @@ function onlyoffice_requirements($phase) {
         ),
       ];
     }
+  }
+
+  if ($phase == 'runtime') {
+    $requirements += \Drupal::service(OnlyofficeHooks::class)->runtimeRequirements();
   }
 
   return $requirements;

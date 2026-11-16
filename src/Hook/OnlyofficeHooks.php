@@ -21,17 +21,21 @@ namespace Drupal\onlyoffice\Hook;
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+use Drupal\Component\Utility\DeprecationHelper;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleExtensionList;
+use Drupal\Core\Extension\Requirement\RequirementSeverity;
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\Url;
 use Drupal\onlyoffice\OnlyofficeAppConfig;
 use Drupal\onlyoffice\OnlyofficeDocumentHelper;
 use Drupal\onlyoffice\OnlyofficeUrlHelper;
+use Firebase\JWT\JWT;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
@@ -82,6 +86,43 @@ class OnlyofficeHooks {
     }
 
     return NULL;
+  }
+
+  /**
+   * Implements hook_runtime_requirements().
+   */
+  #[Hook('runtime_requirements')]
+  public function runtimeRequirements(): array {
+    $secret = (string) $this->configFactory->get('onlyoffice.settings')->get('doc_server_jwt');
+
+    if ($secret === '' || strlen($secret) >= OnlyofficeAppConfig::JWT_SECRET_MIN_LENGTH) {
+      return [];
+    }
+
+    // The editor keeps working with php-jwt 6, which still accepts short keys.
+    try {
+      JWT::encode([], $secret, 'HS256');
+      $rejected = FALSE;
+    }
+    catch (\DomainException $e) {
+      $rejected = TRUE;
+    }
+
+    return [
+      'onlyoffice_jwt_secret' => [
+        'title' => $this->t('ONLYOFFICE Docs secret key'),
+        'description' => $this->t('The secret key is shorter than @length characters. Set a longer key in ONLYOFFICE Docs and in the <a href=":url">ONLYOFFICE Connector settings</a>.', [
+          '@length' => OnlyofficeAppConfig::JWT_SECRET_MIN_LENGTH,
+          ':url' => Url::fromRoute('onlyoffice.settings_form')->toString(),
+        ]),
+        'severity' => DeprecationHelper::backwardsCompatibleCall(
+          \Drupal::VERSION,
+          '11.2.0',
+          fn() => $rejected ? RequirementSeverity::Error : RequirementSeverity::Warning,
+          fn() => $rejected ? REQUIREMENT_ERROR : REQUIREMENT_WARNING,
+        ),
+      ],
+    ];
   }
 
   /**

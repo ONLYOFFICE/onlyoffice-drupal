@@ -206,3 +206,9 @@ msgstr "Sombre"
 
 msgid "Disable certificate verification (insecure)"
 msgstr "Désactiver la vérification du certificat (non sûr)"
+
+msgid "The secret key must be at least @length characters long."
+msgstr "La clé secrète doit contenir au moins @length caractères."
+
+msgid "The secret key is shorter than @length characters. Set a longer key in ONLYOFFICE Docs and in the <a href=\":url\">ONLYOFFICE Connector settings</a>."
+msgstr "La clé secrète contient moins de @length caractères. Définissez une clé plus longue dans ONLYOFFICE Docs et dans les <a href=\":url\">paramètres du connecteur ONLYOFFICE</a>."

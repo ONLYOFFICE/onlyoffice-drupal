@@ -206,3 +206,9 @@ msgstr "Dunkel"
 
 msgid "Disable certificate verification (insecure)"
 msgstr "Zertifikatsüberprüfung deaktivieren (unsicher)"
+
+msgid "The secret key must be at least @length characters long."
+msgstr "Der geheime Schlüssel muss mindestens @length Zeichen lang sein."
+
+msgid "The secret key is shorter than @length characters. Set a longer key in ONLYOFFICE Docs and in the <a href=\":url\">ONLYOFFICE Connector settings</a>."
+msgstr "Der geheime Schlüssel ist kürzer als @length Zeichen. Legen Sie einen längeren Schlüssel in ONLYOFFICE Docs und in den <a href=\":url\">Einstellungen vom ONLYOFFICE-Konnektor</a> fest."

@@ -2,6 +2,7 @@
 
 ## Changed
 - minimum supported drupal version is 10.3
+- ONLYOFFICE Docs secret key must be at least 32 characters long
 - ONLYOFFICE Docs address and secret key settings renamed and given descriptions
 
 ## Added
@@ -15,6 +16,8 @@
 - plugins, macros and document protection settings
 - editor customization settings: chat, compact header, feedback, help and theme
 - setting to disable certificate verification of ONLYOFFICE Docs
+- support for firebase/php-jwt 7
+- status report warning about a short ONLYOFFICE Docs secret key
 
 ## 2.0.0
 ## Added

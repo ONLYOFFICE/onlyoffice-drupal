@@ -206,3 +206,9 @@ msgstr "ダーク"
 
 msgid "Disable certificate verification (insecure)"
 msgstr "証明書の検証を無効にする（安全ではありません）"
+
+msgid "The secret key must be at least @length characters long."
+msgstr "シークレットキーは@length文字以上である必要があります。"
+
+msgid "The secret key is shorter than @length characters. Set a longer key in ONLYOFFICE Docs and in the <a href=\":url\">ONLYOFFICE Connector settings</a>."
+msgstr "シークレットキーが@length文字より短いです。ONLYOFFICE Docsと<a href=\":url\">ONLYOFFICEコネクタ設定</a>で、より長いキーを設定してください。"

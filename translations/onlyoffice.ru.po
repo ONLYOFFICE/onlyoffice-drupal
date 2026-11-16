@@ -206,3 +206,9 @@ msgstr "Темная"
 
 msgid "Disable certificate verification (insecure)"
 msgstr "Отключить проверку сертификата (небезопасно)"
+
+msgid "The secret key must be at least @length characters long."
+msgstr "Секретный ключ должен содержать не менее @length символов."
+
+msgid "The secret key is shorter than @length characters. Set a longer key in ONLYOFFICE Docs and in the <a href=\":url\">ONLYOFFICE Connector settings</a>."
+msgstr "Секретный ключ короче @length символов. Задайте более длинный ключ в ONLYOFFICE Docs и в <a href=\":url\">настройках коннектора ONLYOFFICE</a>."

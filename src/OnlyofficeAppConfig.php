@@ -43,6 +43,15 @@ class OnlyofficeAppConfig {
   private const DOC_SERVICE_API_URL = "/web-apps/apps/api/documents/api.js";
 
   /**
+   * Minimum length of the ONLYOFFICE Docs secret key, in bytes.
+   *
+   * HS256 needs a key of at least 256 bits; php-jwt 7 rejects shorter keys.
+   *
+   * @var int
+   */
+  public const JWT_SECRET_MIN_LENGTH = 32;
+
+  /**
    * Data about supported formats.
    *
    * @var array

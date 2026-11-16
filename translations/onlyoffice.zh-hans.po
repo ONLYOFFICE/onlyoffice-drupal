@@ -206,3 +206,9 @@ msgstr "深色"
 
 msgid "Disable certificate verification (insecure)"
 msgstr "关闭证书校验(不安全)"
+
+msgid "The secret key must be at least @length characters long."
+msgstr "秘钥长度必须至少为 @length 个字符。"
+
+msgid "The secret key is shorter than @length characters. Set a longer key in ONLYOFFICE Docs and in the <a href=\":url\">ONLYOFFICE Connector settings</a>."
+msgstr "秘钥长度少于 @length 个字符。请在 ONLYOFFICE Docs 和 <a href=\":url\">ONLYOFFICE连接器的设置</a>中设置更长的秘钥。"
