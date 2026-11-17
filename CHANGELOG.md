@@ -7,6 +7,7 @@
 - fixed opening media in the editor without access to view it
 - PDF forms are stored in the file system and directory of the file field of the ONLYOFFICE PDF form media type, and submitted forms in the file system of their form
 - fixed the files of deleted form submissions left in the file system
+- fixed the author of the revision saved after co-editing: it is the user who changed the document last, not the one who closed it last
 
 ## Added
 - addresses for internal requests between Drupal and ONLYOFFICE Docs in the advanced server settings

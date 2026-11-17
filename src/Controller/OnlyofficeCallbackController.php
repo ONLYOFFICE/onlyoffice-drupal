@@ -232,7 +232,9 @@ class OnlyofficeCallbackController extends ControllerBase {
       'link' => OnlyofficeUrlHelper::getEditorLink($media)->toString(),
     ];
 
-    $userId = $body->actions[0]->userid ?? NULL;
+    // When saving, Docs puts the user who changed the document last first in
+    // "users"; "actions" holds the user who left the document.
+    $userId = $body->users[0] ?? $body->actions[0]->userid ?? NULL;
 
     $account = $userId !== NULL ? $this->userStorage->load($userId) : NULL;
 
