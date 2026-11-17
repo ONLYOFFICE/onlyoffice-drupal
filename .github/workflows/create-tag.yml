@@ -13,6 +13,8 @@ jobs:
   create-tag:
     if: github.server_url != 'https://github.com'
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.info.outputs.version }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v7
@@ -40,3 +42,72 @@ jobs:
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
           git tag -a "$TAG" -m "Release/$TAG"
           git push origin "$TAG"
+
+  # Commits the packaged module to the branch mirrored to git.drupalcode.org:
+  # one snapshot commit per release, tagged without the "v" prefix.
+  drupal:
+    needs: create-tag
+    runs-on: ubuntu-latest
+    concurrency: drupal-snapshot
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v7
+        with:
+          submodules: recursive
+          fetch-depth: 0
+      - name: Get Info
+        id: info
+        env:
+          VERSION: ${{ needs.create-tag.outputs.version }}
+        run: |
+          major="${VERSION%%.*}"
+          branch="$major.0.x"
+
+          # A rerun after the snapshot was pushed has nothing left to do.
+          if git rev-parse -q --verify "refs/tags/$VERSION" > /dev/null; then
+            echo "$VERSION already exists"
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          if git rev-parse -q --verify "refs/remotes/origin/$branch" > /dev/null; then
+            base="$branch"
+          else
+            base=$(git for-each-ref --format='%(refname:lstrip=3)' 'refs/remotes/origin/*.0.x' \
+              | awk -F. -v major="$major" '$1 < major' | sort -V | tail -n 1)
+          fi
+          if [ -z "$base" ]; then
+            echo "::error::No $branch branch and no earlier X.0.x branch to create it from"
+            exit 1
+          fi
+
+          echo "branch=$branch" >> "$GITHUB_OUTPUT"
+          echo "base=$base" >> "$GITHUB_OUTPUT"
+      - name: Build Module
+        if: steps.info.outputs.skip != 'true'
+        env:
+          BUILD: ${{ runner.temp }}/build
+        run: |
+          mkdir "$BUILD"
+          git archive HEAD | tar -x -C "$BUILD"
+          git submodule foreach --quiet --recursive \
+            'git archive --prefix="$displaypath/" HEAD -- . ":!AUTHORS.md" ":!LICENSE" ":!README.md" | tar -x -C "$BUILD"'
+      - name: Commit Snapshot
+        if: steps.info.outputs.skip != 'true'
+        env:
+          BUILD: ${{ runner.temp }}/build
+          SNAPSHOT: ${{ runner.temp }}/drupal
+          VERSION: ${{ needs.create-tag.outputs.version }}
+          BRANCH: ${{ steps.info.outputs.branch }}
+          BASE: ${{ steps.info.outputs.base }}
+        run: |
+          git config user.name "onlyoffice"
+          git config user.email "onlyoffice@3720544.no-reply.drupal.org"
+          git worktree add -B "$BRANCH" "$SNAPSHOT" "origin/$BASE"
+          cd "$SNAPSHOT"
+          git rm -rq .
+          cp -a "$BUILD/." .
+          git add -A
+          git commit --allow-empty -m "$VERSION"
+          git tag -a "$VERSION" -m "$VERSION"
+          git push origin "refs/heads/$BRANCH" "refs/tags/$VERSION"
