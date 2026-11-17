@@ -20,3 +20,34 @@ field.formatter.settings.onlyoffice_form_formatter:
     height:
       type: integer
       label: 'Height'
+
+field.widget.settings.onlyoffice_form_widget:
+  type: mapping
+  label: 'ONLYOFFICE form widget settings'
+
+field.storage_settings.onlyoffice_form:
+  type: mapping
+  label: 'ONLYOFFICE form field storage settings'
+
+field.field_settings.onlyoffice_form:
+  type: mapping
+  label: 'ONLYOFFICE form field settings'
+  mapping:
+    description_field:
+      type: boolean
+      label: 'Enable description field'
+
+field.value.onlyoffice_form:
+  type: mapping
+  label: 'Default value'
+  mapping:
+    target_id:
+      type: integer
+      label: 'Media ID'
+    description:
+      type: string
+      label: 'Description'
+
+media.source.onlyoffice_pdf_form:
+  type: media.source.field_aware
+  label: '"ONLYOFFICE PDF Form" media source configuration'

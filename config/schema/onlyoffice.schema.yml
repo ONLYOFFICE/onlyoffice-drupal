@@ -45,3 +45,20 @@ onlyoffice.settings:
     protection:
       type: string
       label: 'Enable document protection for'
+
+field.formatter.settings.onlyoffice_preview:
+  type: mapping
+  label: 'ONLYOFFICE Preview formatter settings'
+  mapping:
+    width_unit:
+      type: string
+      label: 'Width units'
+    width:
+      type: integer
+      label: 'Width'
+    height_unit:
+      type: string
+      label: 'Height units'
+    height:
+      type: integer
+      label: 'Height'
