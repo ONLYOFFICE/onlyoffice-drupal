@@ -43,8 +43,9 @@ jobs:
           git tag -a "$TAG" -m "Release/$TAG"
           git push origin "$TAG"
 
-  # Commits the packaged module to the branch mirrored to git.drupalcode.org:
-  # one snapshot commit per release, tagged without the "v" prefix.
+  # Commits the packaged module to the {major}.x branch mirrored to
+  # git.drupalcode.org: one snapshot commit per release, tagged without the "v"
+  # prefix.
   drupal:
     needs: create-tag
     runs-on: ubuntu-latest
@@ -61,7 +62,7 @@ jobs:
           VERSION: ${{ needs.create-tag.outputs.version }}
         run: |
           major="${VERSION%%.*}"
-          branch="$major.0.x"
+          branch="$major.x"
 
           # A rerun after the snapshot was pushed has nothing left to do.
           if git rev-parse -q --verify "refs/tags/$VERSION" > /dev/null; then
@@ -73,11 +74,14 @@ jobs:
           if git rev-parse -q --verify "refs/remotes/origin/$branch" > /dev/null; then
             base="$branch"
           else
-            base=$(git for-each-ref --format='%(refname:lstrip=3)' 'refs/remotes/origin/*.0.x' \
-              | awk -F. -v major="$major" '$1 < major' | sort -V | tail -n 1)
+            # The newest release branch up to this major version; X.x is newer
+            # than any X.Y.x, which is what the 999999 sort key stands for.
+            base=$(git for-each-ref --format='%(refname:lstrip=3)' 'refs/remotes/origin/' \
+              | awk -F. -v major="$major" '/^[0-9]+(\.[0-9]+)?\.x$/ && $1 <= major { print $1, (NF == 2 ? 999999 : $2), $0 }' \
+              | sort -k1,1n -k2,2n | tail -n 1 | cut -d ' ' -f 3)
           fi
           if [ -z "$base" ]; then
-            echo "::error::No $branch branch and no earlier X.0.x branch to create it from"
+            echo "::error::No $branch branch and no earlier release branch to create it from"
             exit 1
           fi
 
