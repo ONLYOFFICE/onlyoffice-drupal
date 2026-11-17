@@ -14,30 +14,33 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+      - name: Checkout Repository
+        uses: actions/checkout@v7
+      - name: Setup Node
+        uses: actions/setup-node@v7
         with:
           node-version: '24.x'
           cache: 'npm'
-      - id: install
+      - name: Install Dependencies
+        id: install
         run: npm ci
-      - run: npm run lint:css
-      - if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+      - name: Lint CSS
+        run: npm run lint:css
+      - name: Lint JS and YAML
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
         run: npm run lint:js
 
   phpcs:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-
+      - name: Checkout Repository
+        uses: actions/checkout@v7
       - name: Setup PHP
-        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+        uses: shivammathur/setup-php@v2
         with:
           php-version: '8.1'
           coverage: none
           tools: composer
-
       - name: Run phpcs
         run: |
           composer global config --no-plugins allow-plugins.dealerdirect/phpcodesniffer-composer-installer true
