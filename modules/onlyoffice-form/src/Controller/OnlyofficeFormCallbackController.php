@@ -283,9 +283,13 @@ class OnlyofficeFormCallbackController extends ControllerBase {
    * Method for force saving file.
    */
   private function proccessForceSave($body, Media $media, $context) {
-    $isSubmitForm = $body->forcesavetype === 3;
+    // Docs also force saves the form being filled in, for example on a timer;
+    // only the submitted form is kept.
+    if (($body->forcesavetype ?? NULL) !== 3) {
+      return new JsonResponse(['error' => 0], 200);
+    }
 
-    $download_url = $body->url;
+    $download_url = $body->url ?? NULL;
     if ($download_url === NULL) {
       $this->getLogger('onlyoffice')->error('URL parameter not found when saving media @type %label.', $context);
       return new JsonResponse(
@@ -307,51 +311,49 @@ class OnlyofficeFormCallbackController extends ControllerBase {
     }
 
     if ($new_data) {
-      if ($isSubmitForm) {
-        // Create a dedicated directory for this media's submissions.
-        $media_uuid = $media->uuid();
-        // Submissions are stored in the same file system as the form.
-        $submission_directory = StreamWrapperManager::getScheme($file->getFileUri()) . '://onlyoffice_forms/submissions/' . $media_uuid;
-        $this->fileSystem->prepareDirectory($submission_directory, FileSystemInterface::CREATE_DIRECTORY);
+      // Create a dedicated directory for this media's submissions.
+      $media_uuid = $media->uuid();
+      // Submissions are stored in the same file system as the form.
+      $submission_directory = StreamWrapperManager::getScheme($file->getFileUri()) . '://onlyoffice_forms/submissions/' . $media_uuid;
+      $this->fileSystem->prepareDirectory($submission_directory, FileSystemInterface::CREATE_DIRECTORY);
 
-        // Generate a unique filename that includes the form name.
-        $timestamp = $this->time->getRequestTime();
-        $unique_id = substr(hash('sha256', $timestamp . rand()), 0, 8);
-        $sanitized_name = preg_replace('/[^a-zA-Z0-9_-]/', '_', $media_name);
-        $new_filename = $sanitized_name . '_submission_' . $unique_id . '.' . $file_extension;
+      // Generate a unique filename that includes the form name.
+      $timestamp = $this->time->getRequestTime();
+      $unique_id = substr(hash('sha256', $timestamp . rand()), 0, 8);
+      $sanitized_name = preg_replace('/[^a-zA-Z0-9_-]/', '_', $media_name);
+      $new_filename = $sanitized_name . '_submission_' . $unique_id . '.' . $file_extension;
 
-        // Set the destination for the new file.
-        $newDestination = $submission_directory . '/' . $new_filename;
+      // Set the destination for the new file.
+      $newDestination = $submission_directory . '/' . $new_filename;
 
-        // Save the submitted form as a new file.
-        $newFile = $this->fileRepository->writeData($new_data, $newDestination);
+      // Save the submitted form as a new file.
+      $newFile = $this->fileRepository->writeData($new_data, $newDestination);
 
-        // Create a form submission entity.
-        $submission = $this->entityTypeManager()->getStorage('onlyoffice_form_submission')->create([
-          'media_id' => $media->id(),
-          'file_id' => $newFile->id(),
-        // This will be 0 for anonymous users, which is correct.
-          'uid' => $this->account->id(),
-        ]);
-        $submission->save();
+      // Create a form submission entity.
+      $submission = $this->entityTypeManager()->getStorage('onlyoffice_form_submission')->create([
+        'media_id' => $media->id(),
+        'file_id' => $newFile->id(),
+      // This will be 0 for anonymous users, which is correct.
+        'uid' => $this->account->id(),
+      ]);
+      $submission->save();
 
-        // For anonymous users, also store the submission in the session.
-        if ($this->account->isAnonymous()) {
-          // Use Drupal's shared tempstore for cross-session persistence.
-          $tempstore = $this->tempstoreFactory->get('onlyoffice_form');
+      // For anonymous users, also store the submission in the session.
+      if ($this->account->isAnonymous()) {
+        // Use Drupal's shared tempstore for cross-session persistence.
+        $tempstore = $this->tempstoreFactory->get('onlyoffice_form');
 
-          // Store with a unique key that includes the media ID.
-          $key = 'submission_' . $media->id() . '_' . $body->key;
+        // Store with a unique key that includes the media ID.
+        $key = 'submission_' . $media->id() . '_' . $body->key;
 
-          // Set with a longer expiration (default is 1 week)
-          $tempstore->set($key, TRUE);
+        // Set with a longer expiration (default is 1 week)
+        $tempstore->set($key, TRUE);
 
-          $this->getLogger('onlyoffice_form')->debug('Stored submission in shared tempstore with key: @key', ['@key' => $key]);
-        }
-
-        $this->getLogger('onlyoffice_form')->notice('Form submission for media @type %label was successfully saved.', $context);
-        return new JsonResponse(['error' => 0], 200);
+        $this->getLogger('onlyoffice_form')->debug('Stored submission in shared tempstore with key: @key', ['@key' => $key]);
       }
+
+      $this->getLogger('onlyoffice_form')->notice('Form submission for media @type %label was successfully saved.', $context);
+      return new JsonResponse(['error' => 0], 200);
     }
     else {
       $this->getLogger('onlyoffice')->error('Error download file from @url.', ['@url' => $download_url]);
