@@ -3,25 +3,40 @@ name: Create Tag
 on:
   push:
     branches: [main]
-    paths-ignore:
-      - '.github/**'
-      - '**/AUTHORS.md'
-      - '**/LICENSE'
-      - '**/README.md'
+    paths:
+      - 'CHANGELOG.md'
+
+permissions:
+  contents: write
 
 jobs:
   create-tag:
+    if: github.server_url != 'https://github.com'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
       - name: Get Info
-        run: |
-          echo "version=$(grep -Eo '[0-9]+(\.[0-9]+)+' CHANGELOG.md | head -n 1)" >> $GITHUB_OUTPUT
         id: info
-      - name: Create Tag
         run: |
+          heading=$(grep -m 1 '^## ' CHANGELOG.md)
+          version=$(echo "$heading" | grep -oE '^## [0-9]+\.[0-9]+\.[0-9]+(-(alpha|beta|rc)[1-9][0-9]*)?$' | cut -c 4-)
+          if [ -z "$version" ]; then
+            echo "::error::The first section of CHANGELOG.md is \"$heading\", not a version heading such as \"## 1.2.3\""
+            exit 1
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+      - name: Create Tag
+        env:
+          TAG: v${{ steps.info.outputs.version }}
+        run: |
+          if git rev-parse -q --verify "refs/tags/$TAG" > /dev/null; then
+            echo "$TAG already exists"
+            exit 0
+          fi
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
-          git tag -a 'v${{ steps.info.outputs.version }}' -m 'Release/v${{ steps.info.outputs.version }}'
-          git push origin 'v${{ steps.info.outputs.version }}'
+          git tag -a "$TAG" -m "Release/$TAG"
+          git push origin "$TAG"
