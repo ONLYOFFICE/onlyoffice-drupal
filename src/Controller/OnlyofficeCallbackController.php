@@ -152,7 +152,7 @@ class OnlyofficeCallbackController extends ControllerBase {
     $body = json_decode($request->getContent());
     $this->getLogger('onlyoffice')->debug('Request from Document Editing Service: <br><pre><code>' . print_r($body, TRUE) . '</code></pre>');
 
-    if (!$body) {
+    if (!is_object($body)) {
       $this->getLogger('onlyoffice')->error('The request body is missing.');
       return new JsonResponse(
         ['error' => 1, 'message' => 'The request body is missing.'],
@@ -161,7 +161,7 @@ class OnlyofficeCallbackController extends ControllerBase {
     }
 
     if ($this->config('onlyoffice.settings')->get('doc_server_jwt')) {
-      $token = $body->token;
+      $token = $body->token ?? NULL;
       $inBody = TRUE;
 
       if (empty($token)) {
@@ -182,9 +182,14 @@ class OnlyofficeCallbackController extends ControllerBase {
       try {
         $bodyFromToken = JWT::decode($token, new Key($this->config('onlyoffice.settings')->get('doc_server_jwt'), 'HS256'));
 
-        $body = $inBody ? $bodyFromToken : $bodyFromToken->payload;
+        $body = $inBody ? $bodyFromToken : ($bodyFromToken->payload ?? NULL);
+
+        if (!is_object($body)) {
+          throw new \UnexpectedValueException('The token has no payload.');
+        }
       }
-      catch (\Exception $e) {
+      // A token that is not a string makes JWT::decode() throw a TypeError.
+      catch (\Throwable $e) {
         $this->getLogger('onlyoffice')->error('Invalid request token.');
         return new JsonResponse(
           ['error' => 1, 'message' => 'Invalid request token.'],
@@ -280,7 +285,7 @@ class OnlyofficeCallbackController extends ControllerBase {
       );
     }
 
-    $download_url = $body->url;
+    $download_url = $body->url ?? NULL;
     if ($download_url === NULL) {
       $this->getLogger('onlyoffice')->error('URL parameter not found when saving media @type %label.', $context);
       return new JsonResponse(

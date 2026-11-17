@@ -174,7 +174,7 @@ class OnlyofficeFormCallbackController extends ControllerBase {
     $body = json_decode($request->getContent());
     $this->getLogger('onlyoffice')->debug('Request from Document Editing Service: <br><pre><code>' . print_r($body, TRUE) . '</code></pre>');
 
-    if (!$body) {
+    if (!is_object($body)) {
       $this->getLogger('onlyoffice')->error('The request body is missing.');
       return new JsonResponse(
         ['error' => 1, 'message' => 'The request body is missing.'],
@@ -183,7 +183,7 @@ class OnlyofficeFormCallbackController extends ControllerBase {
     }
 
     if ($this->config('onlyoffice.settings')->get('doc_server_jwt')) {
-      $token = $body->token;
+      $token = $body->token ?? NULL;
       $inBody = TRUE;
 
       if (empty($token)) {
@@ -204,9 +204,14 @@ class OnlyofficeFormCallbackController extends ControllerBase {
       try {
         $bodyFromToken = JWT::decode($token, new Key($this->config('onlyoffice.settings')->get('doc_server_jwt'), 'HS256'));
 
-        $body = $inBody ? $bodyFromToken : $bodyFromToken->payload;
+        $body = $inBody ? $bodyFromToken : ($bodyFromToken->payload ?? NULL);
+
+        if (!is_object($body)) {
+          throw new \UnexpectedValueException('The token has no payload.');
+        }
       }
-      catch (\Exception $e) {
+      // A token that is not a string makes JWT::decode() throw a TypeError.
+      catch (\Throwable $e) {
         $this->getLogger('onlyoffice')->error('Invalid request token.');
         return new JsonResponse(
           ['error' => 1, 'message' => 'Invalid request token.'],
@@ -344,7 +349,7 @@ class OnlyofficeFormCallbackController extends ControllerBase {
         $tempstore = $this->tempstoreFactory->get('onlyoffice_form');
 
         // Store with a unique key that includes the media ID.
-        $key = 'submission_' . $media->id() . '_' . $body->key;
+        $key = 'submission_' . $media->id() . '_' . ($body->key ?? '');
 
         // Set with a longer expiration (default is 1 week)
         $tempstore->set($key, TRUE);
