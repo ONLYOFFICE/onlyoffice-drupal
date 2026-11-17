@@ -21,10 +21,12 @@ namespace Drupal\onlyoffice_form\Hook;
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+use Drupal\Component\Utility\DeprecationHelper;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ExtensionPathResolver;
+use Drupal\Core\Extension\Requirement\RequirementSeverity;
 use Drupal\Core\Field\FieldTypeCategoryManagerInterface;
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -32,6 +34,8 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\file\FileInterface;
 use Drupal\media\MediaInterface;
+use Drupal\onlyoffice_form\OnlyofficeFormDocumentHelper;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
  * Hook implementations for the ONLYOFFICE form module.
@@ -47,10 +51,14 @@ class OnlyofficeFormHooks {
    *   The entity type manager.
    * @param \Drupal\Core\Extension\ExtensionPathResolver $extensionPathResolver
    *   The extension path resolver.
+   * @param \Drupal\onlyoffice_form\OnlyofficeFormDocumentHelper $documentHelper
+   *   The form document helper.
    */
   public function __construct(
     protected readonly EntityTypeManagerInterface $entityTypeManager,
     protected readonly ExtensionPathResolver $extensionPathResolver,
+    #[Autowire(service: 'onlyoffice_form.document_helper')]
+    protected readonly OnlyofficeFormDocumentHelper $documentHelper,
   ) {}
 
   /**
@@ -151,6 +159,78 @@ class OnlyofficeFormHooks {
     }
 
     return AccessResult::neutral();
+  }
+
+  /**
+   * Implements hook_ENTITY_TYPE_access() for file entities.
+   *
+   * Submission files are not referenced by a file field, so core grants no
+   * access to them in the private file system.
+   */
+  #[Hook('file_access')]
+  public function fileAccess(FileInterface $file, string $operation, AccountInterface $account): AccessResultInterface {
+    if (!in_array($operation, ['view', 'download'], TRUE) || !str_contains($file->getFileUri(), '://onlyoffice_forms/submissions/')) {
+      return AccessResult::neutral();
+    }
+
+    $submissions = $this->entityTypeManager->getStorage('onlyoffice_form_submission')->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('file_id', $file->id())
+      ->range(0, 1)
+      ->execute();
+
+    if (!$submissions) {
+      return AccessResult::neutral();
+    }
+
+    return AccessResult::allowedIfHasPermission($account, 'administer onlyoffice forms')->addCacheableDependency($file);
+  }
+
+  /**
+   * Implements hook_file_download().
+   *
+   * Core serves only the private files referenced by a file field.
+   */
+  #[Hook('file_download')]
+  public function fileDownload(string $uri): array|int|null {
+    if (!str_contains($uri, '://onlyoffice_forms/submissions/')) {
+      return NULL;
+    }
+
+    $files = $this->entityTypeManager->getStorage('file')->loadByProperties(['uri' => $uri]);
+    $file = reset($files);
+
+    if (!$file) {
+      return NULL;
+    }
+
+    return $file->access('download') ? $file->getDownloadHeaders() : -1;
+  }
+
+  /**
+   * Implements hook_runtime_requirements().
+   */
+  #[Hook('runtime_requirements')]
+  public function runtimeRequirements(): array {
+    $definition = $this->documentHelper->getSourceFieldDefinition();
+
+    if (!$definition || $definition->getSetting('uri_scheme') !== 'public') {
+      return [];
+    }
+
+    return [
+      'onlyoffice_form_public_files' => [
+        'title' => $this->t('ONLYOFFICE form submissions'),
+        'value' => $this->t('Public files'),
+        'description' => $this->t('Submitted forms are stored in the public file system, where anyone who knows the address of a file can download it. To keep them private, set up the private file system and select it as the upload destination of the file field of the ONLYOFFICE PDF form media type.'),
+        'severity' => DeprecationHelper::backwardsCompatibleCall(
+          \Drupal::VERSION,
+          '11.2.0',
+          fn() => RequirementSeverity::Warning,
+          fn() => REQUIREMENT_WARNING,
+        ),
+      ],
+    ];
   }
 
   /**

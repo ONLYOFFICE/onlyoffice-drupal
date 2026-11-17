@@ -672,3 +672,11 @@ msgstr "ONLYOFFICE PDF 表单"
 #: src/Plugin/media/Source/OnlyofficePdfForm.php:27
 msgid "Use onlyoffice pdf forms for reusable media."
 msgstr "对于可重复使用的媒体，请使用 ONLYOFFICE PDF 表单。"
+
+#: src/Hook/OnlyofficeFormHooks.php
+msgid "Public files"
+msgstr "公共文件"
+
+#: src/Hook/OnlyofficeFormHooks.php
+msgid "Submitted forms are stored in the public file system, where anyone who knows the address of a file can download it. To keep them private, set up the private file system and select it as the upload destination of the file field of the ONLYOFFICE PDF form media type."
+msgstr "已提交的表单存储在公共文件系统中，任何知道文件地址的人都可以下载。若要将其设为私有，请配置私有文件系统，并将其选为“ONLYOFFICE PDF 表单”媒体类型文件字段的上传目标。"

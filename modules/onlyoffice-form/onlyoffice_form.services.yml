@@ -1,6 +1,7 @@
 services:
   onlyoffice_form.document_helper:
     class: Drupal\onlyoffice_form\OnlyofficeFormDocumentHelper
+    arguments: ['@entity_type.manager']
 
   Drupal\onlyoffice_form\Hook\OnlyofficeFormHooks:
     class: Drupal\onlyoffice_form\Hook\OnlyofficeFormHooks

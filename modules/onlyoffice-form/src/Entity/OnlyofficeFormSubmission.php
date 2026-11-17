@@ -23,6 +23,7 @@ namespace Drupal\onlyoffice_form\Entity;
 
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityChangedTrait;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\user\EntityOwnerInterface;
@@ -173,6 +174,25 @@ class OnlyofficeFormSubmission extends ContentEntityBase implements EntityOwnerI
   public function setFileId($file_id) {
     $this->set('file_id', $file_id);
     return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function postDelete(EntityStorageInterface $storage, array $entities) {
+    parent::postDelete($storage, $entities);
+
+    $fids = [];
+    foreach ($entities as $entity) {
+      if ($fid = $entity->get('file_id')->target_id) {
+        $fids[] = $fid;
+      }
+    }
+
+    if ($fids) {
+      $fileStorage = \Drupal::entityTypeManager()->getStorage('file');
+      $fileStorage->delete($fileStorage->loadMultiple($fids));
+    }
   }
 
 }

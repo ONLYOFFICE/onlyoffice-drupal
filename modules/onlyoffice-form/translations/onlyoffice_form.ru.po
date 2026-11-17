@@ -688,3 +688,11 @@ msgstr "PDF-форма ONLYOFFICE"
 msgid "Use onlyoffice pdf forms for reusable media."
 msgstr ""
 "Используйте PDF-формы ONLYOFFICE для носителей, используемых повторно."
+
+#: src/Hook/OnlyofficeFormHooks.php
+msgid "Public files"
+msgstr "Публичные файлы"
+
+#: src/Hook/OnlyofficeFormHooks.php
+msgid "Submitted forms are stored in the public file system, where anyone who knows the address of a file can download it. To keep them private, set up the private file system and select it as the upload destination of the file field of the ONLYOFFICE PDF form media type."
+msgstr "Отправленные формы хранятся в публичной файловой системе, где любой, кто знает адрес файла, может его скачать. Чтобы закрыть к ним доступ, настройте приватную файловую систему и выберите её местом загрузки в файловом поле типа медиа «PDF-форма ONLYOFFICE»."

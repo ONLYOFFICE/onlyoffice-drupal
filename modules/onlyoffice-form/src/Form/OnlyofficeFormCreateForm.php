@@ -231,7 +231,7 @@ class OnlyofficeFormCreateForm extends FormBase {
     // File upload field - only visible for 'upload' option.
     $form['upload_file'] = [
       '#type' => 'managed_file',
-      '#upload_location' => 'public://onlyoffice_forms/',
+      '#upload_location' => $this->documentHelper->getUploadLocation(),
       '#upload_validators' => [
         'FileExtension' => ['extensions' => 'pdf'],
       ],
@@ -366,7 +366,7 @@ class OnlyofficeFormCreateForm extends FormBase {
         $template_path = OnlyofficeDocumentHelper::getNewTemplatePath('pdf', $language);
 
         // Create the destination directory if it doesn't exist.
-        $directory = 'public://onlyoffice_forms/';
+        $directory = $this->documentHelper->getUploadLocation();
         $this->fileSystem->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY);
 
         // Generate a safe filename.
@@ -374,7 +374,8 @@ class OnlyofficeFormCreateForm extends FormBase {
         if (!str_ends_with(strtolower($filename), '.pdf')) {
           $filename .= '.pdf';
         }
-        $destination = $directory . basename($filename);
+        $separator = substr($directory, -1) == '/' ? '' : '/';
+        $destination = $directory . $separator . basename($filename);
 
         // Copy the template file.
         $uri = $this->fileSystem->copy($template_path, $destination, FileExists::Rename);

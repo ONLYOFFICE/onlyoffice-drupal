@@ -692,3 +692,11 @@ msgstr "Formulario PDF de ONLYOFFICE"
 #: src/Plugin/media/Source/OnlyofficePdfForm.php:27
 msgid "Use onlyoffice pdf forms for reusable media."
 msgstr "Utilizar formularios PDF de ONLYOFFICE para medios reutilizables."
+
+#: src/Hook/OnlyofficeFormHooks.php
+msgid "Public files"
+msgstr "Archivos públicos"
+
+#: src/Hook/OnlyofficeFormHooks.php
+msgid "Submitted forms are stored in the public file system, where anyone who knows the address of a file can download it. To keep them private, set up the private file system and select it as the upload destination of the file field of the ONLYOFFICE PDF form media type."
+msgstr "Los formularios enviados se almacenan en el sistema de archivos público, donde cualquiera que conozca la dirección de un archivo puede descargarlo. Para mantenerlos privados, configure el sistema de archivos privado y selecciónelo como destino de carga del campo de archivo del tipo de medio «Formulario PDF de ONLYOFFICE»."

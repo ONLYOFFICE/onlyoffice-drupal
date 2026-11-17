@@ -41,7 +41,8 @@ pass the same variables to its other commands (values in `dev/.env` take precede
 DRUPAL_VERSION=10.3 PHP_VERSION=8.3 DRUPAL_PORT=8001 DS_PORT=8081 dev/stand.sh
 ```
 
-Mail is not sent: the stand keeps it with Drupal's test mail collector.
+Mail is not sent: the stand keeps it with Drupal's test mail collector. The private file system is set up in
+`/opt/drupal/private`; public files stay the default, so select private files in a file field to use it.
 
 ## How the addresses fit together
 

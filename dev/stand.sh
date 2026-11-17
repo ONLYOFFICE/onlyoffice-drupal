@@ -28,6 +28,8 @@ ADMIN_PASS="${ADMIN_PASS:-admin}"
 
 MODULE_DIR=/opt/drupal/web/modules/contrib/onlyoffice
 SITE_DIR=/opt/drupal/web/sites/default
+# Outside the web root; the path is repeated in settings.stand.php.
+PRIVATE_DIR=/opt/drupal/private
 
 log() {
     printf '\033[1;34m==>\033[0m %s\n' "$*"
@@ -78,6 +80,7 @@ write_settings() {
 // Browsers use localhost, ONLYOFFICE Docs uses the docker service name.
 $settings['trusted_host_patterns'] = ['^localhost$', '^drupal$'];
 $settings['skip_permissions_hardening'] = TRUE;
+$settings['file_private_path'] = '/opt/drupal/private';
 
 // There is no mail server in the stand; sent mail is kept in the state instead.
 $config['system.mail']['interface']['default'] = 'test_mail_collector';
@@ -118,6 +121,7 @@ cmd_up() {
 
     install_packages
     as_root chown -R www-data:www-data "$SITE_DIR"
+    as_root sh -c "mkdir -p $PRIVATE_DIR && chown www-data:www-data $PRIVATE_DIR"
     write_settings
     include_settings
 

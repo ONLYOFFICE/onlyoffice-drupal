@@ -24,8 +24,9 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-use Drupal\Core\File\FileSystemInterface;
+use Drupal\Core\Hook\Attribute\LegacyRequirementsHook;
 use Drupal\media\Entity\MediaType;
+use Drupal\onlyoffice_form\Hook\OnlyofficeFormHooks;
 
 /**
  * Implements hook_schema().
@@ -112,10 +113,6 @@ function onlyoffice_form_schema() {
  * Implements hook_install().
  */
 function onlyoffice_form_install() {
-  // Create the directory for storing form files.
-  $directory = 'public://onlyoffice_forms';
-  \Drupal::service('file_system')->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY);
-
   // Create the ONLYOFFICE PDF form media type.
   _onlyoffice_form_create_media_type();
 }
@@ -148,7 +145,7 @@ function _onlyoffice_form_create_media_type() {
           'type' => 'file',
           'settings' => [
             'target_type' => 'file',
-            'uri_scheme' => 'public',
+            'uri_scheme' => \Drupal::config('system.file')->get('default_scheme'),
           ],
           'cardinality' => 1,
         ]);
@@ -221,11 +218,12 @@ function _onlyoffice_form_create_media_type() {
  * Implements hook_uninstall().
  */
 function onlyoffice_form_uninstall() {
-  // Clean up any files created by this module.
+  // Clean up any files created by this module, in any file system.
   $file_storage = \Drupal::entityTypeManager()->getStorage('file');
-  $fids = \Drupal::database()->select('file_managed', 'fm')
+  $database = \Drupal::database();
+  $fids = $database->select('file_managed', 'fm')
     ->fields('fm', ['fid'])
-    ->condition('uri', 'public://onlyoffice_forms/%', 'LIKE')
+    ->condition('uri', '%' . $database->escapeLike('://onlyoffice_forms/') . '%', 'LIKE')
     ->execute()
     ->fetchCol();
 
@@ -253,4 +251,20 @@ function onlyoffice_form_uninstall() {
   if ($media_type) {
     $media_type->delete();
   }
+}
+
+/**
+ * Implements hook_requirements().
+ *
+ * Drupal 11.3 and later skip this function and use
+ * \Drupal\onlyoffice_form\Hook\OnlyofficeFormHooks::runtimeRequirements()
+ * instead.
+ */
+#[LegacyRequirementsHook]
+function onlyoffice_form_requirements($phase) {
+  if ($phase !== 'runtime') {
+    return [];
+  }
+
+  return \Drupal::service(OnlyofficeFormHooks::class)->runtimeRequirements();
 }

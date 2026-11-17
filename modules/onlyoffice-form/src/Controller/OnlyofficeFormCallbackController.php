@@ -26,6 +26,7 @@ use Drupal\Component\Uuid\Uuid;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\File\FileSystemInterface;
+use Drupal\Core\StreamWrapper\StreamWrapperManager;
 use Drupal\Core\TempStore\SharedTempStoreFactory;
 use Drupal\file\FileRepositoryInterface;
 use Drupal\media\Entity\Media;
@@ -309,7 +310,8 @@ class OnlyofficeFormCallbackController extends ControllerBase {
       if ($isSubmitForm) {
         // Create a dedicated directory for this media's submissions.
         $media_uuid = $media->uuid();
-        $submission_directory = 'public://onlyoffice_forms/submissions/' . $media_uuid;
+        // Submissions are stored in the same file system as the form.
+        $submission_directory = StreamWrapperManager::getScheme($file->getFileUri()) . '://onlyoffice_forms/submissions/' . $media_uuid;
         $this->fileSystem->prepareDirectory($submission_directory, FileSystemInterface::CREATE_DIRECTORY);
 
         // Generate a unique filename that includes the form name.

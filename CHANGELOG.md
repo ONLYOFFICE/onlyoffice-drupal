@@ -5,6 +5,8 @@
 - ONLYOFFICE Docs secret key must be at least 32 characters long
 - ONLYOFFICE Docs address and secret key settings renamed and given descriptions
 - fixed opening media in the editor without access to view it
+- PDF forms are stored in the file system and directory of the file field of the ONLYOFFICE PDF form media type, and submitted forms in the file system of their form
+- fixed the files of deleted form submissions left in the file system
 
 ## Added
 - addresses for internal requests between Drupal and ONLYOFFICE Docs in the advanced server settings
@@ -19,6 +21,7 @@
 - setting to disable certificate verification of ONLYOFFICE Docs
 - support for firebase/php-jwt 7
 - status report warning about a short ONLYOFFICE Docs secret key
+- status report warning when submitted forms are stored in the public file system
 - support for drupal 12
 
 ## 3.0.0

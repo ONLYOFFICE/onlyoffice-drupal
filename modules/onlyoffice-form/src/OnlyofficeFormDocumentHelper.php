@@ -21,10 +21,50 @@ namespace Drupal\onlyoffice_form;
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
+
 /**
  * Set of tools for working with forms.
  */
 class OnlyofficeFormDocumentHelper {
+
+  /**
+   * Constructs an OnlyofficeFormDocumentHelper object.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
+   *   The entity type manager.
+   */
+  public function __construct(
+    protected readonly EntityTypeManagerInterface $entityTypeManager,
+  ) {}
+
+  /**
+   * Returns the file field of the ONLYOFFICE PDF form media type.
+   */
+  public function getSourceFieldDefinition(): ?FieldDefinitionInterface {
+    $types = $this->entityTypeManager->getStorage('media_type')->loadByProperties(['source' => 'onlyoffice_pdf_form']);
+    $type = reset($types);
+
+    return $type ? $type->getSource()->getSourceFieldDefinition($type) : NULL;
+  }
+
+  /**
+   * Returns the directory for new PDF forms, as set in their file field.
+   */
+  public function getUploadLocation(): string {
+    $definition = $this->getSourceFieldDefinition();
+
+    if (!$definition) {
+      throw new \RuntimeException('The ONLYOFFICE PDF form media type is missing.');
+    }
+
+    return $this->entityTypeManager->getStorage('media')
+      ->create(['bundle' => $definition->getTargetBundle()])
+      ->get($definition->getName())
+      ->appendItem()
+      ->getUploadLocation();
+  }
 
   /**
    * Checking pdf onlyoffice form by file content.

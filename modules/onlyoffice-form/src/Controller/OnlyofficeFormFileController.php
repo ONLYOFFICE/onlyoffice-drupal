@@ -150,12 +150,11 @@ class OnlyofficeFormFileController extends ControllerBase {
 
     $uploadedFile = $files['upload_file'];
 
-    // Prepare the destination directory.
-    $directory = 'public://onlyoffice_forms/';
-    $this->fileSystem->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY);
-
     // Save the file.
     try {
+      $directory = $this->documentHelper->getUploadLocation();
+      $this->fileSystem->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY);
+
       $result = $this->fileUploadHandler->handleFileUpload(
         new FormUploadedFile($uploadedFile),
         ['FileExtension' => ['extensions' => 'pdf']],

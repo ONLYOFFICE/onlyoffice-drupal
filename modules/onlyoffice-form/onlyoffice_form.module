@@ -28,6 +28,7 @@ use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Hook\Attribute\LegacyHook;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\file\FileInterface;
 use Drupal\media\MediaInterface;
 use Drupal\onlyoffice_form\Hook\OnlyofficeFormHooks;
 
@@ -69,6 +70,22 @@ function template_preprocess_onlyoffice_form_file_upload(array &$variables): voi
 #[LegacyHook]
 function onlyoffice_form_media_access(MediaInterface $media, string $operation, AccountInterface $account): AccessResultInterface {
   return \Drupal::service(OnlyofficeFormHooks::class)->mediaAccess($media, $operation, $account);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_access() for file entities.
+ */
+#[LegacyHook]
+function onlyoffice_form_file_access(FileInterface $file, string $operation, AccountInterface $account): AccessResultInterface {
+  return \Drupal::service(OnlyofficeFormHooks::class)->fileAccess($file, $operation, $account);
+}
+
+/**
+ * Implements hook_file_download().
+ */
+#[LegacyHook]
+function onlyoffice_form_file_download(string $uri): array|int|null {
+  return \Drupal::service(OnlyofficeFormHooks::class)->fileDownload($uri);
 }
 
 /**
