@@ -45,11 +45,15 @@ function onlyoffice_uninstall() {
 }
 
 /**
- * Set the default editor and security settings.
+ * Set the default connection, editor and security settings.
  */
 function onlyoffice_update_10001() {
   $config = \Drupal::configFactory()->getEditable('onlyoffice.settings');
   $defaults = [
+    'verify_peer_off' => FALSE,
+    'doc_server_jwt_header' => '',
+    'doc_server_internal_url' => '',
+    'storage_url' => '',
     'chat' => TRUE,
     'compact_header' => FALSE,
     'feedback' => FALSE,
