@@ -4,6 +4,7 @@
 - minimum supported drupal version is 10.3
 - ONLYOFFICE Docs secret key must be at least 32 characters long
 - ONLYOFFICE Docs address and secret key settings renamed and given descriptions
+- fixed opening media in the editor without access to view it
 
 ## Added
 - addresses for internal requests between Drupal and ONLYOFFICE Docs in the advanced server settings

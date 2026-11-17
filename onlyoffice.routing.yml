@@ -18,6 +18,7 @@ onlyoffice.editor:
         type: entity:media
   requirements:
     _permission: 'view media,access media overview'
+    _entity_access: 'media.view'
     media: '\d+'
 
 onlyoffice.save_as:
