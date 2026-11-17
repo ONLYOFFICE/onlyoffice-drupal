@@ -27,6 +27,7 @@ services:
     volumes:
       - drupal:/opt/drupal
       - ..:/opt/drupal/web/modules/contrib/onlyoffice
+      - ./php.ini:/usr/local/etc/php/conf.d/zz-stand.ini:ro
 
   documentserver:
     image: onlyoffice/documentserver:${DS_VERSION:-latest}

@@ -9,7 +9,8 @@ dev/stand.sh            # start, install or update Drupal, enable and configure 
 
 Drupal is at http://localhost:8000 (`admin` / `admin`), Docs at http://localhost:8080.
 The stand enables Media, `onlyoffice` and `onlyoffice_form`, fills in the connection settings and runs the same
-connection check as the settings form. Module edits are live; the Drupal codebase lives in a Docker volume, not on disk.
+connection check as the settings form. Module edits are live (`dev/php.ini` makes OPcache check for
+changed files on every request); the Drupal codebase lives in a Docker volume, not on disk.
 
 | Command | |
 |---|---|
