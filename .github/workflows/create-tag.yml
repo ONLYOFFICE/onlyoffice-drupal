@@ -3,25 +3,115 @@ name: Create Tag
 on:
   push:
     branches: [main]
-    paths-ignore:
-      - '.github/**'
-      - '**/AUTHORS.md'
-      - '**/LICENSE'
-      - '**/README.md'
+    paths:
+      - 'CHANGELOG.md'
+
+permissions:
+  contents: write
 
 jobs:
   create-tag:
+    if: github.server_url != 'https://github.com'
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.info.outputs.version }}
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
       - name: Get Info
-        run: |
-          echo "version=$(grep -Eo '[0-9]+(\.[0-9]+)+' CHANGELOG.md | head -n 1)" >> $GITHUB_OUTPUT
         id: info
-      - name: Create Tag
         run: |
+          heading=$(grep -m 1 '^## ' CHANGELOG.md)
+          version=$(echo "$heading" | grep -oE '^## [0-9]+\.[0-9]+\.[0-9]+(-(alpha|beta|rc)[1-9][0-9]*)?$' | cut -c 4-)
+          if [ -z "$version" ]; then
+            echo "::error::The first section of CHANGELOG.md is \"$heading\", not a version heading such as \"## 1.2.3\""
+            exit 1
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+      - name: Create Tag
+        env:
+          TAG: v${{ steps.info.outputs.version }}
+        run: |
+          if git rev-parse -q --verify "refs/tags/$TAG" > /dev/null; then
+            echo "$TAG already exists"
+            exit 0
+          fi
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
-          git tag -a 'v${{ steps.info.outputs.version }}' -m 'Release/v${{ steps.info.outputs.version }}'
-          git push origin 'v${{ steps.info.outputs.version }}'
+          git tag -a "$TAG" -m "Release/$TAG"
+          git push origin "$TAG"
+
+  # Commits the packaged module to the {major}.x branch mirrored to
+  # git.drupalcode.org: one snapshot commit per release, tagged without the "v"
+  # prefix.
+  drupal:
+    needs: create-tag
+    runs-on: ubuntu-latest
+    concurrency: drupal-snapshot
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v7
+        with:
+          submodules: recursive
+          fetch-depth: 0
+      - name: Get Info
+        id: info
+        env:
+          VERSION: ${{ needs.create-tag.outputs.version }}
+        run: |
+          major="${VERSION%%.*}"
+          branch="$major.x"
+
+          # A rerun after the snapshot was pushed has nothing left to do.
+          if git rev-parse -q --verify "refs/tags/$VERSION" > /dev/null; then
+            echo "$VERSION already exists"
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          if git rev-parse -q --verify "refs/remotes/origin/$branch" > /dev/null; then
+            base="$branch"
+          else
+            # The newest release branch up to this major version; X.x is newer
+            # than any X.Y.x, which is what the 999999 sort key stands for.
+            base=$(git for-each-ref --format='%(refname:lstrip=3)' 'refs/remotes/origin/' \
+              | awk -F. -v major="$major" '/^[0-9]+(\.[0-9]+)?\.x$/ && $1 <= major { print $1, (NF == 2 ? 999999 : $2), $0 }' \
+              | sort -k1,1n -k2,2n | tail -n 1 | cut -d ' ' -f 3)
+          fi
+          if [ -z "$base" ]; then
+            echo "::error::No $branch branch and no earlier release branch to create it from"
+            exit 1
+          fi
+
+          echo "branch=$branch" >> "$GITHUB_OUTPUT"
+          echo "base=$base" >> "$GITHUB_OUTPUT"
+      - name: Build Module
+        if: steps.info.outputs.skip != 'true'
+        env:
+          BUILD: ${{ runner.temp }}/build
+        run: |
+          mkdir "$BUILD"
+          git archive HEAD | tar -x -C "$BUILD"
+          git submodule foreach --quiet --recursive \
+            'git archive --prefix="$displaypath/" HEAD -- . ":!AUTHORS.md" ":!LICENSE" ":!README.md" | tar -x -C "$BUILD"'
+      - name: Commit Snapshot
+        if: steps.info.outputs.skip != 'true'
+        env:
+          BUILD: ${{ runner.temp }}/build
+          SNAPSHOT: ${{ runner.temp }}/drupal
+          VERSION: ${{ needs.create-tag.outputs.version }}
+          BRANCH: ${{ steps.info.outputs.branch }}
+          BASE: ${{ steps.info.outputs.base }}
+        run: |
+          git config user.name "onlyoffice"
+          git config user.email "onlyoffice@3720544.no-reply.drupal.org"
+          git worktree add -B "$BRANCH" "$SNAPSHOT" "origin/$BASE"
+          cd "$SNAPSHOT"
+          git rm -rq .
+          cp -a "$BUILD/." .
+          git add -A
+          git commit --allow-empty -m "$VERSION"
+          git tag -a "$VERSION" -m "$VERSION"
+          git push origin "refs/heads/$BRANCH" "refs/tags/$VERSION"

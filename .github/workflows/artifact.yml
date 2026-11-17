@@ -13,21 +13,31 @@ jobs:
   artifact:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Checkout Repository
+        uses: actions/checkout@v7
         with:
           submodules: recursive
       - name: Get Info
-        run: |
-          echo "version=$(grep -Eo '[0-9]+(\.[0-9]+)+' CHANGELOG.md | head -n 1)" >> $GITHUB_OUTPUT
         id: info
+        run: |
+          version=$(grep -m 1 '^## ' CHANGELOG.md | grep -oE '^## [0-9]+\.[0-9]+\.[0-9]+(-(alpha|beta|rc)[1-9][0-9]*)?$' | cut -c 4-)
+          echo "version=${version:-$(git rev-parse --short HEAD)}" >> "$GITHUB_OUTPUT"
       - name: Build Artifact
         run: |
           mkdir -p ./deploy
           git archive --prefix=onlyoffice-drupal/ HEAD | tar -x -C ./deploy
           git -C assets/document-templates archive --prefix=onlyoffice-drupal/assets/document-templates/ HEAD -- . ':!AUTHORS.md' ':!LICENSE' ':!README.md' | tar -x -C ./deploy
       - name: Upload Artifact
-        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: github.server_url == 'https://github.com'
+        uses: actions/upload-artifact@v7
+        with:
+          name: onlyoffice-drupal-${{ steps.info.outputs.version }}
+          path: deploy
+      # actions/upload-artifact@v4+ takes Gitea for GHES and refuses to run; this
+      # fork is the same action without that check.
+      - name: Upload Artifact (Gitea)
+        if: github.server_url != 'https://github.com'
+        uses: christopherHX/gitea-upload-artifact@v4
         with:
           name: onlyoffice-drupal-${{ steps.info.outputs.version }}
           path: deploy

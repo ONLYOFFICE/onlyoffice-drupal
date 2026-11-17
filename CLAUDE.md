@@ -9,7 +9,19 @@ A Drupal contrib module `onlyoffice` ("ONLYOFFICE Connector") that opens Media-m
 ## Branches
 
 - `develop` holds the next release, `main` holds released code. One release supports every Drupal core version in `core_version_requirement` in the `*.info.yml` files and `drupal/core` in `composer.json`; keep them in sync.
+- `{major}.x` branches (`4.x`; the older `1.0.x`, `2.0.x`, `3.0.x`) hold the code published on drupal.org: one snapshot commit per release, made by CI, with a history unrelated to `develop` and `main`. Don't commit to them or merge them; changes from drupal.org issues and merge requests are made in `develop`.
 - The code deliberately uses the APIs of the newer Drupal versions (hook classes, plugin attributes, newer core APIs with BC fallbacks) so that one build runs on all of them. Keep it that way and don't flag it.
+
+## Releases
+
+The main repository is on Gitea; GitHub receives its changes by sync. Workflows in `.github/workflows` run on both, so a job that must run on only one checks `github.server_url`.
+
+1. A push to `main` that changes `CHANGELOG.md` runs `create-tag.yml` on Gitea. It takes the version from the first `## ` heading of `CHANGELOG.md` and tags `vX.Y.Z`.
+2. In the same workflow, the `drupal` job builds the module as drupal.org packages it (`git archive`, so `export-ignore` paths in `.gitattributes` are left out, plus the submodule files), commits it to the `X.x` branch and tags it `X.Y.Z` without the `v`. The first release of a major version creates `X.x` from the newest earlier release branch.
+3. The `vX.Y.Z` tag reaches GitHub, where `release.yml` creates the GitHub release with the zip and the notes from that version's section of `CHANGELOG.md`.
+4. drupal.org is updated by hand: `git push drupal origin/X.x:refs/heads/X.x X.Y.Z` (remote `git@git.drupal.org:project/onlyoffice.git`, pushes are fast-forward only and a tag can't be moved), then "Add new release" on the project page. On the first release of a major version, also make `X.x` the default branch on git.drupalcode.org and mark it supported in "Administer releases".
+
+Files that must not reach the release packages go to `.gitattributes` as `export-ignore`. In workflows, reference actions by major version tag (`actions/checkout@v7`); on Gitea, upload artifacts with `christopherHX/gitea-upload-artifact`, because `actions/upload-artifact` v4+ refuses to run there.
 
 ## Setup and commands
 
@@ -41,7 +53,7 @@ CI runs the same checks (`.github/workflows/lint.yml`). Lints don't show that a 
 - Send requests to Docs through `OnlyofficeDocumentService` and build URLs for Docs through `OnlyofficeUrlHelper`, so internal addresses, JWT and certificate settings apply.
 - A new setting needs: default in `config/install`, schema in `config/schema`, the field in `SettingsForm`, an update hook in `onlyoffice.install` for existing sites, and the settings table in `README.md`.
 - Don't edit files inside `assets/document-templates`; it belongs to the ONLYOFFICE/document-templates repo.
-- Add user-visible changes to the top section of `CHANGELOG.md`. Release CI takes the version from the first version number in that file, so a release needs a `## X.Y.Z` heading at the top.
+- Add user-visible changes to the top section of `CHANGELOG.md`. A release needs a `## X.Y.Z` heading (or `X.Y.Z-alphaN`, `-betaN`, `-rcN`) as the first section, following the drupal.org release naming: CI tags the release from it and fails without it.
 - Commit messages follow Conventional Commits (`feat:`, `fix(form):`, `chore:`, `ci:` …).
 
 ## Coding practices
