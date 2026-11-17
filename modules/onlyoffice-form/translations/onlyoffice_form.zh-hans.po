@@ -70,7 +70,7 @@ msgstr "ONLYOFFICE 表单"
 
 #: onlyoffice_form.info.yml:0
 msgid "Allows users to create and edit ONLYOFFICE forms directly in Drupal."
-msgstr ""
+msgstr "允许用户直接在 Drupal 中创建和编辑 ONLYOFFICE 表单。"
 
 #: onlyoffice_form.info.yml:0
 #: src/Plugin/Field/FieldType/OnlyofficeFormItem.php:30
@@ -381,7 +381,7 @@ msgstr "与此提交关联的文件存在于数据库中，但在磁盘上找不
 
 #: src/Controller/OnlyofficeFormSubmissionController.php:251
 msgid "Sorry, this file format isn't supported (@extension)"
-msgstr "抱歉，不支持此文件格式 (@extension)"
+msgstr "对不起，无法支持该文件格式（@extension）"
 
 #: src/Controller/OnlyofficeFormSubmissionController.php:280
 msgid "View Submission: @filename"
@@ -583,7 +583,7 @@ msgstr "选择“是”以在提交后隐藏表单字段"
 
 #: src/Plugin/Field/FieldFormatter/OnlyofficeFormFormatter.php:244;262
 msgid "Percents"
-msgstr "百分比"
+msgstr "百分数"
 
 #: src/Plugin/Field/FieldFormatter/OnlyofficeFormFormatter.php:245;263
 msgid "Pixels"
@@ -680,3 +680,15 @@ msgstr "公共文件"
 #: src/Hook/OnlyofficeFormHooks.php
 msgid "Submitted forms are stored in the public file system, where anyone who knows the address of a file can download it. To keep them private, set up the private file system and select it as the upload destination of the file field of the ONLYOFFICE PDF form media type."
 msgstr "已提交的表单存储在公共文件系统中，任何知道文件地址的人都可以下载。若要将其设为私有，请配置私有文件系统，并将其选为“ONLYOFFICE PDF 表单”媒体类型文件字段的上传目标。"
+
+#: src/OnlyofficeFormSubmissionListBuilder.php
+msgid "Access and view the forms submitted by your site visitors in this tab."
+msgstr "在此选项卡中，您可以访问和查看网站访问者提交的表单。"
+
+#: src/Controller/OnlyofficeFormFileController.php
+msgid "An unrecoverable error occurred. The uploaded file likely exceeded the maximum file size (@size) that this server supports."
+msgstr "发生了不可恢复的错误。上传的文件可能超过了此服务器支持的最大文件大小（@size）。"
+
+#: src/OnlyofficeFormListBuilder.php
+msgid "Create and edit <strong>PDF forms</strong> with <strong>ONLYOFFICE</strong> in this module. Publish them directly to your website, making it easy for visitors to fill them out online. Track all submissions in the Submitted forms tab, where you can view every entry."
+msgstr "在此模块中使用 <strong>ONLYOFFICE</strong> 创建和编辑 <strong>PDF 表单</strong>。将其直接发布到您的网站，方便访问者在线填写。在“已提交的表单”选项卡中跟踪所有提交内容，查看每个条目。"

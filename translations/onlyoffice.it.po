@@ -15,8 +15,8 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 3.6\n"
 
-msgid "Allows editing office files."
-msgstr "Consente di modificare i file di ufficio."
+msgid "Allows in-browser document editing from the Drupal Media module with ONLYOFFICE Docs. Requires a separate installation of ONLYOFFICE Docs (Document Server)."
+msgstr "Consente di modificare nel browser i documenti del modulo Media di Drupal con ONLYOFFICE Docs. Richiede un'installazione separata di ONLYOFFICE Docs (Document Server)."
 
 msgid "The ONLYOFFICE connector allows users to edit office documents, spreadsheets, and presentations in the Media module from Drupal using ONLYOFFICE Docs packaged as Document Server. Users are able to collaborate on documents in real-time and preview files on public pages."
 msgstr "Il connettore ONLYOFFICE consente agli utenti di modificare file d'ufficio: documenti, fogli di calcolo e presentazioni nel modulo Media da Drupal utilizzando ONLYOFFICE Docs impacchettato come Document Server. Gli utenti possono collaborare su documenti in tempo reale e visualizzare i file in anteprima su pagine pubbliche."
@@ -81,8 +81,8 @@ msgstr "Impossibile raggiungere ONLYOFFICE. Si prega di contattare l'amministrat
 msgid "Not supported version DocumentServer."
 msgstr "Versione DocumentServer non supportata."
 
-msgid "Sorry, this file format isn't supported (@extension)."
-msgstr "Spiacenti, questo formato di file non è supportato (@estensione)."
+msgid "Sorry, this file format isn't supported (@extension)"
+msgstr "Spiacenti, questo formato di file non è supportato (@extension)"
 
 msgid "ONLYOFFICE Preview"
 msgstr "Anteprima ONLYOFFICE"
@@ -212,3 +212,36 @@ msgstr "La chiave segreta deve contenere almeno @length caratteri."
 
 msgid "The secret key is shorter than @length characters. Set a longer key in ONLYOFFICE Docs and in the <a href=\":url\">ONLYOFFICE Connector settings</a>."
 msgstr "La chiave segreta contiene meno di @length caratteri. Imposta una chiave più lunga in ONLYOFFICE Docs e nelle <a href=\":url\">impostazioni del connettore ONLYOFFICE</a>."
+
+msgid "About"
+msgstr "Informazioni"
+
+msgid "Administer ONLYOFFICE connector"
+msgstr "Amministra il connettore ONLYOFFICE"
+
+msgid "Close"
+msgstr "Chiudi"
+
+msgid "Height"
+msgstr "Altezza"
+
+msgid "Hide"
+msgstr "Nascondi"
+
+msgid "ONLYOFFICE"
+msgstr "ONLYOFFICE"
+
+msgid "ONLYOFFICE Connector"
+msgstr "Connettore ONLYOFFICE"
+
+msgid "ONLYOFFICE Connector requires the firebase/php-jwt library."
+msgstr "Il connettore ONLYOFFICE richiede la libreria firebase/php-jwt."
+
+msgid "Show"
+msgstr "Mostra"
+
+msgid "Width"
+msgstr "Larghezza"
+
+msgid "Your PDF form has been submitted. You can download your filled PDF form via context menu."
+msgstr "Il tuo modulo PDF è stato inviato. Puoi scaricare il modulo PDF compilato tramite il menu contestuale."

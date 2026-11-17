@@ -72,7 +72,7 @@ msgstr "ONLYOFFICE-Formular"
 
 #: onlyoffice_form.info.yml:0
 msgid "Allows users to create and edit ONLYOFFICE forms directly in Drupal."
-msgstr ""
+msgstr "Ermöglicht es Benutzern, ONLYOFFICE-Formulare direkt in Drupal zu erstellen und zu bearbeiten."
 
 #: onlyoffice_form.info.yml:0
 #: src/Plugin/Field/FieldType/OnlyofficeFormItem.php:30
@@ -601,11 +601,11 @@ msgstr "Wählen Sie Ja, um die Formularfelder nach dem Absenden auszublenden."
 
 #: src/Plugin/Field/FieldFormatter/OnlyofficeFormFormatter.php:244;262
 msgid "Percents"
-msgstr "Prozent"
+msgstr "Prozentsätze"
 
 #: src/Plugin/Field/FieldFormatter/OnlyofficeFormFormatter.php:245;263
 msgid "Pixels"
-msgstr "Pixel"
+msgstr "Bildpunkte"
 
 #: src/Plugin/Field/FieldFormatter/OnlyofficeFormFormatter.php:288
 msgid "Save submissions: Yes"
@@ -703,3 +703,15 @@ msgstr "Öffentliche Dateien"
 #: src/Hook/OnlyofficeFormHooks.php
 msgid "Submitted forms are stored in the public file system, where anyone who knows the address of a file can download it. To keep them private, set up the private file system and select it as the upload destination of the file field of the ONLYOFFICE PDF form media type."
 msgstr "Eingereichte Formulare werden im öffentlichen Dateisystem gespeichert, in dem jeder, der die Adresse einer Datei kennt, sie herunterladen kann. Um sie privat zu halten, richten Sie das private Dateisystem ein und wählen Sie es als Upload-Ziel des Dateifelds des Medientyps „ONLYOFFICE PDF-Formular“ aus."
+
+#: src/OnlyofficeFormSubmissionListBuilder.php
+msgid "Access and view the forms submitted by your site visitors in this tab."
+msgstr "Auf dieser Registerkarte können Sie die von den Besuchern Ihrer Website eingereichten Formulare aufrufen und ansehen."
+
+#: src/Controller/OnlyofficeFormFileController.php
+msgid "An unrecoverable error occurred. The uploaded file likely exceeded the maximum file size (@size) that this server supports."
+msgstr "Ein nicht behebbarer Fehler ist aufgetreten. Die hochgeladene Datei hat wahrscheinlich die maximale Dateigröße (@size) überschritten, die dieser Server unterstützt."
+
+#: src/OnlyofficeFormListBuilder.php
+msgid "Create and edit <strong>PDF forms</strong> with <strong>ONLYOFFICE</strong> in this module. Publish them directly to your website, making it easy for visitors to fill them out online. Track all submissions in the Submitted forms tab, where you can view every entry."
+msgstr "Erstellen und bearbeiten Sie in diesem Modul <strong>PDF-Formulare</strong> mit <strong>ONLYOFFICE</strong>. Veröffentlichen Sie sie direkt auf Ihrer Website, damit Besucher sie bequem online ausfüllen können. Verfolgen Sie alle Einsendungen auf der Registerkarte „Eingereichte Formulare“, wo Sie jeden Eintrag ansehen können."

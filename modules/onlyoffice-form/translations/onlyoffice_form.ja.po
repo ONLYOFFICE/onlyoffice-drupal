@@ -71,7 +71,7 @@ msgstr "ONLYOFFICEフォーム"
 
 #: onlyoffice_form.info.yml:0
 msgid "Allows users to create and edit ONLYOFFICE forms directly in Drupal."
-msgstr ""
+msgstr "ユーザーがDrupal内でONLYOFFICEフォームを直接作成および編集できるようにします。"
 
 #: onlyoffice_form.info.yml:0
 #: src/Plugin/Field/FieldType/OnlyofficeFormItem.php:30
@@ -387,8 +387,7 @@ msgstr ""
 
 #: src/Controller/OnlyofficeFormSubmissionController.php:251
 msgid "Sorry, this file format isn't supported (@extension)"
-msgstr ""
-"申し訳ありません。このファイル形式はサポートされていません （@extension）"
+msgstr "申し訳ありませんが、このファイル形式はサポートされていません（@extension）"
 
 #: src/Controller/OnlyofficeFormSubmissionController.php:280
 msgid "View Submission: @filename"
@@ -693,3 +692,15 @@ msgstr "公開ファイル"
 #: src/Hook/OnlyofficeFormHooks.php
 msgid "Submitted forms are stored in the public file system, where anyone who knows the address of a file can download it. To keep them private, set up the private file system and select it as the upload destination of the file field of the ONLYOFFICE PDF form media type."
 msgstr "提出されたフォームは公開ファイルシステムに保存されており、ファイルのアドレスを知っている人は誰でもダウンロードできます。非公開にするには、プライベートファイルシステムを設定し、メディアタイプ「ONLYOFFICEのPDFフォーム」のファイルフィールドのアップロード先として選択してください。"
+
+#: src/OnlyofficeFormSubmissionListBuilder.php
+msgid "Access and view the forms submitted by your site visitors in this tab."
+msgstr "このタブでは、サイトの訪問者が提出したフォームにアクセスして表示できます。"
+
+#: src/Controller/OnlyofficeFormFileController.php
+msgid "An unrecoverable error occurred. The uploaded file likely exceeded the maximum file size (@size) that this server supports."
+msgstr "回復できないエラーが発生しました。アップロードされたファイルが、このサーバーでサポートされている最大ファイルサイズ（@size）を超えている可能性があります。"
+
+#: src/OnlyofficeFormListBuilder.php
+msgid "Create and edit <strong>PDF forms</strong> with <strong>ONLYOFFICE</strong> in this module. Publish them directly to your website, making it easy for visitors to fill them out online. Track all submissions in the Submitted forms tab, where you can view every entry."
+msgstr "このモジュールで、<strong>ONLYOFFICE</strong>を使用して<strong>PDFフォーム</strong>を作成および編集できます。フォームをWebサイトに直接公開して、訪問者がオンラインで簡単に入力できるようにします。すべての提出は「提出されたフォーム」タブで追跡でき、各エントリを表示できます。"

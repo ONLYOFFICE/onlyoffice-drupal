@@ -71,7 +71,7 @@ msgstr "Modulo ONLYOFFICE"
 
 #: onlyoffice_form.info.yml:0
 msgid "Allows users to create and edit ONLYOFFICE forms directly in Drupal."
-msgstr ""
+msgstr "Consente agli utenti di creare e modificare moduli ONLYOFFICE direttamente in Drupal."
 
 #: onlyoffice_form.info.yml:0
 #: src/Plugin/Field/FieldType/OnlyofficeFormItem.php:30
@@ -141,7 +141,7 @@ msgstr "Nascondi tutti i moduli dopo l'invio"
 #: config/schema/onlyoffice_form.schema.yml:0
 #: src/Plugin/Field/FieldFormatter/OnlyofficeFormFormatter.php:241
 msgid "Width units"
-msgstr "Unità larghezza"
+msgstr "Unità di larghezza"
 
 #: config/schema/onlyoffice_form.schema.yml:0
 #: src/Plugin/Field/FieldFormatter/OnlyofficeFormFormatter.php:250;284
@@ -151,7 +151,7 @@ msgstr "Larghezza"
 #: config/schema/onlyoffice_form.schema.yml:0
 #: src/Plugin/Field/FieldFormatter/OnlyofficeFormFormatter.php:259
 msgid "Height units"
-msgstr "Unità altezza"
+msgstr "Unità di altezza"
 
 #: config/schema/onlyoffice_form.schema.yml:0
 #: src/Plugin/Field/FieldFormatter/OnlyofficeFormFormatter.php:268;285
@@ -389,7 +389,7 @@ msgstr ""
 
 #: src/Controller/OnlyofficeFormSubmissionController.php:251
 msgid "Sorry, this file format isn't supported (@extension)"
-msgstr "Spiacente, questo formato file non è supportato (@extension)"
+msgstr "Spiacenti, questo formato di file non è supportato (@extension)"
 
 #: src/Controller/OnlyofficeFormSubmissionController.php:280
 msgid "View Submission: @filename"
@@ -694,3 +694,15 @@ msgstr "File pubblici"
 #: src/Hook/OnlyofficeFormHooks.php
 msgid "Submitted forms are stored in the public file system, where anyone who knows the address of a file can download it. To keep them private, set up the private file system and select it as the upload destination of the file field of the ONLYOFFICE PDF form media type."
 msgstr "I moduli inviati sono archiviati nel file system pubblico, dove chiunque conosca l'indirizzo di un file può scaricarlo. Per mantenerli privati, configura il file system privato e selezionalo come destinazione di caricamento del campo file del tipo di media «Modulo PDF ONLYOFFICE»."
+
+#: src/OnlyofficeFormSubmissionListBuilder.php
+msgid "Access and view the forms submitted by your site visitors in this tab."
+msgstr "In questa scheda puoi accedere ai moduli inviati dai visitatori del tuo sito e visualizzarli."
+
+#: src/Controller/OnlyofficeFormFileController.php
+msgid "An unrecoverable error occurred. The uploaded file likely exceeded the maximum file size (@size) that this server supports."
+msgstr "Si è verificato un errore irreversibile. Il file caricato probabilmente supera la dimensione massima del file (@size) supportata da questo server."
+
+#: src/OnlyofficeFormListBuilder.php
+msgid "Create and edit <strong>PDF forms</strong> with <strong>ONLYOFFICE</strong> in this module. Publish them directly to your website, making it easy for visitors to fill them out online. Track all submissions in the Submitted forms tab, where you can view every entry."
+msgstr "Crea e modifica <strong>moduli PDF</strong> con <strong>ONLYOFFICE</strong> in questo modulo. Pubblicali direttamente sul tuo sito web, così i visitatori potranno compilarli facilmente online. Tieni traccia di tutti gli invii nella scheda «Moduli inviati», dove puoi visualizzare ogni voce."

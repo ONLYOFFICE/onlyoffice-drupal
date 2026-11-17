@@ -73,7 +73,7 @@ msgstr "Formulario de ONLYOFFICE"
 
 #: onlyoffice_form.info.yml:0
 msgid "Allows users to create and edit ONLYOFFICE forms directly in Drupal."
-msgstr ""
+msgstr "Permite a los usuarios crear y editar formularios de ONLYOFFICE directamente en Drupal."
 
 #: onlyoffice_form.info.yml:0
 #: src/Plugin/Field/FieldType/OnlyofficeFormItem.php:30
@@ -143,7 +143,7 @@ msgstr "Ocultar todos los formularios después de enviarlos"
 #: config/schema/onlyoffice_form.schema.yml:0
 #: src/Plugin/Field/FieldFormatter/OnlyofficeFormFormatter.php:241
 msgid "Width units"
-msgstr "Unidades de anchura"
+msgstr "Unidades de ancho"
 
 #: config/schema/onlyoffice_form.schema.yml:0
 #: src/Plugin/Field/FieldFormatter/OnlyofficeFormFormatter.php:250;284
@@ -700,3 +700,15 @@ msgstr "Archivos públicos"
 #: src/Hook/OnlyofficeFormHooks.php
 msgid "Submitted forms are stored in the public file system, where anyone who knows the address of a file can download it. To keep them private, set up the private file system and select it as the upload destination of the file field of the ONLYOFFICE PDF form media type."
 msgstr "Los formularios enviados se almacenan en el sistema de archivos público, donde cualquiera que conozca la dirección de un archivo puede descargarlo. Para mantenerlos privados, configure el sistema de archivos privado y selecciónelo como destino de carga del campo de archivo del tipo de medio «Formulario PDF de ONLYOFFICE»."
+
+#: src/OnlyofficeFormSubmissionListBuilder.php
+msgid "Access and view the forms submitted by your site visitors in this tab."
+msgstr "En esta pestaña puede acceder a los formularios enviados por los visitantes de su sitio y verlos."
+
+#: src/Controller/OnlyofficeFormFileController.php
+msgid "An unrecoverable error occurred. The uploaded file likely exceeded the maximum file size (@size) that this server supports."
+msgstr "Se ha producido un error irrecuperable. Probablemente el archivo subido supera el tamaño máximo de archivo (@size) que admite este servidor."
+
+#: src/OnlyofficeFormListBuilder.php
+msgid "Create and edit <strong>PDF forms</strong> with <strong>ONLYOFFICE</strong> in this module. Publish them directly to your website, making it easy for visitors to fill them out online. Track all submissions in the Submitted forms tab, where you can view every entry."
+msgstr "Cree y edite <strong>formularios PDF</strong> con <strong>ONLYOFFICE</strong> en este módulo. Publíquelos directamente en su sitio web para que los visitantes puedan rellenarlos en línea fácilmente. Haga un seguimiento de todos los envíos en la pestaña «Formularios enviados», donde puede ver cada entrada."

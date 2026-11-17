@@ -1,4 +1,4 @@
 administer onlyoffice configuration:
   title: 'Administer ONLYOFFICE connector'
-  description: 'Optional description.'
+  description: 'Manage ONLYOFFICE Connector settings.'
   restrict access: true

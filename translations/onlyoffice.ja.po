@@ -15,8 +15,8 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n!=1);\n"
 "X-Generator: Poedit 3.6\n"
 
-msgid "Allows editing office files."
-msgstr "オフィスファイルの編集を可能にします"
+msgid "Allows in-browser document editing from the Drupal Media module with ONLYOFFICE Docs. Requires a separate installation of ONLYOFFICE Docs (Document Server)."
+msgstr "ONLYOFFICE Docsを使用して、DrupalのMediaモジュールのドキュメントをブラウザで編集できます。ONLYOFFICE Docs（Document Server）を別途インストールする必要があります。"
 
 msgid "The ONLYOFFICE connector allows users to edit office documents, spreadsheets, and presentations in the Media module from Drupal using ONLYOFFICE Docs packaged as Document Server. Users are able to collaborate on documents in real-time and preview files on public pages."
 msgstr "ONLYOFFICEコネクタを使用すると、ユーザーは、ドキュメントサーバーとしてパッケージ化されたONLYOFFICE Docsを使用して、DrupalからMediaモジュールのドキュメント、スプレッドシート、およびプレゼンテーションを編集できます。ユーザーは、リアルタイムでドキュメントを共同編集したり、公開ページでファイルをプレビューしたりできます。"
@@ -81,8 +81,8 @@ msgstr "ONLYOFFICE に接続できません。管理者にお問い合わせく�
 msgid "Not supported version DocumentServer."
 msgstr "サポートされていないバージョン DocumentServer"
 
-msgid "Sorry, this file format isn't supported (@extension)."
-msgstr "申し訳ありませんが、このファイル形式はサポートされていません（@extension）。"
+msgid "Sorry, this file format isn't supported (@extension)"
+msgstr "申し訳ありませんが、このファイル形式はサポートされていません（@extension）"
 
 msgid "ONLYOFFICE Preview"
 msgstr "ONLYOFFICEプレビュー"
@@ -212,3 +212,36 @@ msgstr "シークレットキーは@length文字以上である必要があり�
 
 msgid "The secret key is shorter than @length characters. Set a longer key in ONLYOFFICE Docs and in the <a href=\":url\">ONLYOFFICE Connector settings</a>."
 msgstr "シークレットキーが@length文字より短いです。ONLYOFFICE Docsと<a href=\":url\">ONLYOFFICEコネクタ設定</a>で、より長いキーを設定してください。"
+
+msgid "About"
+msgstr "詳細情報"
+
+msgid "Administer ONLYOFFICE connector"
+msgstr "ONLYOFFICEコネクタを管理する"
+
+msgid "Close"
+msgstr "閉じる"
+
+msgid "Height"
+msgstr "高さ"
+
+msgid "Hide"
+msgstr "非表示"
+
+msgid "ONLYOFFICE"
+msgstr "ONLYOFFICE"
+
+msgid "ONLYOFFICE Connector"
+msgstr "ONLYOFFICEコネクタ"
+
+msgid "ONLYOFFICE Connector requires the firebase/php-jwt library."
+msgstr "ONLYOFFICEコネクタにはfirebase/php-jwtライブラリが必要です。"
+
+msgid "Show"
+msgstr "表示"
+
+msgid "Width"
+msgstr "幅"
+
+msgid "Your PDF form has been submitted. You can download your filled PDF form via context menu."
+msgstr "PDFフォームが送信されました。入力済みのPDFフォームはコンテキストメニューからダウンロードできます。"

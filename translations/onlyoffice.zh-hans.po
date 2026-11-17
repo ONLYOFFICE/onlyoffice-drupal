@@ -15,8 +15,8 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Poedit 3.6\n"
 
-msgid "Allows editing office files."
-msgstr "允许编辑办公文件。"
+msgid "Allows in-browser document editing from the Drupal Media module with ONLYOFFICE Docs. Requires a separate installation of ONLYOFFICE Docs (Document Server)."
+msgstr "使用 ONLYOFFICE Docs 在浏览器中编辑 Drupal Media 模块中的文档。需要单独安装 ONLYOFFICE Docs（Document Server）。"
 
 msgid "The ONLYOFFICE connector allows users to edit office documents, spreadsheets, and presentations in the Media module from Drupal using ONLYOFFICE Docs packaged as Document Server. Users are able to collaborate on documents in real-time and preview files on public pages."
 msgstr "ONLYOFFICE连接器允许用户使用ONLYOFFICE文档编辑器（并入文档服务器）在Drupal的媒体模块中编辑办公文档、电子表格和演示文稿。用户可以实时协作处理文件，并在公共页面上预览文件。"
@@ -81,8 +81,8 @@ msgstr "无法联系到ONLYOFFICE。请联系管理员"
 msgid "Not supported version DocumentServer."
 msgstr "不支持的DocumentServer版本。"
 
-msgid "Sorry, this file format isn't supported (@extension)."
-msgstr "对不起，无法支持该文件格式（@extension）。"
+msgid "Sorry, this file format isn't supported (@extension)"
+msgstr "对不起，无法支持该文件格式（@extension）"
 
 msgid "ONLYOFFICE Preview"
 msgstr "ONLYOFFICE 预览"
@@ -212,3 +212,36 @@ msgstr "秘钥长度必须至少为 @length 个字符。"
 
 msgid "The secret key is shorter than @length characters. Set a longer key in ONLYOFFICE Docs and in the <a href=\":url\">ONLYOFFICE Connector settings</a>."
 msgstr "秘钥长度少于 @length 个字符。请在 ONLYOFFICE Docs 和 <a href=\":url\">ONLYOFFICE连接器的设置</a>中设置更长的秘钥。"
+
+msgid "About"
+msgstr "关于"
+
+msgid "Administer ONLYOFFICE connector"
+msgstr "管理 ONLYOFFICE 连接器"
+
+msgid "Close"
+msgstr "关闭"
+
+msgid "Height"
+msgstr "高度"
+
+msgid "Hide"
+msgstr "隐藏"
+
+msgid "ONLYOFFICE"
+msgstr "ONLYOFFICE"
+
+msgid "ONLYOFFICE Connector"
+msgstr "ONLYOFFICE 连接器"
+
+msgid "ONLYOFFICE Connector requires the firebase/php-jwt library."
+msgstr "ONLYOFFICE 连接器需要 firebase/php-jwt 库。"
+
+msgid "Show"
+msgstr "显示"
+
+msgid "Width"
+msgstr "宽度"
+
+msgid "Your PDF form has been submitted. You can download your filled PDF form via context menu."
+msgstr "您的 PDF 表单已提交。您可以通过上下文菜单下载已填写的 PDF 表单。"

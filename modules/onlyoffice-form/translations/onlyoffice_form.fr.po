@@ -72,7 +72,7 @@ msgstr "Formulaire ONLYOFFICE"
 
 #: onlyoffice_form.info.yml:0
 msgid "Allows users to create and edit ONLYOFFICE forms directly in Drupal."
-msgstr ""
+msgstr "Permet aux utilisateurs de créer et de modifier des formulaires ONLYOFFICE directement dans Drupal."
 
 #: onlyoffice_form.info.yml:0
 #: src/Plugin/Field/FieldType/OnlyofficeFormItem.php:30
@@ -368,7 +368,7 @@ msgstr "L'enregistrement du fichier a échoué. Veuillez réessayer."
 
 #: src/Controller/OnlyofficeFormFileController.php:178
 msgid "Error uploading file: @error"
-msgstr "Erreur lors du téléchargement du fichier : @erreur"
+msgstr "Erreur lors du téléchargement du fichier : @error"
 
 #: src/Controller/OnlyofficeFormSubmissionController.php:221
 msgid "File not found."
@@ -397,7 +397,7 @@ msgstr ""
 
 #: src/Controller/OnlyofficeFormSubmissionController.php:280
 msgid "View Submission: @filename"
-msgstr "Afficher la soumission : @nomdufichier"
+msgstr "Afficher la soumission : @filename"
 
 #: src/Controller/OnlyofficeFormSubmissionController.php:249
 msgid "File @type %label is not supported current module."
@@ -567,7 +567,7 @@ msgstr "Aucune soumission trouvée pour %form."
 
 #: src/Form/OnlyofficeFormSubmissionDeleteForm.php:158
 msgid "Error deleting submissions: @error"
-msgstr "Erreur dans la suppression des soumissions : @erreur"
+msgstr "Erreur dans la suppression des soumissions : @error"
 
 #: src/Form/OnlyofficeFormSubmissionDeleteSingleForm.php:88
 msgid "Are you sure you want to delete this submission?"
@@ -601,7 +601,7 @@ msgstr ""
 
 #: src/Plugin/Field/FieldFormatter/OnlyofficeFormFormatter.php:244;262
 msgid "Percents"
-msgstr "Pourcentages"
+msgstr "Pourcentage"
 
 #: src/Plugin/Field/FieldFormatter/OnlyofficeFormFormatter.php:245;263
 msgid "Pixels"
@@ -706,3 +706,15 @@ msgstr "Fichiers publics"
 #: src/Hook/OnlyofficeFormHooks.php
 msgid "Submitted forms are stored in the public file system, where anyone who knows the address of a file can download it. To keep them private, set up the private file system and select it as the upload destination of the file field of the ONLYOFFICE PDF form media type."
 msgstr "Les formulaires soumis sont stockés dans le système de fichiers public, où toute personne connaissant l’adresse d’un fichier peut le télécharger. Pour les garder privés, configurez le système de fichiers privé et sélectionnez-le comme destination de téléversement du champ de fichier du type de média « Formulaire PDF ONLYOFFICE »."
+
+#: src/OnlyofficeFormSubmissionListBuilder.php
+msgid "Access and view the forms submitted by your site visitors in this tab."
+msgstr "Dans cet onglet, accédez aux formulaires soumis par les visiteurs de votre site et consultez-les."
+
+#: src/Controller/OnlyofficeFormFileController.php
+msgid "An unrecoverable error occurred. The uploaded file likely exceeded the maximum file size (@size) that this server supports."
+msgstr "Une erreur irrécupérable s'est produite. Le fichier téléversé dépasse probablement la taille maximale de fichier (@size) prise en charge par ce serveur."
+
+#: src/OnlyofficeFormListBuilder.php
+msgid "Create and edit <strong>PDF forms</strong> with <strong>ONLYOFFICE</strong> in this module. Publish them directly to your website, making it easy for visitors to fill them out online. Track all submissions in the Submitted forms tab, where you can view every entry."
+msgstr "Créez et modifiez des <strong>formulaires PDF</strong> avec <strong>ONLYOFFICE</strong> dans ce module. Publiez-les directement sur votre site web pour que les visiteurs puissent les remplir facilement en ligne. Suivez toutes les soumissions dans l'onglet « Formulaires soumis », où vous pouvez consulter chaque entrée."

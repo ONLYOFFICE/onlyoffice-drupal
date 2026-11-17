@@ -71,7 +71,7 @@ msgstr "Форма ONLYOFFICE"
 
 #: onlyoffice_form.info.yml:0
 msgid "Allows users to create and edit ONLYOFFICE forms directly in Drupal."
-msgstr ""
+msgstr "Позволяет пользователям создавать и редактировать формы ONLYOFFICE прямо в Drupal."
 
 #: onlyoffice_form.info.yml:0
 #: src/Plugin/Field/FieldType/OnlyofficeFormItem.php:30
@@ -392,7 +392,7 @@ msgstr ""
 
 #: src/Controller/OnlyofficeFormSubmissionController.php:251
 msgid "Sorry, this file format isn't supported (@extension)"
-msgstr "К сожалению, этот формат файла не поддерживается (@extension)"
+msgstr "Извините, этот формат файла не поддерживается (@extension)"
 
 #: src/Controller/OnlyofficeFormSubmissionController.php:280
 msgid "View Submission: @filename"
@@ -696,3 +696,15 @@ msgstr "Публичные файлы"
 #: src/Hook/OnlyofficeFormHooks.php
 msgid "Submitted forms are stored in the public file system, where anyone who knows the address of a file can download it. To keep them private, set up the private file system and select it as the upload destination of the file field of the ONLYOFFICE PDF form media type."
 msgstr "Отправленные формы хранятся в публичной файловой системе, где любой, кто знает адрес файла, может его скачать. Чтобы закрыть к ним доступ, настройте приватную файловую систему и выберите её местом загрузки в файловом поле типа медиа «PDF-форма ONLYOFFICE»."
+
+#: src/OnlyofficeFormSubmissionListBuilder.php
+msgid "Access and view the forms submitted by your site visitors in this tab."
+msgstr "На этой вкладке можно открыть и просмотреть формы, отправленные посетителями сайта."
+
+#: src/Controller/OnlyofficeFormFileController.php
+msgid "An unrecoverable error occurred. The uploaded file likely exceeded the maximum file size (@size) that this server supports."
+msgstr "Произошла неустранимая ошибка. Вероятно, размер загруженного файла превышает максимальный размер (@size), поддерживаемый этим сервером."
+
+#: src/OnlyofficeFormListBuilder.php
+msgid "Create and edit <strong>PDF forms</strong> with <strong>ONLYOFFICE</strong> in this module. Publish them directly to your website, making it easy for visitors to fill them out online. Track all submissions in the Submitted forms tab, where you can view every entry."
+msgstr "Создавайте и редактируйте <strong>PDF-формы</strong> с помощью <strong>ONLYOFFICE</strong> в этом модуле. Публикуйте их прямо на сайте, чтобы посетители могли легко заполнять их онлайн. Следите за всеми отправками на вкладке «Отправленные формы», где можно просмотреть каждую из них."
