@@ -204,7 +204,16 @@ class OnlyofficeFormHooks {
       return NULL;
     }
 
-    return $file->access('download') ? $file->getDownloadHeaders() : -1;
+    if (!$file->access('download')) {
+      return -1;
+    }
+
+    return DeprecationHelper::backwardsCompatibleCall(
+      \Drupal::VERSION,
+      '11.2.0',
+      fn() => $file->getDownloadHeaders(),
+      fn() => file_get_content_headers($file),
+    );
   }
 
   /**
