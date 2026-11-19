@@ -10,6 +10,7 @@
 - fixed the author of the revision saved after co-editing: it is the user who changed the document last, not the one who closed it last
 - fixed PHP warnings and errors on callbacks from ONLYOFFICE Docs with the token only in the header or with missing or malformed fields
 - fixed the missing configuration schema of the preview formatter, the ONLYOFFICE PDF form media source and the ONLYOFFICE form field
+- fixed the blank editor page for an unsupported file format: it shows the error message instead
 - fixed the untranslated and mistranslated strings, and the description of the ONLYOFFICE Connector permission
 
 ## Added

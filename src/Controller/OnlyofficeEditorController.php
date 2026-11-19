@@ -241,7 +241,10 @@ class OnlyofficeEditorController extends ControllerBase {
 
     if (!$documentType) {
       $this->getLogger('onlyoffice')->warning('Media @type %label is not supported current module.', $context);
-      return ['#error' => $this->t("Sorry, this file format isn't supported (@extension)", ['@extension' => $extension])];
+      return [
+        '#error' => $this->t("Sorry, this file format isn't supported (@extension)", ['@extension' => $extension]),
+        '#filename' => $file->getFilename(),
+      ];
     }
 
     $user = $this->currentUser()->getAccount();

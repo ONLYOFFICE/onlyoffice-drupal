@@ -30,12 +30,22 @@
             text-decoration: none;
         }
 
+        .onlyoffice-error {
+            padding: 20px;
+            font-size: 14px;
+        }
+
     </style>
 
+    {% if not error %}
     <script type="text/javascript" src="{{ doc_server_url }}"></script>
+    {% endif %}
 </head>
 
 <body>
+    {% if error %}
+    <p class="onlyoffice-error">{{ error }}</p>
+    {% else %}
     <div id="iframeEditor"></div>
 
     <script type="text/javascript">
@@ -55,16 +65,9 @@
             }
 
             var config = {{ config|raw }};
-            var error =  "{{ error }}";
             var saveAsUrl = {{ save_as_url|json_encode|raw }};
 
             config.events = config.events || {};
-
-            if (error) {
-              config.events.onAppReady = function() {
-                docEditor.showMessage(error);
-              };
-            }
 
             if (saveAsUrl) {
               config.events.onRequestSaveAs = function(event) {
@@ -94,6 +97,7 @@
             window.attachEvent("load", connectEditor);
         }
     </script>
+    {% endif %}
 </body>
 
 </html>
