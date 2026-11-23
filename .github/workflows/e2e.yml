@@ -4,11 +4,9 @@ on:
   workflow_dispatch:
     inputs:
       drupal_image:
-        description: 'Drupal image'
-        default: 'drupal:11-apache'
+        description: 'Drupal image (default: drupal:11-apache)'
       documentserver_image:
-        description: 'Document Server image'
-        default: 'onlyoffice/documentserver:latest'
+        description: 'Document Server image (default: onlyoffice/documentserver:latest)'
   push:
     branches: [main]
     paths-ignore:
