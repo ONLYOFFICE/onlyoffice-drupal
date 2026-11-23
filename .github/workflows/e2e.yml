@@ -1,0 +1,75 @@
+name: E2E
+
+on:
+  workflow_dispatch:
+    inputs:
+      drupal_image:
+        description: 'Drupal image (default: drupal:11-apache)'
+      documentserver_image:
+        description: 'Document Server image (default: onlyoffice/documentserver:latest)'
+  push:
+    branches: [main]
+    paths-ignore:
+      - '**/*.md'
+      - 'LICENSE'
+      - '.gitignore'
+      - 'dev/**'
+  pull_request:
+    branches: [main, develop]
+    paths-ignore:
+      - '**/*.md'
+      - 'LICENSE'
+      - '.gitignore'
+      - 'dev/**'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: e2e-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v7
+        with:
+          submodules: recursive
+
+      - name: Build Artifact
+        run: |
+          mkdir -p ./deploy
+          git archive --prefix=onlyoffice-drupal/ HEAD | tar -x -C ./deploy
+          git -C assets/document-templates archive --prefix=onlyoffice-drupal/assets/document-templates/ HEAD -- . ':!AUTHORS.md' ':!LICENSE' ':!README.md' | tar -x -C ./deploy
+
+      - name: Upload Artifact
+        if: github.server_url == 'https://github.com'
+        uses: actions/upload-artifact@v7
+        with:
+          name: onlyoffice-drupal
+          path: deploy
+          retention-days: 1
+          if-no-files-found: error
+
+      # actions/upload-artifact@v4+ takes Gitea for GHES and refuses to run; this
+      # fork is the same action without that check.
+      - name: Upload Artifact (Gitea)
+        if: github.server_url != 'https://github.com'
+        uses: christopherHX/gitea-upload-artifact@v4
+        with:
+          name: onlyoffice-drupal
+          path: deploy
+          retention-days: 1
+          if-no-files-found: error
+
+  e2e:
+    needs: build
+    uses: ONLYOFFICE/integration-tests/.github/workflows/e2e.yml@develop
+    with:
+      system: drupal
+      artifact_name: onlyoffice-drupal
+      documentserver_image: ${{ inputs.documentserver_image || 'onlyoffice/documentserver:latest' }}
+      env_overrides: DRUPAL_IMAGE=${{ inputs.drupal_image || 'drupal:11-apache' }}
